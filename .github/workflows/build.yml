@@ -28,4 +28,4 @@ jobs:
         yarn grunt package
 
     - name: Test
-      run: yarn grunt test:unit
+      run: yarn grunt test:unit -- --watch=false --browsers=ChromeHeadless
