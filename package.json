@@ -17,7 +17,14 @@
     "test-i18n": "jasmine-node i18n/spec",
     "test-i18n-ucd": "jasmine-node i18n/ucd/spec",
     "build": "npx -y esbuild src/Angular.js --bundle --outfile=dist/angular.js",
-    "build:min": "npx -y esbuild src/Angular.js --bundle --minify --outfile=dist/angular.min.js"
+    "build:min": "npx -y esbuild src/Angular.js --bundle --minify --outfile=dist/angular.min.js",
+    "test:jqlite": "npx -y karma start karma-jqlite.conf.js --single-run",
+    "test:jquery": "npx -y karma start karma-jquery.conf.js --single-run",
+    "test:jquery-2.2": "npx -y karma start karma-jquery-2.2.conf.js --single-run",
+    "test:jquery-2.1": "npx -y karma start karma-jquery-2.1.conf.js --single-run",
+    "test:modules": "npm run build && npx -y karma start karma-modules.conf.js --single-run && npx -y karma start karma-modules-ngAnimate.conf.js --single-run && npx -y karma start karma-modules-ngMock.conf.js --single-run",
+    "test:unit": "npm run test:jqlite && npm run test:jquery && npm run test:jquery-2.2 && npm run test:jquery-2.1 && npm run test:modules",
+    "test": "npm run test:unit"
   },
   "devDependencies": {
     "angular-benchpress": "0.x.x",

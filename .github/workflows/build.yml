@@ -22,10 +22,13 @@ jobs:
     - name: Install yarn
       run: npm install --global yarn
       
+    - name: Install dependencies
+      run: yarn install
+
     - name: Build
       run: |
-        yarn install
-        yarn grunt package
+        yarn build
+        yarn build:min
 
     - name: Test
-      run: yarn grunt test:unit
+      run: yarn test

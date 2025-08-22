@@ -127,7 +127,7 @@ Before you submit your pull request consider the following guidelines:
 * Run the AngularJS [unit][developers.tests-unit] and [E2E test][developers.tests-e2e] suites, and ensure that all tests
   pass. It is generally sufficient to run the tests only on Chrome, as our continuous integration test will
   run the tests on additional browsers.
-* Run `yarn grunt eslint` to check that you have followed the automatically enforced coding rules
+* Run `npx eslint .` to check that you have followed the automatically enforced coding rules
 * Commit your changes using a descriptive commit message that follows our
   [commit message conventions][developers.commits]. Adherence to the
   [commit message conventions][developers.commits] is required, because release notes are
@@ -141,7 +141,7 @@ Before you submit your pull request consider the following guidelines:
 * Before creating the Pull Request, package and run all tests a last time:
 
     ```shell
-    yarn grunt test
+    yarn test
     ```
 
 * Push your branch to GitHub:
