@@ -47,6 +47,13 @@ Develop
 We've set up a separate document for
 [developers](https://github.com/angular/angular.js/blob/master/DEVELOPERS.md).
 
+Build
+--------------------
+
+The build system now uses [esbuild](https://esbuild.github.io/).
+Run `yarn build` to generate `dist/angular.js` and
+`yarn build:min` for a minified bundle in `dist/`.
+
 
 [![Analytics](https://ga-beacon.appspot.com/UA-8594346-11/angular.js/README.md?pixel)](https://github.com/igrigorik/ga-beacon)
 
