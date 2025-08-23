@@ -16,10 +16,10 @@ See `.circleci/config.yml` for the complete deployment config and build steps.
 - Run `cd scripts/docs.angularjs.org-firebase`.
   This changes the current working directory.
 
-- Run `yarn grunt package`.
+- Run `yarn build`.
   This builds the files that will be deployed.
 
-- Run `yarn grunt prepareDeploy`.
+- Run `yarn build:min`.
   This copies docs content files into `./deploy` and the partials for Search Engine AJAX Crawling into `./functions/content`.
 
 - Run `$(yarn bin)/firebase emulators:start` (or `..\..\node_modules\.bin\firebase emulators:start` on Windows).

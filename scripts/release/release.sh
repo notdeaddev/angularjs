@@ -36,8 +36,8 @@ function init {
 
 function build {
   cd ../..
-  yarn grunt ci-checks package --no-color
-
+  yarn run build
+  yarn run build:min
   cd $SCRIPT_DIR
 }
 

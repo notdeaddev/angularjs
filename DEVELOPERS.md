@@ -9,7 +9,7 @@
 ## <a name="setup"> Development Setup
 
 This document describes how to set up your development environment to build and test AngularJS, and
-explains the basic mechanics of using `git`, `node`, `yarn` and `grunt`.
+explains the basic mechanics of using `git`, `node`, and `yarn`.
 
 ### Installing Dependencies
 
@@ -35,9 +35,7 @@ machine:
   to be installed and included in your
   [PATH](http://docs.oracle.com/javase/tutorial/essential/environment/paths.html) variable.
 
-* [Grunt](http://gruntjs.com): We use Grunt as our build system. We're using it as a local dependency,
-  but you can also add the grunt command-line tool globally (with `yarn global add grunt-cli`), which allows
-  you to leave out the `yarn` prefix for all our grunt commands.
+* [esbuild](https://esbuild.github.io/): Used for bundling the project. It is installed automatically via npm scripts.
 
 ### Forking AngularJS on Github
 
@@ -51,7 +49,7 @@ Afterwards, go ahead and [fork](http://help.github.com/forking) the
 
 ### Building AngularJS
 
-To build AngularJS, you clone the source code repository and use Grunt to generate the non-minified
+To build AngularJS, you clone the source code repository and use the provided scripts to generate the non-minified
 and minified AngularJS files:
 
 ```shell
@@ -68,24 +66,13 @@ git remote add upstream "https://github.com/angular/angular.js.git"
 yarn install
 
 # Build AngularJS:
-yarn grunt package
+yarn build
+yarn build:min
 ```
 
-**Note:** If you're using Windows, you must use an elevated command prompt (right click, run as
-Administrator). This is because `yarn grunt package` creates some symbolic links.
-
-The build output is in the `build` directory. It consists of the following files and
-directories:
-
-* `angular-<version>.zip` — The complete zip file, containing all of the release build
-artifacts.
+The build output is in the `dist` directory and contains:
 
 * `angular.js` / `angular.min.js` — The regular and minified core AngularJS script file.
-
-* `angular-*.js` / `angular-*.min.js` — All other AngularJS module script files.
-
-* `docs/` — A directory that contains a standalone version of the docs
-  (same as served in `docs.angularjs.org`).
 
 ### <a name="local-server"></a> Running a Local Development Web Server
 
@@ -94,7 +81,7 @@ HTTP server. For this purpose, we have made available a local web server based o
 
 1. To start the web server, run:
    ```shell
-   yarn grunt webserver
+   npx -y http-server .
    ```
 
 2. To access the local server, enter the following URL into your web browser:
@@ -116,13 +103,13 @@ We write unit and integration tests with Jasmine and execute them with Karma. To
 tests once on Chrome run:
 
 ```shell
-yarn grunt test:unit
+yarn test
 ```
 
 To run the tests on other browsers use the command line flag:
 
 ```shell
-yarn grunt test:unit --browsers=Chrome,Firefox
+yarn test --browsers=Chrome,Firefox
 ```
 
 **Note:** there should be _no spaces between browsers_. `Chrome, Firefox` is INVALID.
@@ -134,9 +121,9 @@ For example, to run the whole unit test suite on selected browsers:
 
 ```shell
 # Browserstack
-yarn grunt test:unit --browsers=BS_Chrome,BS_Firefox,BS_Safari,BS_IE_9,BS_IE_10,BS_IE_11,BS_EDGE,BS_iOS_10
+yarn test --browsers=BS_Chrome,BS_Firefox,BS_Safari,BS_IE_9,BS_IE_10,BS_IE_11,BS_EDGE,BS_iOS_10
 # Saucelabs
-yarn grunt test:unit --browsers=SL_Chrome,SL_Firefox,SL_Safari,SL_IE_9,SL_IE_10,SL_IE_11,SL_EDGE,SL_iOS_10
+yarn test --browsers=SL_Chrome,SL_Firefox,SL_Safari,SL_IE_9,SL_IE_10,SL_IE_11,SL_EDGE,SL_iOS_10
 ```
 
 Running these commands requires you to set up [Karma Browserstack][karma-browserstack] or
@@ -148,7 +135,7 @@ source or test files change. To execute tests in this mode run:
 1. To start the Karma server, capture Chrome browser and run unit tests, run:
 
    ```shell
-   yarn grunt autotest
+   npx -y karma start karma-jqlite.conf.js
    ```
 
 2. To capture more browsers, open this URL in the desired browser (URL might be different if you
@@ -161,10 +148,10 @@ source or test files change. To execute tests in this mode run:
 3. To re-run tests just change any source or test file.
 
 
-To learn more about all of the preconfigured Grunt tasks run:
+To see available npm scripts run:
 
 ```shell
-yarn grunt --help
+npm run
 ```
 
 
@@ -173,7 +160,7 @@ yarn grunt --help
 AngularJS's end to end tests are run with Protractor. Simply run:
 
 ```shell
-yarn grunt test:e2e
+npx -y protractor protractor-conf.js
 ```
 
 This will start the webserver and run the tests on Chrome.
@@ -316,19 +303,19 @@ Extracting the source code documentation, processing and building the docs is ha
 documentation generation tool [Dgeni][dgeni].
 
 ### Building and viewing the docs locally
-The docs can be built from scratch using grunt:
+The docs can be built from scratch using the build scripts:
 
 ```shell
-yarn grunt docs
+yarn build
 ```
 
 This defers the doc-building task to `gulp`.
 
 Note that the docs app is using the local build files to run. This means you might first have to run
-the build:
+the minified build:
 
 ```shell
-yarn grunt build
+yarn build:min
 ```
 
 (This is also necessary if you are making changes to minErrors).
