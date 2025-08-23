@@ -17,18 +17,18 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: 14.x
+        node-version: 20.19.4
 
-    - name: Install yarn
-      run: npm install --global yarn
-      
+    - name: Use npm 11.4.2
+      run: npm install -g npm@11.4.2
+
     - name: Install dependencies
-      run: yarn install
+      run: npm install
 
     - name: Build
       run: |
-        yarn build
-        yarn build:min
+        npm run build
+        npm run build:min
 
     - name: Test
-      run: yarn test
+      run: npm test
