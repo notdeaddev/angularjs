@@ -6,7 +6,7 @@ module.exports = function(config, specificOptions) {
     autoWatch: true,
     logLevel: config.LOG_INFO,
     logColors: true,
-    browsers: ['Chrome'],
+    browsers: ['ChromeHeadless'],
     browserDisconnectTimeout: 10000,
     browserDisconnectTolerance: 2,
     browserNoActivityTimeout: 30000,
@@ -178,33 +178,40 @@ module.exports = function(config, specificOptions) {
     '/someSanitizedUrl',
     '/{{testUrl}}'
   ];
-  var log4js = require('log4js');
-  var layouts = require('log4js/lib/layouts');
-  var originalConfigure = log4js.configure;
-  log4js.configure = function(log4jsConfig) {
-    var consoleAppender = log4jsConfig.appenders.shift();
-    var originalResult = originalConfigure.call(log4js, log4jsConfig);
-    var layout = layouts.layout(consoleAppender.layout.type, consoleAppender.layout);
+  var log4js, layouts;
+  try {
+    log4js = require('log4js');
+    layouts = require('log4js/lib/layouts');
+  } catch (err) {
+    log4js = null;
+  }
 
+  if (log4js) {
+    var originalConfigure = log4js.configure;
+    log4js.configure = function(log4jsConfig) {
+      var consoleAppender = log4jsConfig.appenders.shift();
+      var originalResult = originalConfigure.call(log4js, log4jsConfig);
+      var layout = layouts.layout(consoleAppender.layout.type, consoleAppender.layout);
 
+      log4js.addAppender(function(log) {
+        var msg = log.data[0];
 
-    log4js.addAppender(function(log) {
-      var msg = log.data[0];
+        // ignore web-server's 404s
+        if (log.categoryName === 'web-server' && log.level.levelStr === config.LOG_WARN &&
+            IGNORED_404.some(function(ignoredLog) {return msg.indexOf(ignoredLog) !== -1;})) {
+          return;
+        }
 
-      // ignore web-server's 404s
-      if (log.categoryName === 'web-server' && log.level.levelStr === config.LOG_WARN &&
-          IGNORED_404.some(function(ignoredLog) {return msg.indexOf(ignoredLog) !== -1;})) {
-        return;
-      }
+        // on CI, ignore DEBUG statements
+        if (process.env.CI && log.level.levelStr === config.LOG_DEBUG) {
+          return;
+        }
 
-      // on CI, ignore DEBUG statements
-      if (process.env.CI && log.level.levelStr === config.LOG_DEBUG) {
-        return;
-      }
+        console.log(layout(log));
+      });
 
-      console.log(layout(log));
-    });
-
-    return originalResult;
-  };
+      log4js.configure = originalConfigure;
+      return originalResult;
+    };
+  }
 };
