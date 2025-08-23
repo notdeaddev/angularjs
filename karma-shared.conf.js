@@ -6,7 +6,7 @@ module.exports = function(config, specificOptions) {
     autoWatch: true,
     logLevel: config.LOG_INFO,
     logColors: true,
-    browsers: ['ChromeHeadless'],
+    browsers: ['ChromeHeadlessNoSandbox'],
     browserDisconnectTimeout: 10000,
     browserDisconnectTolerance: 2,
     browserNoActivityTimeout: 30000,
@@ -37,6 +37,10 @@ module.exports = function(config, specificOptions) {
     // For more browsers on Sauce Labs see:
     // https://saucelabs.com/docs/platforms/webdriver
     customLaunchers: {
+      'ChromeHeadlessNoSandbox': {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
+      },
       'SL_Chrome': {
         base: 'SauceLabs',
         browserName: 'chrome',
