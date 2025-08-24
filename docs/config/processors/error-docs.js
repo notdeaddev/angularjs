@@ -12,7 +12,12 @@ module.exports = function errorDocsProcessor(log, errorNamespaceMap, getMinerrIn
     $process: function(docs) {
 
       // Get the extracted min errors to compare with the error docs, and report any mismatch
-      var collectedErrors = require('../../../build/errors.json').errors;
+      var collectedErrors = {};
+      try {
+        collectedErrors = require('../../../build/errors.json').errors;
+      } catch (e) {
+        log.warn('No build/errors.json found; skipping min error comparison');
+      }
       var flatErrors = [];
 
       for (var namespace in collectedErrors) {
@@ -55,7 +60,8 @@ module.exports = function errorDocsProcessor(log, errorNamespaceMap, getMinerrIn
           // Link this error doc to its namespace doc
           namespaceDoc.errors.push(doc);
           doc.namespaceDoc = namespaceDoc;
-          doc.formattedErrorMessage = getMinerrInfo().errors[doc.namespace][doc.name];
+          var info = getMinerrInfo().errors;
+          doc.formattedErrorMessage = (info[doc.namespace] || {})[doc.name];
         }
       });
 

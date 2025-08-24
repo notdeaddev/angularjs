@@ -32,6 +32,7 @@ npm ci            # preferred in CI
 npm run test      # or: npm run test:ci
 npm run lint
 npm run build
+npm run docs
 
 # with yarn (Corepack)
 yarn install --frozen-lockfile
@@ -174,6 +175,7 @@ CI must pass on all required jobs (lint, tests, build). If CI scripts live in `.
 * [ ] Only one logical topic in this PR
 * [ ] `package.json` and lockfile updated together (if applicable)
 * [ ] Lint passes locally
+* [ ] Docs build passes locally (`npm run docs`)
 * [ ] Tests added/updated and passing locally
 * [ ] CI green (tests, lint, build)
 * [ ] Docs/notes updated (if behavior changed)
