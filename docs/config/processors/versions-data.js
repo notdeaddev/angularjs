@@ -9,7 +9,7 @@ var semver = require('semver');
  * This processor will create a new doc that will be rendered as a JavaScript file
  * containing meta information about the current versions of AngularJS
  */
-module.exports = function generateVersionDocProcessor(gitData) {
+module.exports = function generateVersionDocProcessor(gitData, log) {
   return {
     $runAfter: ['generatePagesDataProcessor'],
     $runBefore: ['rendering-docs'],
@@ -18,9 +18,21 @@ module.exports = function generateVersionDocProcessor(gitData) {
     $process: function(docs) {
 
       var ignoredBuilds = this.ignoredBuilds;
-      var currentVersion = require('../../../build/version.json');
-      var output = exec('yarn info angular versions --json', { silent: true }).stdout.split('\n')[0];
-      var allVersions = processAllVersionsResponse(JSON.parse(output).data);
+      var currentVersion;
+      try {
+        currentVersion = require('../../../build/version.json');
+      } catch (e) {
+        log.warn('No version.json found; using placeholder version');
+        currentVersion = { version: 'snapshot', full: 'snapshot', isSnapshot: true };
+      }
+
+      var allVersions = [currentVersion.version];
+      try {
+        var output = exec('yarn info angular versions --json', { silent: true }).stdout.split('\n')[0];
+        allVersions = processAllVersionsResponse(JSON.parse(output).data);
+      } catch (e) {
+        log.warn('Failed to fetch Angular versions from yarn; using current version only');
+      }
 
       docs.push({
         docType: 'current-version-data',

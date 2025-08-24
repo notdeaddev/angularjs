@@ -25,7 +25,8 @@
     "test:jquery-2.1": "npm run karma -- start karma-jquery-2.1.conf.js --single-run",
     "test:modules": "npm run build && npm run karma -- start karma-modules.conf.js --single-run && npm run karma -- start karma-modules-ngAnimate.conf.js --single-run && npm run karma -- start karma-modules-ngMock.conf.js --single-run",
     "test:unit": "npm run test:jqlite && npm run test:jquery && npm run test:jquery-2.2 && npm run test:jquery-2.1 && npm run test:modules",
-    "test": "npm run test:unit"
+    "test": "npm run test:unit",
+    "docs": "node scripts/build-docs.js"
   },
   "devDependencies": {
     "angular-benchpress": "0.x.x",
@@ -40,6 +41,7 @@
     "cz-conventional-changelog": "1.1.4",
     "dgeni": "^0.4.9",
     "dgeni-packages": "^0.26.5",
+    "esbuild": "^0.23.1",
     "eslint-plugin-promise": "^3.6.0",
     "event-stream": "~3.1.0",
     "firebase-tools": "^9.3.0",
@@ -65,7 +67,6 @@
     "karma-spec-reporter": "0.0.32",
     "lodash": "~4.17.21",
     "log4js": "^0.6.27",
-    "puppeteer": "^23.0.2",
     "lunr": "^0.7.2",
     "marked": "~0.3.0",
     "node-html-encoder": "0.0.2",
@@ -73,6 +74,7 @@
     "open-sans-fontface": "^1.4.0",
     "promises-aplus-tests": "~2.1.0",
     "protractor": "^7.0.0",
+    "puppeteer": "^23.0.2",
     "q": "~1.0.0",
     "q-io": "^1.10.9",
     "qq": "^0.3.5",
@@ -87,7 +89,6 @@
     "sorted-object": "^1.0.0",
     "stringmap": "^0.2.2"
   },
-  "dependencies": {},
   "commitplease": {
     "style": "angular",
     "nohook": true

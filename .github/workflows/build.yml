@@ -30,5 +30,8 @@ jobs:
         npm run build
         npm run build:min
 
+    - name: Build docs
+      run: npm run docs
+
     - name: Test
       run: npm test
