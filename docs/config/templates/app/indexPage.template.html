@@ -193,8 +193,8 @@
           </div>
         </div>
         <div class="grid-right">
-          <div ng-show="loading">Loading &hellip;</div>
-          <div ng-show="loadingError">There was an error loading this resource. Please try again later.</div>
+          <div ng-show="loading" ng-cloak>Loading &hellip;</div>
+          <div ng-show="loadingError" ng-cloak>There was an error loading this resource. Please try again later.</div>
           <div ng-hide="loading" ng-include="partialPath" toc-collector autoscroll></div>
         </div>
       </div>
