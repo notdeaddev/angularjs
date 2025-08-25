@@ -37,4 +37,15 @@ describe('DocsController', function() {
       expect($window._gaq.pop()).toEqual(['_trackPageview', 'x/y/z']);
     }));
   });
+
+  it('should hide the loading indicator after content is loaded', inject(function($compile) {
+    var element = $compile('<div ng-show="loading">Loading &hellip;</div>')($scope);
+    $scope.loading = true;
+    $scope.$digest();
+    expect(element.hasClass('ng-hide')).toBe(false);
+
+    $scope.$broadcast('$includeContentLoaded');
+    $scope.$digest();
+    expect(element.hasClass('ng-hide')).toBe(true);
+  }));
 });
