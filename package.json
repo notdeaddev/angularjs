@@ -18,7 +18,7 @@
     "test-i18n-ucd": "jasmine-node i18n/ucd/spec",
     "build": "node scripts/build-angular.js",
     "build:min": "node scripts/build-angular.js",
-    "karma": "CHROME_BIN=$(node -e \"process.stdout.write(require('puppeteer').executablePath())\") npx -y --package karma@4.4.1 --package karma-jasmine@1.1.2 --package karma-chrome-launcher@3.1.0 karma",
+    "karma": "npx -y --package karma@4.4.1 --package karma-jasmine@1.1.2 --package karma-chrome-launcher@3.1.0 karma",
     "test:jqlite": "npm run karma -- start karma-jqlite.conf.js --single-run",
     "test:jquery": "npm run karma -- start karma-jquery.conf.js --single-run",
     "test:jquery-2.2": "npm run karma -- start karma-jquery-2.2.conf.js --single-run",
