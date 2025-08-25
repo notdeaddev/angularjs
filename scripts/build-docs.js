@@ -6,6 +6,7 @@ const path = require('path');
 const glob = require('glob');
 const esbuild = require('esbuild');
 const Dgeni = require('dgeni');
+const {spawnSync} = require('child_process');
 
 const rootDir = path.resolve(__dirname, '..');
 const docsDir = path.join(rootDir, 'docs');
@@ -113,11 +114,23 @@ async function docGen() {
   await dgeni.generate();
 }
 
+function runDocsTests() {
+  const result = spawnSync(
+    'npm',
+    ['run', 'karma', '--', 'start', path.join(rootDir, 'karma-docs.conf.js'), '--single-run'],
+    {stdio: 'inherit'}
+  );
+  if (result.status !== 0) {
+    throw new Error('Docs tests failed');
+  }
+}
+
 async function main() {
   copyAngular();
   await docGen();
   await buildApp();
   await assets();
+  runDocsTests();
 }
 
 main().catch(err => {

@@ -12,24 +12,32 @@ async function buildAngular(outputFolder) {
   fs.mkdirSync(outDir, {recursive: true});
 
   const modules = [
-    {name: 'angular', group: 'angularSrc'},
-    {name: 'angular-resource', group: 'angularSrcModuleNgResource'},
-    {name: 'angular-route', group: 'angularSrcModuleNgRoute'},
-    {name: 'angular-cookies', group: 'angularSrcModuleNgCookies'},
-    {name: 'angular-sanitize', group: 'angularSrcModuleNgSanitize'},
-    {name: 'angular-touch', group: 'angularSrcModuleNgTouch'},
-    {name: 'angular-animate', group: 'angularSrcModuleNgAnimate'},
-    {name: 'angular-mocks', files: [
-      'src/ngMock/angular-mocks.js',
-      'src/ngMock/browserTrigger.js'
-    ]}
+    {name: 'angular', group: 'angularSrc', prefix: 'src/angular.prefix', suffix: 'src/angular.suffix'},
+    {name: 'angular-resource', group: 'angularSrcModuleNgResource', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-route', group: 'angularSrcModuleNgRoute', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-cookies', group: 'angularSrcModuleNgCookies', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-sanitize', group: 'angularSrcModuleNgSanitize', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-touch', group: 'angularSrcModuleNgTouch', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-animate', group: 'angularSrcModuleNgAnimate', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {
+      name: 'angular-mocks',
+      files: [
+        'src/ngMock/angular-mocks.js',
+        'src/ngMock/browserTrigger.js'
+      ],
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    }
   ];
 
   for (const mod of modules) {
     const files = mod.files || mergeFilesFor(mod.group);
-    const code = files
-      .map(f => fs.readFileSync(path.join(rootDir, f), 'utf8'))
-      .join('\n');
+    const parts = [
+      fs.readFileSync(path.join(rootDir, mod.prefix), 'utf8'),
+      ...files.map(f => fs.readFileSync(path.join(rootDir, f), 'utf8')),
+      fs.readFileSync(path.join(rootDir, mod.suffix), 'utf8')
+    ];
+    const code = parts.join('\n');
     const base = path.join(outDir, mod.name);
     fs.writeFileSync(`${base}.js`, code);
     const result = await esbuild.transform(code, {
