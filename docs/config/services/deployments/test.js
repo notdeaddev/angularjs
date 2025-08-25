@@ -5,19 +5,19 @@ module.exports = function testDeployment(getVersion) {
     name: 'test',
     examples: {
       commonFiles: {
-        scripts: ['../../../angular.js']
+        scripts: ['../../angular.js']
       },
-      dependencyPath: '../../../'
+      dependencyPath: '../../'
     },
     scripts: [
-      '../angular.js',
-      '../angular-resource.js',
-      '../angular-route.js',
-      '../angular-cookies.js',
-      '../angular-mocks.js',
-      '../angular-sanitize.js',
-      '../angular-touch.js',
-      '../angular-animate.js',
+      'angular.js',
+      'angular-resource.js',
+      'angular-route.js',
+      'angular-cookies.js',
+      'angular-mocks.js',
+      'angular-sanitize.js',
+      'angular-touch.js',
+      'angular-animate.js',
       'components/marked-' + getVersion('marked') + '/lib/marked.js',
       'js/angular-bootstrap/dropdown-toggle.js',
       'components/lunr-' + getVersion('lunr') + '/lunr.js',

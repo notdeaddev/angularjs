@@ -16,8 +16,8 @@
     "commit": "git-cz",
     "test-i18n": "jasmine-node i18n/spec",
     "test-i18n-ucd": "jasmine-node i18n/ucd/spec",
-    "build": "npx -y esbuild src/Angular.js --bundle --outfile=dist/angular.js",
-    "build:min": "npx -y esbuild src/Angular.js --bundle --minify --outfile=dist/angular.min.js",
+    "build": "node scripts/build-angular.js",
+    "build:min": "node scripts/build-angular.js",
     "karma": "CHROME_BIN=$(node -e \"process.stdout.write(require('puppeteer').executablePath())\") npx -y --package karma@4.4.1 --package karma-jasmine@1.1.2 --package karma-chrome-launcher@3.1.0 karma",
     "test:jqlite": "npm run karma -- start karma-jqlite.conf.js --single-run",
     "test:jquery": "npm run karma -- start karma-jquery.conf.js --single-run",
@@ -26,7 +26,7 @@
     "test:modules": "npm run build && npm run karma -- start karma-modules.conf.js --single-run && npm run karma -- start karma-modules-ngAnimate.conf.js --single-run && npm run karma -- start karma-modules-ngMock.conf.js --single-run",
     "test:unit": "npm run test:jqlite && npm run test:jquery && npm run test:jquery-2.2 && npm run test:jquery-2.1 && npm run test:modules",
     "test": "npm run test:unit",
-    "docs": "node scripts/build-docs.js"
+    "docs": "npm run build && node scripts/build-docs.js"
   },
   "devDependencies": {
     "angular-benchpress": "0.x.x",

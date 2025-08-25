@@ -28,6 +28,26 @@ function copyDir(src, dest) {
   fs.cpSync(src, dest, {recursive: true});
 }
 
+function copyAngular() {
+  const buildDir = path.join(rootDir, 'build');
+  const modules = [
+    'angular',
+    'angular-resource',
+    'angular-route',
+    'angular-cookies',
+    'angular-sanitize',
+    'angular-touch',
+    'angular-animate',
+    'angular-mocks'
+  ];
+
+  for (const mod of modules) {
+    copyFile(path.join(buildDir, `${mod}.js`), path.join(outputFolder, `${mod}.js`));
+    copyFile(path.join(buildDir, `${mod}.min.js`), path.join(outputFolder, `${mod}.min.js`));
+    copyFile(path.join(buildDir, `${mod}.min.js.map`), path.join(outputFolder, `${mod}.min.js.map`));
+  }
+}
+
 async function buildApp() {
   const files = glob.sync(path.join(docsDir, 'app/src/**/*.js'), {
     ignore: path.join(docsDir, 'app/src/angular.bind.js')
@@ -94,6 +114,7 @@ async function docGen() {
 }
 
 async function main() {
+  copyAngular();
   await docGen();
   await buildApp();
   await assets();
