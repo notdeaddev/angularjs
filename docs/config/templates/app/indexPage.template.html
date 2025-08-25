@@ -90,8 +90,8 @@
               <li class="dropdown" uib-dropdown>
                 <a href="#" class="dropdown-toggle" uib-dropdown-toggle>Learn</a>
                 <ul class="dropdown-menu" uib-dropdown-menu>
-                  <li><a href="tutorial">Tutorial</a></li>
-                  <li><a href="misc/faq">FAQ</a></li>
+                  <li><a href="#!/tutorial">Tutorial</a></li>
+                  <li><a href="#!/misc/faq">FAQ</a></li>
                   <li><a href="https://www.youtube.com/user/angularjs">Videos</a></li>
                   <li><a href="http://angular.codeschool.com/">Free Course</a></li>
                   <li><a href="https://www.madewithangular.com/">Case Studies</a></li>
@@ -100,10 +100,10 @@
               <li class="dropdown" uib-dropdown>
                 <a href="#" class="dropdown-toggle" uib-dropdown-toggle>Develop</a>
                 <ul class="dropdown-menu" uib-dropdown-menu>
-                  <li><a href="guide">Developer Guide</a></li>
-                  <li><a href="api">API Reference</a></li>
-                  <li><a href="error">Error Reference</a></li>
-                  <li><a href="misc/contribute">Contribute</a></li>
+                  <li><a href="#!/guide">Developer Guide</a></li>
+                  <li><a href="#!/api">API Reference</a></li>
+                  <li><a href="#!/error">Error Reference</a></li>
+                  <li><a href="#!/misc/contribute">Contribute</a></li>
                   <li><a href="https://github.com/angular/angular-seed">Seed App project template</a></li>
                   <li><a href="https://github.com/angular/angular.js">GitHub</a></li>
                   <li><a href="https://github.com/angular/angular.js/blob/master/CHANGELOG.md">Changelog</a></li>
@@ -125,13 +125,13 @@
             </ul>
 
           </div>
-          <div class="search-results-container" ng-show="hasResults" ng-cloak>
+          <div class="search-results-container" ng-show="hasResults">
             <div class="container">
               <div class="search-results-frame">
                 <div ng-repeat="(key, value) in results track by key" class="search-results-group" ng-class="colClassName + ' col-group-' + key" ng-show="value.length > 0">
                   <h4 class="search-results-group-heading">{{ key }}</h4>
                   <ul class="search-results">
-                    <li ng-repeat="item in value" class="search-result"><a ng-click="handleResultClicked($event)" ng-href="{{ item.path }}">{{ item.name }}</a></li>
+                    <li ng-repeat="item in value" class="search-result"><a ng-click="handleResultClicked($event)" ng-href="#!{{ item.path }}">{{ item.name }}</a></li>
                   </ul>
                 </div>
               </div>
@@ -142,7 +142,7 @@
           </div>
         </div>
       </nav>
-      <nav id="navbar-sub" class="sup-header navbar navbar-fixed-top" scroll-y-offset-element ng-cloak>
+      <nav id="navbar-sub" class="sup-header navbar navbar-fixed-top" scroll-y-offset-element>
         <div class="container main-grid main-header-grid">
         <p class="site-notice">
               AngularJS support has officially ended as of January 2022.
@@ -161,7 +161,7 @@
             <ul class="nav-breadcrumb">
               <li ng-repeat="crumb in breadcrumb" class="nav-breadcrumb-entry naked-list">
                 <span class="divider"> /</span>
-                <a ng-href="{{crumb.url}}">{{crumb.name}}</a>
+                <a ng-href="#!{{crumb.url}}">{{crumb.name}}</a>
               </li>
             </ul>
           </div>
@@ -169,20 +169,20 @@
       </nav>
     </header>
 
-    <section role="main" class="container main-body" ng-cloak>
+    <section role="main" class="container main-body">
       <div class="main-grid main-body-grid">
         <div class="grid-left">
           <a class="btn toc-toggle visible-xs" ng-click="toc=!toc">Show / Hide Table of Contents</a>
           <div class="side-navigation" ng-show="toc==true">
             <ul class="nav-list naked-list">
               <li ng-repeat="navGroup in currentArea.navGroups track by navGroup.name" class="nav-index-group">
-                <a href="{{ navGroup.href }}" ng-class="navClass(navGroup)" class="nav-index-group-heading">{{ navGroup.name }}</a>
+                <a ng-href="#!{{ navGroup.href }}" ng-class="navClass(navGroup)" class="nav-index-group-heading">{{ navGroup.name }}</a>
                 <ul class="aside-nav">
                   <li ng-repeat="navItem in navGroup.navItems" ng-class="navClass(navItem)" class="nav-index-listing">
-                    <a ng-if="navItem.extra.href" ng-class="navClass(navItem.extra)" href="{{navItem.extra.href}}">
+                    <a ng-if="navItem.extra.href" ng-class="navClass(navItem.extra)" ng-href="{{navItem.extra.href}}">
                       {{navItem.extra.text}}<i ng-if="navItem.extra.icon" class="icon-{{navItem.extra.icon}}"></i>
                     </a>
-                    <a tabindex="2" ng-class="linkClass(navItem)" href="{{navItem.href}}">{{navItem.name}}</a>
+                    <a tabindex="2" ng-class="linkClass(navItem)" ng-href="#!{{navItem.href}}">{{navItem.name}}</a>
                   </li>
                 </ul>
               </li>

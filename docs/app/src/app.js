@@ -17,6 +17,6 @@ angular.module('docsApp', [
   'ui.bootstrap.dropdown'
 ])
 
-.config(['$locationProvider', function($locationProvider) {
-  $locationProvider.html5Mode(true).hashPrefix('!');
-}]);
+  .config(['$locationProvider', function($locationProvider) {
+    $locationProvider.html5Mode(false).hashPrefix('!');
+  }]);
