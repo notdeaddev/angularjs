@@ -5,18 +5,18 @@ module.exports = function defaultDeployment(getVersion) {
     name: 'default',
     examples: {
       commonFiles: {
-        scripts: ['../../../angular.min.js']
+        scripts: ['../../angular.min.js']
       },
-      dependencyPath: '../../../'
+      dependencyPath: '../../'
     },
     scripts: [
-      '../angular.min.js',
-      '../angular-resource.min.js',
-      '../angular-route.min.js',
-      '../angular-cookies.min.js',
-      '../angular-sanitize.min.js',
-      '../angular-touch.min.js',
-      '../angular-animate.min.js',
+      'angular.min.js',
+      'angular-resource.min.js',
+      'angular-route.min.js',
+      'angular-cookies.min.js',
+      'angular-sanitize.min.js',
+      'angular-touch.min.js',
+      'angular-animate.min.js',
       'components/marked-' + getVersion('marked') + '/marked.min.js',
       'js/angular-bootstrap/dropdown-toggle.min.js',
       'components/lunr-' + getVersion('lunr') + '/lunr.min.js',
