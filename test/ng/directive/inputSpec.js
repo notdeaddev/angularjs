@@ -1499,6 +1499,18 @@ describe('input', function() {
       expect(inputElm.val()).toBe('1970-01-01T15:41:00.500');
 
       $rootScope.$apply(function() {
+        $rootScope.threeFortyOnePm = new Date(1970, 0, 1, 15, 41, 50, 50);
+      });
+
+      expect(inputElm.val()).toBe('1970-01-01T15:41:50.050');
+
+      $rootScope.$apply(function() {
+        $rootScope.threeFortyOnePm = new Date(1970, 0, 1, 15, 41, 0, 50);
+      });
+
+      expect(inputElm.val()).toBe('1970-01-01T15:41:00.050');
+
+      $rootScope.$apply(function() {
         $rootScope.threeFortyOnePm = new Date(1970, 0, 1, 15, 41, 50, 0);
       });
 
