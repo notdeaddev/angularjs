@@ -40,5 +40,8 @@ jobs:
     - name: Build docs
       run: npm run docs
 
+    - name: Update WebDriver
+      run: npx webdriver-manager update --gecko=false --standalone=false
+
     - name: Run e2e tests
       run: npm run test:e2e

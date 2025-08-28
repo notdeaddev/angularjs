@@ -9,6 +9,9 @@ config.specs = [
 ];
 
 config.capabilities.browserName = 'chrome';
+config.capabilities.chromeOptions = {
+  args: ['--headless', '--no-sandbox', '--disable-dev-shm-usage']
+};
 
 config.directConnect = true;
 
