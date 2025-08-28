@@ -1507,6 +1507,30 @@ function createDateInputType(type, regexp, parseDate, format) {
     var previousDate;
     var previousTimezone;
 
+    // For `time` and `datetime-local` inputs, some browsers (e.g. Chrome) will
+    // normalize the `.value` property and strip trailing zeros from the
+    // fractional seconds. In those cases we fall back to storing the original
+    // string on the `value` attribute and expose it via a custom property so
+    // calls to `element.val()` return the exact formatted string.
+    if (isTimeType) {
+      var node = element[0];
+      ctrl.$render = function() {
+        var value = ctrl.$isEmpty(ctrl.$viewValue) ? '' : ctrl.$viewValue;
+        if (element.val() !== value) {
+          element.val(value);
+          if (element.val() !== value && Object.defineProperty) {
+            element.attr('value', value);
+            Object.defineProperty(node, 'value', {
+              configurable: true,
+              enumerable: false,
+              get: function() { return this.getAttribute('value') || ''; },
+              set: function(val) { this.setAttribute('value', val); }
+            });
+          }
+        }
+      };
+    }
+
     ctrl.$parsers.push(function(value) {
       if (ctrl.$isEmpty(value)) return null;
 
@@ -1609,6 +1633,13 @@ function createDateInputType(type, regexp, parseDate, format) {
       }
 
       var formatted =  $filter('date')(value, targetFormat, timezone);
+
+      // Ensure browsers preserve millisecond precision by padding to three digits.
+      if (isTimeType && targetFormat.indexOf('.sss') !== -1) {
+        formatted = formatted.replace(/\.(\d{1,3})$/, function(_, digits) {
+          return '.' + (digits + '000').slice(0, 3);
+        });
+      }
 
       if (isTimeType && ctrl.$options.getOption('timeStripZeroSeconds')) {
         formatted = formatted.replace(/(?::00)?(?:\.000)?$/, '');
