@@ -26,6 +26,8 @@
     "test:modules": "npm run build && npm run karma -- start karma-modules.conf.js --single-run && npm run karma -- start karma-modules-ngAnimate.conf.js --single-run && npm run karma -- start karma-modules-ngMock.conf.js --single-run",
     "test:unit": "npm run test:jqlite && npm run test:jquery && npm run test:jquery-2.2 && npm run test:jquery-2.1 && npm run test:modules",
     "test": "npm run test:unit",
+    "test:e2e": "npx protractor protractor-conf.js",
+    "lint": "node scripts/validate-angular-files.js",
     "docs": "npm run build && node scripts/build-docs.js"
   },
   "devDependencies": {
