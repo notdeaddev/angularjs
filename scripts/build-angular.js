@@ -18,6 +18,9 @@ async function buildAngular(outputFolder) {
     {name: 'angular-cookies', group: 'angularSrcModuleNgCookies', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
     {name: 'angular-sanitize', group: 'angularSrcModuleNgSanitize', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
     {name: 'angular-touch', group: 'angularSrcModuleNgTouch', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-aria', group: 'angularSrcModuleNgAria', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-message-format', group: 'angularSrcModuleNgMessageFormat', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    {name: 'angular-messages', group: 'angularSrcModuleNgMessages', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
     {name: 'angular-animate', group: 'angularSrcModuleNgAnimate', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
     {
       name: 'angular-mocks',
@@ -47,6 +50,25 @@ async function buildAngular(outputFolder) {
     });
     fs.writeFileSync(`${base}.min.js`, result.code);
     fs.writeFileSync(`${base}.min.js.map`, result.map);
+  }
+
+  const testBundles = [
+    'angular-aria',
+    'angular-cookies',
+    'angular-message-format',
+    'angular-messages',
+    'angular-resource',
+    'angular-route',
+    'angular-sanitize',
+    'angular-touch'
+  ];
+  const testBundlesDir = path.join(outDir, 'test-bundles');
+  fs.mkdirSync(testBundlesDir, {recursive: true});
+  for (const bundle of testBundles) {
+    fs.copyFileSync(
+      path.join(outDir, `${bundle}.js`),
+      path.join(testBundlesDir, `${bundle}.js`)
+    );
   }
 }
 
