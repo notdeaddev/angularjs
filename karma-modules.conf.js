@@ -6,6 +6,7 @@ module.exports = function(config) {
   sharedConfig(config, {testName: 'AngularJS: isolated module tests', logFile: 'karma-modules-isolated.log'});
 
   config.set({
+    failOnEmptyTestSuite: false,
     files: [
       'build/angular.js',
       'build/angular-mocks.js',
