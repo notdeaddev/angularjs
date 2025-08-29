@@ -26,6 +26,9 @@
     "test:modules": "npm run build && npm run karma -- start karma-modules.conf.js --single-run && npm run karma -- start karma-modules-ngAnimate.conf.js --single-run && npm run karma -- start karma-modules-ngMock.conf.js --single-run",
     "test:unit": "npm run test:jqlite && npm run test:jquery && npm run test:jquery-2.2 && npm run test:jquery-2.1 && npm run test:modules",
     "test": "npm run test:unit",
+    "test:e2e": "CHROMEDRIVER_PATH=${CHROMEDRIVER_PATH:-/usr/local/bin/chromedriver} npx protractor protractor-conf.js",
+    "lint": "node scripts/validate-angular-files.js && npm run lint:eslint",
+    "lint:eslint": "npx eslint *.js benchmarks docs lib scripts src test i18n",
     "docs": "npm run build && node scripts/build-docs.js"
   },
   "devDependencies": {
@@ -42,6 +45,7 @@
     "dgeni": "^0.4.9",
     "dgeni-packages": "^0.26.5",
     "esbuild": "^0.23.1",
+    "eslint": "^7.32.0",
     "eslint-plugin-promise": "^3.6.0",
     "event-stream": "~3.1.0",
     "firebase-tools": "^9.3.0",

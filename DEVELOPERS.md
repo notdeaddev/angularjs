@@ -157,10 +157,13 @@ npm run
 
 ### <a name="e2e-tests"></a> Running the End-to-end Test Suite
 
-AngularJS's end to end tests are run with Protractor. Simply run:
+AngularJS's end to end tests are run with Protractor and exercise the docs-generated example app.
+Build the docs and install a ChromeDriver version that matches your local Chrome before running the tests:
 
 ```shell
-npx -y protractor protractor-conf.js
+npm run docs
+npx webdriver-manager update --gecko=false --standalone=false
+npm run test:e2e
 ```
 
 This will start the webserver and run the tests on Chrome.

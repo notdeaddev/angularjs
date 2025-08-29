@@ -9,7 +9,11 @@ config.specs = [
 ];
 
 config.capabilities.browserName = 'chrome';
+config.capabilities.chromeOptions = {
+  args: ['--headless', '--no-sandbox', '--disable-dev-shm-usage']
+};
 
 config.directConnect = true;
+config.chromeDriver = process.env.CHROMEDRIVER_PATH || '/usr/local/bin/chromedriver';
 
 exports.config = config;
