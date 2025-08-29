@@ -1,5 +1,7 @@
 'use strict';
 
+var e2eServer;
+
 exports.config = {
   allScriptsTimeout: 11000,
 
@@ -10,6 +12,20 @@ exports.config = {
   capabilities: {
     // Fix element scrolling behavior in Firefox for fixed header elements (like angularjs.org has)
     'elementScrollBehavior': 1
+  },
+
+  beforeLaunch: function() {
+    var createServer = require('./test/e2e/server');
+    e2eServer = createServer();
+    return new Promise(function(resolve) {
+      e2eServer.listen(8000, resolve);
+    });
+  },
+
+  afterLaunch: function() {
+    if (e2eServer) {
+      e2eServer.close();
+    }
   },
 
   onPrepare: function() {
