@@ -26,9 +26,13 @@ jobs:
       run: npm ci
 
     - name: Setup Chrome
+      id: setup-chrome
       uses: browser-actions/setup-chrome@v2
       with:
         install-chromedriver: true
+
+    - name: Export ChromeDriver path
+      run: echo "CHROMEDRIVER_PATH=${{ steps.setup-chrome.outputs.chromedriver-path }}" >> $GITHUB_ENV
 
     - name: Lint
       run: npm run lint
