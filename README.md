@@ -51,8 +51,19 @@ Build
 --------------------
 
 The build system now uses [esbuild](https://esbuild.github.io/).
-Run `yarn build` to generate `dist/angular.js` and
-`yarn build:min` for a minified bundle in `dist/`.
+Run `npm run build` to generate `dist/angular.js` and
+`npm run build:min` for a minified bundle in `dist/`.
+
+Test
+--------------------
+
+Run unit tests with `npm test`. End-to-end tests rely on the docs example app and a matching ChromeDriver:
+
+```bash
+npm run docs
+npx webdriver-manager update --gecko=false --standalone=false
+npm run test:e2e
+```
 
 
 [![Analytics](https://ga-beacon.appspot.com/UA-8594346-11/angular.js/README.md?pixel)](https://github.com/igrigorik/ga-beacon)

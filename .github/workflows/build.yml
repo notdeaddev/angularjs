@@ -25,6 +25,11 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Setup Chrome
+      uses: browser-actions/setup-chrome@v2
+      with:
+        install-chromedriver: true
+
     - name: Lint
       run: npm run lint
       continue-on-error: true
