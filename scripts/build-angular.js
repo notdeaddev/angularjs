@@ -5,6 +5,27 @@ const fs = require('fs');
 const path = require('path');
 const esbuild = require('esbuild');
 const {mergeFilesFor} = require(path.join(__dirname, '..', 'angularFiles.js'));
+const pkg = require(path.join(__dirname, '..', 'package.json'));
+
+function replaceVersionPlaceholders(src) {
+  const branch = pkg.branchVersion || '0.0.0';
+  const match = branch.match(/(\d+)\.(\d+)\.(\d+)/) || ['', '0', '0', '0'];
+  const NG_VERSION = {
+    full: `${match[1]}.${match[2]}.${match[3]}`,
+    major: match[1],
+    minor: match[2],
+    patch: match[3],
+    cdn: `${match[1]}.${match[2]}.${match[3]}`,
+    codeName: 'snapshot'
+  };
+  return src
+    .replace(/(["'])NG_VERSION_FULL\1/g, NG_VERSION.full)
+    .replace(/(["'])NG_VERSION_MAJOR\1/, NG_VERSION.major)
+    .replace(/(["'])NG_VERSION_MINOR\1/, NG_VERSION.minor)
+    .replace(/(["'])NG_VERSION_DOT\1/, NG_VERSION.patch)
+    .replace(/(["'])NG_VERSION_CDN\1/, NG_VERSION.cdn)
+    .replace(/(["'])NG_VERSION_CODENAME\1/g, NG_VERSION.codeName);
+}
 
 async function buildAngular(outputFolder) {
   const rootDir = path.resolve(__dirname, '..');
@@ -13,6 +34,7 @@ async function buildAngular(outputFolder) {
 
   const modules = [
     {name: 'angular', group: 'angularSrc', prefix: 'src/angular.prefix', suffix: 'src/angular.suffix'},
+    {name: 'angular-loader', group: 'angularLoader', prefix: 'src/loader.prefix', suffix: 'src/loader.suffix'},
     {name: 'angular-resource', group: 'angularSrcModuleNgResource', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
     {name: 'angular-route', group: 'angularSrcModuleNgRoute', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
     {name: 'angular-cookies', group: 'angularSrcModuleNgCookies', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
@@ -40,7 +62,7 @@ async function buildAngular(outputFolder) {
       ...files.map(f => fs.readFileSync(path.join(rootDir, f), 'utf8')),
       fs.readFileSync(path.join(rootDir, mod.suffix), 'utf8')
     ];
-    const code = parts.join('\n');
+    const code = replaceVersionPlaceholders(parts.join('\n'));
     const base = path.join(outDir, mod.name);
     fs.writeFileSync(`${base}.js`, code);
     const result = await esbuild.transform(code, {
