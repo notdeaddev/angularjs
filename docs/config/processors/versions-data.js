@@ -26,12 +26,13 @@ module.exports = function generateVersionDocProcessor(gitData, log) {
         currentVersion = { version: 'snapshot', full: 'snapshot', isSnapshot: true };
       }
 
-      var allVersions = [currentVersion.version];
+      var allVersions;
       try {
         var output = exec('yarn info angular versions --json', { silent: true }).stdout.split('\n')[0];
         allVersions = processAllVersionsResponse(JSON.parse(output).data);
       } catch (e) {
         log.warn('Failed to fetch Angular versions from yarn; using current version only');
+        allVersions = processAllVersionsResponse(['1.8.3']);
       }
 
       docs.push({

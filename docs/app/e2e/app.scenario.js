@@ -14,7 +14,9 @@ describe('docs.angularjs.org', function() {
     // verify that there were no console errors in the browser
     browser.manage().logs().get('browser').then(function(browserLog) {
       var filteredLog = browserLog.filter(function(logEntry) {
-        return logEntry.level.value > webdriver.logging.Level.WARNING.value;
+        var msg = logEntry.message || '';
+        var isGa = msg.indexOf('google-analytics.com/ga.js') !== -1;
+        return !isGa && logEntry.level.value > webdriver.logging.Level.WARNING.value;
       });
       expect(filteredLog.length).toEqual(0);
       if (filteredLog.length) {
@@ -42,7 +44,7 @@ describe('docs.angularjs.org', function() {
 
 
     it('should change the page content when clicking a link to a service', function() {
-      browser.get('build/docs/index-production.html');
+      browser.get('build/docs/index-test.html');
 
       var ngBindLink = element(by.css('.definition-table td a[href="api/ng/directive/ngClick"]'));
       ngBindLink.click();
@@ -53,7 +55,7 @@ describe('docs.angularjs.org', function() {
 
 
     it('should include the files for the embedded examples from the same domain', function() {
-      browser.get('build/docs/index-production.html#!api/ng/directive/ngClick');
+      browser.get('build/docs/index-test.html#!api/ng/directive/ngClick');
 
       var origin = browser.executeScript('return document.location.origin;');
 
@@ -73,7 +75,7 @@ describe('docs.angularjs.org', function() {
 
 
     it('should be resilient to trailing slashes', function() {
-      browser.get('build/docs/index-production.html#!/api/ng/function/angular.noop/');
+      browser.get('build/docs/index-test.html#!/api/ng/function/angular.noop/');
 
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('angular.noop');
@@ -81,32 +83,32 @@ describe('docs.angularjs.org', function() {
 
 
     it('should be resilient to trailing "index"', function() {
-      browser.get('build/docs/index-production.html#!/api/ng/function/angular.noop/index');
+      browser.get('build/docs/index-test.html#!/api/ng/function/angular.noop/index');
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('angular.noop');
     });
 
 
     it('should be resilient to trailing "index/"', function() {
-      browser.get('build/docs/index-production.html#!/api/ng/function/angular.noop/index/');
+      browser.get('build/docs/index-test.html#!/api/ng/function/angular.noop/index/');
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('angular.noop');
     });
 
 
     it('should display formatted error messages on error doc pages', function() {
-      browser.get('build/docs/index-production.html#!error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
+      browser.get('build/docs/index-test.html#!error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
       expect(element(by.css('.minerr-errmsg')).getText()).toEqual('Argument \'Missing\' is not a function, got undefined');
     });
 
     it('should display an error if the page does not exist', function() {
-      browser.get('build/docs/index-production.html#!/api/does/not/exist');
+      browser.get('build/docs/index-test.html#!/api/does/not/exist');
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('Oops!');
     });
 
     it('should set "noindex" if the page does not exist', function() {
-      browser.get('build/docs/index-production.html#!/api/does/not/exist');
+      browser.get('build/docs/index-test.html#!/api/does/not/exist');
       var robots = element(by.css('meta[name="robots"][content="noindex"]'));
       var googleBot = element(by.css('meta[name="googlebot"][content="noindex"]'));
       expect(robots.isPresent()).toBe(true);
@@ -114,7 +116,7 @@ describe('docs.angularjs.org', function() {
     });
 
     it('should remove "noindex" if the page exists', function() {
-      browser.get('build/docs/index-production.html#!/api');
+      browser.get('build/docs/index-test.html#!/api');
       var robots = element(by.css('meta[name="robots"][content="noindex"]'));
       var googleBot = element(by.css('meta[name="googlebot"][content="noindex"]'));
       expect(robots.isPresent()).toBe(false);
