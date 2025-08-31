@@ -46,7 +46,7 @@ describe('docs.angularjs.org', function() {
     it('should change the page content when clicking a link to a service', function() {
       browser.get('build/docs/index-test.html');
 
-      var ngBindLink = element(by.css('.definition-table td a[href="api/ng/directive/ngClick"]'));
+      var ngBindLink = element(by.css('.definition-table td a[href="#!/api/ng/directive/ngClick"]'));
       ngBindLink.click();
 
       var mainHeader = element(by.css('.main-body h1 '));
@@ -55,7 +55,7 @@ describe('docs.angularjs.org', function() {
 
 
     it('should include the files for the embedded examples from the same domain', function() {
-      browser.get('build/docs/index-test.html#!api/ng/directive/ngClick');
+      browser.get('build/docs/index-test.html#!/api/ng/directive/ngClick');
 
       var origin = browser.executeScript('return document.location.origin;');
 
@@ -97,7 +97,7 @@ describe('docs.angularjs.org', function() {
 
 
     it('should display formatted error messages on error doc pages', function() {
-      browser.get('build/docs/index-test.html#!error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
+      browser.get('build/docs/index-test.html#!/error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
       expect(element(by.css('.minerr-errmsg')).getText()).toEqual('Argument \'Missing\' is not a function, got undefined');
     });
 

@@ -13,7 +13,7 @@ describe('API pages', function() {
   it('should change the page content when clicking a link to a service', function() {
     browser.get('build/docs/index.html');
 
-    var ngBindLink = element(by.css('.definition-table td a[href="api/ng/directive/ngClick"]'));
+    var ngBindLink = element(by.css('.definition-table td a[href="#!/api/ng/directive/ngClick"]'));
     ngBindLink.click();
 
     var mainHeader = element(by.css('.main-body h1 '));

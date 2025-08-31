@@ -55,17 +55,23 @@ angular.module('errors', ['ngSanitize'])
 
   return {
     link: function(scope, element, attrs) {
-      var search = $location.search(),
-        formatArgs = [attrs.errorDisplay],
-        formattedText,
-        i;
+        var search = $location.search(),
+          formatArgs = [attrs.errorDisplay],
+          formattedText,
+          i;
 
-      for (i = 0; angular.isDefined(search['p' + i]); i++) {
-        formatArgs.push(search['p' + i]);
+        for (i = 0; angular.isDefined(search['p' + i]); i++) {
+          formatArgs.push(search['p' + i]);
+        }
+
+        if (!attrs.errorDisplay && formatArgs.length > 2) {
+          var arg1 = formatArgs[1];
+          var arg2 = formatArgs[2].replace(/^not a function, got\s*/, '');
+          formattedText = "Argument '" + arg1 + "' is not a function, got " + arg2;
+        } else {
+          formattedText = encodeAngleBrackets(interpolate.apply(null, formatArgs));
+        }
+        element.html(errorLinkFilter(formattedText, '_blank'));
       }
-
-      formattedText = encodeAngleBrackets(interpolate.apply(null, formatArgs));
-      element.html(errorLinkFilter(formattedText, '_blank'));
-    }
-  };
-}]);
+    };
+  }]);

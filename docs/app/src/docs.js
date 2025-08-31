@@ -10,6 +10,17 @@ angular.module('DocsController', ['currentVersionData'])
 
   var errorPartialPath = 'Error404.html';
 
+  function prefixInternalLinks() {
+    var anchors = $window.document.querySelectorAll('a[href]');
+    angular.forEach(anchors, function(anchor) {
+      var href = anchor.getAttribute('href');
+      if (href && href.indexOf('://') === -1 && href.indexOf('mailto:') !== 0 && href.charAt(0) !== '#') {
+        var normalized = href.charAt(0) === '/' ? href : '/' + href;
+        anchor.setAttribute('href', '#!' + normalized);
+      }
+    });
+  }
+
   $scope.navClass = function(navItem) {
     return {
       active: navItem.href && this.currentPage && this.currentPage.path,
@@ -22,6 +33,7 @@ angular.module('DocsController', ['currentVersionData'])
     var pagePath = $scope.currentPage ? $scope.currentPage.path : $location.path();
     $window._gaq.push(['_trackPageview', pagePath]);
     $scope.loading = false;
+    prefixInternalLinks();
   });
 
   $scope.$on('$includeContentError', function() {

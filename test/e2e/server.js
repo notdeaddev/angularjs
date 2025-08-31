@@ -13,6 +13,10 @@ module.exports = function createServer() {
   const middleware = middlewareFactory('/e2e');
 
   return http.createServer(function(req, res) {
+    if (req.url === '/favicon.ico') {
+      res.statusCode = 204;
+      return res.end();
+    }
     middleware(req, res, function(err) {
       if (err) {
         res.statusCode = 500;
