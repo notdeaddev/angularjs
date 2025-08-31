@@ -39,7 +39,9 @@ function copyAngular() {
     'angular-sanitize',
     'angular-touch',
     'angular-animate',
-    'angular-mocks'
+    'angular-mocks',
+    'angular-aria',
+    'angular-message-format'
   ];
 
   for (const mod of modules) {
