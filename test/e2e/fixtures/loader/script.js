@@ -6,7 +6,6 @@ angular.
     'ngSanitize',
     'ngRoute',
     'ngResource',
-    'ngParseExt',
     'ngMessages',
     'ngMessageFormat',
     'ngCookies',
