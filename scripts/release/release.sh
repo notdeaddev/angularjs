@@ -36,8 +36,8 @@ function init {
 
 function build {
   cd ../..
-  yarn run build
-  yarn run build:min
+  npm run build
+  npm run build:min
   cd $SCRIPT_DIR
 }
 

@@ -9,7 +9,7 @@
 ## <a name="setup"> Development Setup
 
 This document describes how to set up your development environment to build and test AngularJS, and
-explains the basic mechanics of using `git`, `node`, and `yarn`.
+explains the basic mechanics of using `git` and `node`.
 
 ### Installing Dependencies
 
@@ -27,8 +27,7 @@ machine:
   [nvm-windows](https://github.com/coreybutler/nvm-windows))
   to manage and install Node.js, which makes it easy to change the version of Node.js per project.
 
-* [Yarn](https://yarnpkg.com): We use Yarn to install our Node.js module dependencies
-  (rather than using npm). See the detailed [installation instructions][yarn-install].
+* [npm](https://www.npmjs.com/): We use npm to install our Node.js module dependencies.
 
 * [Java](http://www.java.com): We minify JavaScript using
   [Closure Tools](https://developers.google.com/closure/), which require Java (version 7 or higher)
@@ -63,11 +62,11 @@ cd angular.js
 git remote add upstream "https://github.com/angular/angular.js.git"
 
 # Install JavaScript dependencies:
-yarn install
+npm ci
 
 # Build AngularJS:
-yarn build
-yarn build:min
+npm run build
+npm run build:min
 ```
 
 The build output is in the `dist` directory and contains:
@@ -103,13 +102,13 @@ We write unit and integration tests with Jasmine and execute them with Karma. To
 tests once on Chrome run:
 
 ```shell
-yarn test
+npm test
 ```
 
 To run the tests on other browsers use the command line flag:
 
 ```shell
-yarn test --browsers=Chrome,Firefox
+npm test --browsers=Chrome,Firefox
 ```
 
 **Note:** there should be _no spaces between browsers_. `Chrome, Firefox` is INVALID.
@@ -121,9 +120,9 @@ For example, to run the whole unit test suite on selected browsers:
 
 ```shell
 # Browserstack
-yarn test --browsers=BS_Chrome,BS_Firefox,BS_Safari,BS_IE_9,BS_IE_10,BS_IE_11,BS_EDGE,BS_iOS_10
+npm test --browsers=BS_Chrome,BS_Firefox,BS_Safari,BS_IE_9,BS_IE_10,BS_IE_11,BS_EDGE,BS_iOS_10
 # Saucelabs
-yarn test --browsers=SL_Chrome,SL_Firefox,SL_Safari,SL_IE_9,SL_IE_10,SL_IE_11,SL_EDGE,SL_iOS_10
+npm test --browsers=SL_Chrome,SL_Firefox,SL_Safari,SL_IE_9,SL_IE_10,SL_IE_11,SL_EDGE,SL_iOS_10
 ```
 
 Running these commands requires you to set up [Karma Browserstack][karma-browserstack] or
@@ -222,7 +221,7 @@ readable messages** that are easy to follow when looking through the **project h
 we use the git commit messages to **generate the AngularJS change log**.
 
 The commit message formatting can be added using a typical git workflow or through the use of a CLI
-wizard ([Commitizen](https://github.com/commitizen/cz-cli)). To use the wizard, run `yarn run commit`
+wizard ([Commitizen](https://github.com/commitizen/cz-cli)). To use the wizard, run `npm run commit`
 in your terminal after staging your changes in git.
 
 ### Commit Message Format
@@ -309,7 +308,7 @@ documentation generation tool [Dgeni][dgeni].
 The docs can be built from scratch using the build scripts:
 
 ```shell
-yarn build
+npm run build
 ```
 
 This defers the doc-building task to `gulp`.
@@ -318,7 +317,7 @@ Note that the docs app is using the local build files to run. This means you mig
 the minified build:
 
 ```shell
-yarn build:min
+npm run build:min
 ```
 
 (This is also necessary if you are making changes to minErrors).
@@ -475,4 +474,3 @@ You can see an example of a well-defined example [in the `ngRepeat` documentatio
 [karma-browserstack]: https://github.com/karma-runner/karma-browserstack-launcher
 [karma-saucelabs]: https://github.com/karma-runner/karma-sauce-launcher
 [unit-testing]: https://docs.angularjs.org/guide/unit-testing
-[yarn-install]: https://yarnpkg.com/en/docs/install

@@ -9,8 +9,7 @@
     "url": "https://github.com/angular/angular.js.git"
   },
   "engines": {
-    "node": ">=12.14.1",
-    "yarn": ">=1.21.1"
+    "node": ">=12.14.1"
   },
   "scripts": {
     "commit": "git-cz",

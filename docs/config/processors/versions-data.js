@@ -28,10 +28,10 @@ module.exports = function generateVersionDocProcessor(gitData, log) {
 
       var allVersions;
       try {
-        var output = exec('yarn info angular versions --json', { silent: true }).stdout.split('\n')[0];
-        allVersions = processAllVersionsResponse(JSON.parse(output).data);
+        var output = exec('npm view angular versions --json', { silent: true }).stdout;
+        allVersions = processAllVersionsResponse(JSON.parse(output));
       } catch (e) {
-        log.warn('Failed to fetch Angular versions from yarn; using current version only');
+        log.warn('Failed to fetch Angular versions from npm; using current version only');
         allVersions = processAllVersionsResponse(['1.8.3']);
       }
 
@@ -60,7 +60,7 @@ module.exports = function generateVersionDocProcessor(gitData, log) {
 
         var latestMap = {};
 
-        // When the docs are built on a tagged commit, yarn info won't include the latest release,
+        // When the docs are built on a tagged commit, npm view won't include the latest release,
         // so we add it manually based on the local version.json file.
         var missesCurrentVersion = !currentVersion.isSnapshot && !versions.find(function(version) {
           return version === currentVersion.version;

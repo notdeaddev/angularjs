@@ -1,6 +1,6 @@
 # Vendor Libraries
 
-Libraries that are not available via yarn / the npm registry, are checked into git in the `vendor`
+Libraries that are not available via the npm registry are checked into git in the `vendor`
 folder.
 
 Currently this affects the following libraries:
@@ -22,6 +22,5 @@ This project has never been published to npm.
 If a different version becomes available, it must be manually downloaded and replaced in the
 repository.
 
-Should yarn support requiring zip archives in the future (see
-[yarn github issue: Zip support](https://github.com/yarnpkg/yarn/issues/1483)),
-we can remove the libraries from the repository and add them to the package.json.
+If the packages become available on npm in the future, we can remove the libraries from the
+repository and add them to the package.json.
