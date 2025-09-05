@@ -141,7 +141,7 @@ Before you submit your pull request consider the following guidelines:
 * Before creating the Pull Request, package and run all tests a last time:
 
     ```shell
-    yarn test
+    npm test
     ```
 
 * Push your branch to GitHub:

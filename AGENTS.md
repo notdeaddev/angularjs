@@ -17,10 +17,7 @@
 ## 1) Toolchain & Environment
 
 * **Node.js**: Use the version declared in `.nvmrc` or `engines.node` in `package.json`. If both exist, prefer `.nvmrc`.
-* **Package manager**: Use what the repo uses (Yarn or npm). Detect via `yarn.lock` vs `package-lock.json`.
-
-  * If `yarn.lock` exists → use **Yarn (via Corepack)**.
-  * If `package-lock.json` exists → use **npm**.
+* **Package manager**: Use **npm** with the provided `package-lock.json`.
 * **Lockfiles are mandatory.** Never delete or regenerate with a different tool unless the PR is explicitly about migrating package managers.
 * **Chrome for tests**: Karma/Jasmine run headless. If touching the Karma config, ensure `ChromeHeadless` with `--no-sandbox` and `--disable-dev-shm-usage` flags remains supported.
 
@@ -33,12 +30,6 @@ npm run test      # or: npm run test:ci
 npm run lint
 npm run build
 npm run docs
-
-# with yarn (Corepack)
-yarn install --frozen-lockfile
-yarn test:ci
-yarn lint
-yarn build
 ```
 
 > Agents must **use existing package scripts** instead of raw tool invocations when available.
@@ -81,13 +72,12 @@ Examples:
    * If you change `package.json`, you **must** update the lockfile in the **same commit**:
 
      * npm: `npm install --package-lock-only` (or run the actual install) → commit `package-lock.json`.
-     * yarn: `yarn install` → commit `yarn.lock`.
 3. **Dependency upgrades**:
 
    * Patch/minor: allowed if tests and type checks pass.
    * Major: open a separate PR with migration notes, links to changelogs, and code mods if needed.
 4. **Do not add transient, unused deps.** If added, show usage in code or remove.
-5. **Security**: Prefer fixes suggested by `npm audit`/`yarn npm audit`. When suppressing, document why in the PR.
+5. **Security**: Prefer fixes suggested by `npm audit`. When suppressing, document why in the PR.
 
 ---
 
@@ -141,18 +131,18 @@ browsers: ['ChromeHeadlessNoSandbox'],
 
 ## 7) CI & Local Verification
 
-Before committing, an agent must run (depending on package manager):
+Before committing, an agent must run:
 
 ```bash
-# Install with the repo’s tool
-yarn install --frozen-lockfile || npm ci
+# Install dependencies
+npm ci
 
 # Type checks (if configured)
-yarn typecheck || npm run typecheck || true
+npm run typecheck || true
 
 # Lint & tests
-yarn lint || npm run lint
-yarn test:ci || npm run test:ci
+npm run lint
+npm run test:ci
 ```
 
 CI must pass on all required jobs (lint, tests, build). If CI scripts live in `.github/workflows/`, **do not** modify them unless the task is specifically about CI.
@@ -236,15 +226,15 @@ git add package.json package-lock.json
 git commit -m "build(deps-dev): bump angular-mocks to ^1.8.4"
 ```
 
-### Adding a Test for a Fix (Yarn example)
+### Adding a Test for a Fix (npm example)
 
 ```bash
 # implement fix in src/...
 # add matching spec in test/... or src/**/*\.spec.js
 
-yarn install --frozen-lockfile
-yarn lint --fix
-yarn test:ci
+npm ci
+npm run lint --fix
+npm run test:ci
 
 git add -A
 git commit -m "fix(date-parser): handle empty input correctly"
