@@ -51,4 +51,3 @@ jobs:
 
     - name: Run e2e tests
       run: npm run test:e2e
-      continue-on-error: true
