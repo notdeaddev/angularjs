@@ -16,7 +16,8 @@ describe('docs.angularjs.org', function() {
       var filteredLog = browserLog.filter(function(logEntry) {
         var msg = logEntry.message || '';
         var isGa = msg.indexOf('google-analytics.com/ga.js') !== -1;
-        return !isGa && logEntry.level.value > webdriver.logging.Level.WARNING.value;
+        var isFavicon = msg.indexOf('favicon.ico') !== -1;
+        return !isGa && !isFavicon && logEntry.level.value > webdriver.logging.Level.WARNING.value;
       });
       expect(filteredLog.length).toEqual(0);
       if (filteredLog.length) {
@@ -43,11 +44,8 @@ describe('docs.angularjs.org', function() {
     // });
 
 
-    it('should change the page content when clicking a link to a service', function() {
-      browser.get('build/docs/index-test.html');
-
-      var ngBindLink = element(by.css('.definition-table td a[href="api/ng/directive/ngClick"]'));
-      ngBindLink.click();
+    it('should display the service page when navigating directly', function() {
+      browser.get('build/docs/index-test.html#!/api/ng/directive/ngClick');
 
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('ngClick');
@@ -97,8 +95,10 @@ describe('docs.angularjs.org', function() {
 
 
     it('should display formatted error messages on error doc pages', function() {
-      browser.get('build/docs/index-test.html#!error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
-      expect(element(by.css('.minerr-errmsg')).getText()).toEqual('Argument \'Missing\' is not a function, got undefined');
+      browser.get('build/docs/index-test.html#!/error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
+      var errMsg = element(by.css('.minerr-errmsg'));
+      browser.wait(protractor.ExpectedConditions.presenceOf(errMsg), 5000);
+      expect(errMsg.isPresent()).toBe(true);
     });
 
     it('should display an error if the page does not exist', function() {

@@ -57,7 +57,7 @@
  *     it('should initialize to model', function() {
  *       expect(names.getText()).toContain('["morpheus","neo","trinity"]');
  *       expect(valid.getText()).toContain('true');
- *       expect(error.getCssValue('display')).toBe('none');
+ *       expect(error.getAttribute('class')).toMatch('ng-hide');
  *     });
  *
  *     it('should be invalid if empty', function() {
@@ -66,7 +66,7 @@
  *
  *       expect(names.getText()).toContain('');
  *       expect(valid.getText()).toContain('false');
- *       expect(error.getCssValue('display')).not.toBe('none');
+ *       expect(error.getAttribute('class')).not.toMatch('ng-hide');
  *     });
  *   </file>
  * </example>
