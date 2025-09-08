@@ -81,12 +81,14 @@ describe('$anchorScroll', function() {
         await scrollToTop();
 
         await execWithTempViewportHeight(tempHeight, async function() {
-          await buttons.each(async function(button, idx) {
+          var count = await buttons.count();
+          for (var i = 0; i < count; i++) {
+            var button = buttons.get(i);
+            var anchorId = 'anchor-' + (i + 1);
             await button.click();
-            var anchorId = 'anchor-' + (idx + 1);
             await waitForInViewport(anchorId);
             expect(anchorId).toBeInViewport();
-          });
+          }
           await waitForTop('anchor-5', yOffset);
           expect('anchor-5').toHaveTop(yOffset);
         });
