@@ -14,6 +14,6 @@ config.capabilities.chromeOptions = {
 };
 
 config.directConnect = true;
-config.chromeDriver = process.env.CHROMEDRIVER_PATH || '/usr/local/bin/chromedriver';
+config.chromeDriver = process.env.CHROMEDRIVER_PATH || '/usr/bin/chromedriver';
 
 exports.config = config;
