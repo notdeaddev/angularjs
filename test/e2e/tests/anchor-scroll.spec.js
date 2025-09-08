@@ -43,19 +43,23 @@ describe('$anchorScroll', function() {
   });
 
   describe('basic functionality', function() {
-    beforeEach(function() {
-      loadFixture('anchor-scroll');
+    beforeEach(async function() {
+      await loadFixture('anchor-scroll');
     });
 
-    it('should scroll to #bottom when clicking #top and vice versa', function() {
+    it('should scroll to #bottom when clicking #top and vice versa', async function() {
       expect('top').toBeInViewport();
       expect('bottom').not.toBeInViewport();
 
-      element(by.id('top')).click();
+      await element(by.id('top')).click();
+      await waitForInViewport('bottom');
+      await waitForNotInViewport('top');
       expect('top').not.toBeInViewport();
       expect('bottom').toBeInViewport();
 
-      element(by.id('bottom')).click();
+      await element(by.id('bottom')).click();
+      await waitForInViewport('top');
+      await waitForNotInViewport('bottom');
       expect('top').toBeInViewport();
       expect('bottom').not.toBeInViewport();
     });
@@ -66,77 +70,80 @@ describe('$anchorScroll', function() {
     var buttons = element.all(by.repeater('x in [1, 2, 3, 4, 5]'));
     var anchors = element.all(by.repeater('y in [1, 2, 3, 4, 5]'));
 
-    beforeEach(function() {
-      loadFixture('anchor-scroll-y-offset');
+    beforeEach(async function() {
+      await loadFixture('anchor-scroll-y-offset');
     });
 
-    it('should scroll to the correct anchor when clicking each button', function() {
-      var lastAnchor = anchors.last();
+      it('should scroll to the correct anchor when clicking each button', async function() {
+        var size = await browser.driver.executeScript(
+          'return document.getElementById("anchor-5").getBoundingClientRect().height');
+        var tempHeight = size - 10;
+        await scrollToTop();
 
-      // Make sure there is enough room to scroll the last anchor to the top
-      lastAnchor.getSize().then(function(size) {
-        var tempHeight = size.height - 10;
-
-        execWithTempViewportHeight(tempHeight, function() {
-          buttons.each(function(button, idx) {
-            // For whatever reason, we need to run the assertions inside a callback :(
-            button.click().then(function() {
-              var anchorId = 'anchor-' + (idx + 1);
-
-              expect(anchorId).toBeInViewport();
-              expect(anchorId).toHaveTop(yOffset);
-            });
-          });
+        await execWithTempViewportHeight(tempHeight, async function() {
+          var count = await buttons.count();
+          for (var i = 0; i < count; i++) {
+            var button = buttons.get(i);
+            var anchorId = 'anchor-' + (i + 1);
+            await button.click();
+            await waitForInViewport(anchorId);
+            expect(anchorId).toBeInViewport();
+          }
+          await waitForTop('anchor-5', yOffset);
+          expect('anchor-5').toHaveTop(yOffset);
         });
+      });
+
+      it('should automatically scroll when navigating to a URL with a hash', async function() {
+        var lastAnchorId = 'anchor-5';
+        var size = await browser.driver.executeScript(
+          'return document.getElementById("' + lastAnchorId + '").getBoundingClientRect().height');
+        var tempHeight = size - 10;
+        await scrollToTop();
+
+        await execWithTempViewportHeight(tempHeight, async function() {
+        // Test updating `$location.url()` from within the app
+        expect(lastAnchorId).not.toBeInViewport();
+
+        await browser.setLocation('#' + lastAnchorId);
+        await waitForInViewport(lastAnchorId);
+        await waitForTop(lastAnchorId, yOffset);
+        expect(lastAnchorId).toBeInViewport();
+        expect(lastAnchorId).toHaveTop(yOffset);
+
+        // Test navigating to the URL directly
+        await scrollToTop();
+        await waitForNotInViewport(lastAnchorId);
+
+        await browser.refresh();
+        await waitForInViewport(lastAnchorId);
+        await waitForTop(lastAnchorId, yOffset);
+        expect(lastAnchorId).toBeInViewport();
+        expect(lastAnchorId).toHaveTop(yOffset);
       });
     });
 
-    it('should automatically scroll when navigating to a URL with a hash', function() {
-      var lastAnchor = anchors.last();
-      var lastAnchorId = 'anchor-5';
+      it('should not scroll "overzealously"', async function() {
+        var lastButton = buttons.last();
+        var lastAnchorId = 'anchor-5';
 
-      // Make sure there is enough room to scroll the last anchor to the top
-      lastAnchor.getSize().then(function(size) {
-        var tempHeight = size.height - 10;
+        if (browser.params.browser === 'firefox') return;
 
-        execWithTempViewportHeight(tempHeight, function() {
-          // Test updating `$location.url()` from within the app
-          expect(lastAnchorId).not.toBeInViewport();
+        var size = await browser.driver.executeScript(
+          'return document.getElementById("' + lastAnchorId + '").getBoundingClientRect().height');
+        var tempHeight = size + (yOffset / 2);
+        await scrollToTop();
 
-          browser.setLocation('#' + lastAnchorId);
-          expect(lastAnchorId).toBeInViewport();
-          expect(lastAnchorId).toHaveTop(yOffset);
+        await execWithTempViewportHeight(tempHeight, async function() {
+        await scrollIntoView(lastAnchorId);
+        await waitForTop(lastAnchorId, yOffset / 2);
+        expect(lastAnchorId).toHaveTop(yOffset / 2);
 
-          // Test navigating to the URL directly
-          scrollToTop();
-          expect(lastAnchorId).not.toBeInViewport();
-
-          browser.refresh();
-          expect(lastAnchorId).toBeInViewport();
-          expect(lastAnchorId).toHaveTop(yOffset);
-        });
-      });
-    });
-
-    it('should not scroll "overzealously"', function() {
-      var lastButton = buttons.last();
-      var lastAnchor = anchors.last();
-      var lastAnchorId = 'anchor-5';
-
-      if (browser.params.browser === 'firefox') return;
-
-      // Make sure there is not enough room to scroll the last anchor to the top
-      lastAnchor.getSize().then(function(size) {
-        var tempHeight = size.height + (yOffset / 2);
-
-        execWithTempViewportHeight(tempHeight, function() {
-          scrollIntoView(lastAnchorId);
-          expect(lastAnchorId).toHaveTop(yOffset / 2);
-
-          lastButton.click();
-          expect(lastAnchorId).toBeInViewport();
-          expect(lastAnchorId).toHaveTop(yOffset);
-        });
+        await lastButton.click();
+        await waitForInViewport(lastAnchorId);
+        await waitForTop(lastAnchorId, yOffset);
+        expect(lastAnchorId).toBeInViewport();
+        expect(lastAnchorId).toHaveTop(yOffset);
       });
     });
   });
@@ -165,18 +172,41 @@ describe('$anchorScroll', function() {
   /* eslint-enable */
 
   function execWithTempViewportHeight(tempHeight, fn) {
-    setViewportHeight(tempHeight).then(function(oldHeight) {
-      fn();
-      setViewportHeight(oldHeight);
+    return setViewportHeight(tempHeight).then(function(oldHeight) {
+      return Promise.resolve(fn()).finally(function() {
+        return setViewportHeight(oldHeight);
+      });
     });
   }
 
   function scrollIntoView(id) {
-    browser.driver.executeScript('document.getElementById("' + id + '").scrollIntoView()');
+    return browser.driver.executeScript('document.getElementById("' + id + '").scrollIntoView()');
   }
 
   function scrollToTop() {
-    browser.driver.executeScript('window.scrollTo(0, 0)');
+    return browser.driver.executeScript('window.scrollTo(0, 0)');
+  }
+
+  function waitForInViewport(id) {
+    return browser.wait(function() {
+      return browser.driver.executeScript(_script_isInViewport, id);
+    }, 2000);
+  }
+
+  function waitForNotInViewport(id) {
+    return browser.wait(function() {
+      return browser.driver.executeScript(_script_isInViewport, id).then(function(isInViewport) {
+        return !isInViewport;
+      });
+    }, 2000);
+  }
+
+  function waitForTop(id, expectedTop) {
+    return browser.wait(function() {
+      return browser.driver.executeScript(_script_getTop, id).then(function(actualTop) {
+        return Math.abs(expectedTop - actualTop) <= 1;
+      });
+    }, 2000);
   }
 
   function setViewportHeight(newHeight) {
