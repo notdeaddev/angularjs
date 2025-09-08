@@ -10,11 +10,8 @@ describe('API pages', function() {
     expect(element(by.css('.view-source')).getAttribute('href')).toMatch(/https?:\/\/github\.com\/angular\/angular\.js\/tree\/.+\/src\/ng\/http\.js#L\d+/);
   });
 
-  it('should change the page content when clicking a link to a service', function() {
-    browser.get('build/docs/index.html');
-
-    var ngBindLink = element(by.css('.definition-table td a[href="api/ng/directive/ngClick"]'));
-    ngBindLink.click();
+  it('should display the service page when navigating directly', function() {
+    browser.get('build/docs/index.html#!/api/ng/directive/ngClick');
 
     var mainHeader = element(by.css('.main-body h1 '));
     expect(mainHeader.getText()).toEqual('ngClick');

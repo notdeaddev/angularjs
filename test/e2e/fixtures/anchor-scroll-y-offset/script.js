@@ -2,6 +2,9 @@
 
 angular.
   module('test', []).
+  config(['$locationProvider', function($locationProvider) {
+    $locationProvider.hashPrefix('');
+  }]).
   controller('TestController', function($anchorScroll, $location, $scope) {
     $anchorScroll.yOffset = 50;
 
