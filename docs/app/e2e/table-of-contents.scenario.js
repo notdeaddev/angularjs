@@ -127,4 +127,20 @@ describe('table of contents', function() {
       expect(match[1].all(by.css('li')).count()).toBe(3);
     });
   });
+
+  it('should navigate to the correct section when a TOC link is clicked', function() {
+    browser.get('build/docs/index.html#!/guide/services');
+
+    var tocLinks = element.all(by.css('toc-container > div > toc-tree a'));
+    tocLinks.get(1).getAttribute('href').then(function(href) {
+      var id = href.split('#').pop();
+      tocLinks.get(1).click();
+      browser.waitForAngular();
+      expect(browser.getCurrentUrl()).toContain('#!/guide/services#' + id);
+      browser.executeScript('return document.getElementById(arguments[0]).getBoundingClientRect().top;', id)
+        .then(function(top) {
+          expect(top).toBeLessThan(20);
+        });
+    });
+  });
 });

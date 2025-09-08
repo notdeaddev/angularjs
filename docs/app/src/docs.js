@@ -3,9 +3,9 @@
 angular.module('DocsController', ['currentVersionData'])
 
 .controller('DocsController', [
-          '$scope', '$rootScope', '$location', '$window', '$cookies',
+          '$scope', '$rootScope', '$location', '$window', '$cookies', '$anchorScroll',
               'NG_PAGES', 'NG_NAVIGATION', 'CURRENT_NG_VERSION',
-  function($scope, $rootScope, $location, $window, $cookies,
+  function($scope, $rootScope, $location, $window, $cookies, $anchorScroll,
               NG_PAGES, NG_NAVIGATION, CURRENT_NG_VERSION) {
 
   var errorPartialPath = 'Error404.html';
@@ -22,6 +22,7 @@ angular.module('DocsController', ['currentVersionData'])
     var pagePath = $scope.currentPage ? $scope.currentPage.path : $location.path();
     $window._gaq.push(['_trackPageview', pagePath]);
     $scope.loading = false;
+    $anchorScroll();
   });
 
   $scope.$on('$includeContentError', function() {

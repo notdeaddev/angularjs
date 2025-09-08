@@ -1,7 +1,7 @@
 'use strict';
 
 describe('DocsController', function() {
-  var $scope;
+  var $scope, $anchorScroll;
 
   angular.module('fake', [])
     .value('$cookies', {})
@@ -14,7 +14,11 @@ describe('DocsController', function() {
   angular.module('allVersionsData', [])
     .value('ALL_NG_VERSIONS', {});
 
-  beforeEach(module('fake', 'DocsController'));
+  beforeEach(module('fake', 'DocsController', function($provide) {
+    $anchorScroll = jasmine.createSpy('$anchorScroll');
+    $provide.value('$anchorScroll', $anchorScroll);
+  }));
+
   beforeEach(inject(function($rootScope, $controller) {
     $scope = $rootScope;
     $controller('DocsController', { $scope: $scope });
@@ -36,6 +40,11 @@ describe('DocsController', function() {
       $scope.$broadcast('$includeContentLoaded');
       expect($window._gaq.pop()).toEqual(['_trackPageview', 'x/y/z']);
     }));
+
+    it('should scroll to the anchor', function() {
+      $scope.$broadcast('$includeContentLoaded');
+      expect($anchorScroll).toHaveBeenCalled();
+    });
   });
 
   it('should hide the loading indicator after content is loaded', inject(function($compile) {
