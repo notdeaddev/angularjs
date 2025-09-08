@@ -13,8 +13,7 @@ var helper = {
       fixture += '?jquery';
     }
 
-    browser.get('/e2e/fixtures/' + fixture);
-    return helper;
+    return browser.get('/e2e/fixtures/' + fixture).then(() => helper);
   }
 };
 

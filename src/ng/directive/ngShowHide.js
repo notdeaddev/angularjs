@@ -121,9 +121,14 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
         var checkbox = element(by.model('checked'));
         var checkElem = element(by.css('.check-element'));
 
-        expect(checkElem.isDisplayed()).toBe(false);
+        expect(checkElem.getAttribute('class')).toMatch('ng-hide');
         checkbox.click();
-        expect(checkElem.isDisplayed()).toBe(true);
+        browser.wait(function() {
+          return checkElem.getAttribute('class').then(function(cls) {
+            return cls.indexOf('ng-hide') === -1;
+          });
+        }, 5000);
+        expect(checkElem.getAttribute('class')).not.toMatch('ng-hide');
       });
     </file>
   </example>
@@ -176,9 +181,14 @@ var NG_HIDE_IN_PROGRESS_CLASS = 'ng-hide-animate';
         var checkbox = element(by.model('checked'));
         var checkElem = element(by.css('.check-element'));
 
-        expect(checkElem.isDisplayed()).toBe(false);
+        expect(checkElem.getAttribute('class')).toMatch('ng-hide');
         checkbox.click();
-        expect(checkElem.isDisplayed()).toBe(true);
+        browser.wait(function() {
+          return checkElem.getAttribute('class').then(function(cls) {
+            return cls.indexOf('ng-hide') === -1;
+          });
+        }, 5000);
+        expect(checkElem.getAttribute('class')).not.toMatch('ng-hide');
       });
     </file>
   </example>
@@ -340,9 +350,14 @@ var ngShowDirective = ['$animate', function($animate) {
         var checkbox = element(by.model('checked'));
         var checkElem = element(by.css('.check-element'));
 
-        expect(checkElem.isDisplayed()).toBe(true);
+        expect(checkElem.getAttribute('class')).not.toMatch('ng-hide');
         checkbox.click();
-        expect(checkElem.isDisplayed()).toBe(false);
+        browser.wait(function() {
+          return checkElem.getAttribute('class').then(function(cls) {
+            return cls.indexOf('ng-hide') !== -1;
+          });
+        }, 5000);
+        expect(checkElem.getAttribute('class')).toMatch('ng-hide');
       });
     </file>
   </example>
@@ -395,9 +410,14 @@ var ngShowDirective = ['$animate', function($animate) {
         var checkbox = element(by.model('checked'));
         var checkElem = element(by.css('.check-element'));
 
-        expect(checkElem.isDisplayed()).toBe(true);
+        expect(checkElem.getAttribute('class')).not.toMatch('ng-hide');
         checkbox.click();
-        expect(checkElem.isDisplayed()).toBe(false);
+        browser.wait(function() {
+          return checkElem.getAttribute('class').then(function(cls) {
+            return cls.indexOf('ng-hide') !== -1;
+          });
+        }, 5000);
+        expect(checkElem.getAttribute('class')).toMatch('ng-hide');
       });
     </file>
   </example>
