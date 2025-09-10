@@ -21,7 +21,6 @@
  */
 
 // define ngTouch module
-/* global ngTouch */
 var ngTouch = angular.module('ngTouch', []);
 
 ngTouch.info({ angularVersion: '"NG_VERSION_FULL"' });

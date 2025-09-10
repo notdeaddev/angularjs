@@ -1,7 +1,6 @@
 'use strict';
 
 /* global angularModule: true,
-  version: true,
 
   $CompileProvider,
 

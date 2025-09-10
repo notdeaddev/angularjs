@@ -1,13 +1,6 @@
 'use strict';
 
-/* global VALID_CLASS: true,
-  INVALID_CLASS: true,
-  PRISTINE_CLASS: true,
-  DIRTY_CLASS: true,
-  UNTOUCHED_CLASS: true,
-  TOUCHED_CLASS: true,
-  PENDING_CLASS: true,
-  addSetValidityMethod: true,
+/* global addSetValidityMethod: true,
   setupValidity: true,
   defaultModelOptions: false
 */

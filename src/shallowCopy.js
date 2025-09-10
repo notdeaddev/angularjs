@@ -1,6 +1,6 @@
 'use strict';
 
-/* global shallowCopy: true */
+/* exported shallowCopy */
 
 /**
  * Creates a shallow copy of an object, an array or a primitive.

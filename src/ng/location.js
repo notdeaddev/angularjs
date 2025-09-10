@@ -1,5 +1,5 @@
 'use strict';
-/* global stripHash: true */
+/* exported stripHash */
 
 var PATH_MATCH = /^([^?#]*)(\?([^#]*))?(#(.*))?$/,
     DEFAULT_PORTS = {'http': 80, 'https': 443, 'ftp': 21};

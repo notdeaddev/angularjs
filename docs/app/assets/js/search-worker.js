@@ -1,7 +1,7 @@
 'use strict';
 
 /* eslint-env worker */
-/* global importScripts, lunr */
+/* global lunr */
 
 // Load up the lunr library
 importScripts('../components/lunr-0.7.2/lunr.min.js');

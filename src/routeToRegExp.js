@@ -1,6 +1,6 @@
 'use strict';
 
-/* global routeToRegExp: true */
+/* exported routeToRegExp */
 
 /**
  * @param {string} path - The path to parse. (It is assumed to have query and hash stripped off.)

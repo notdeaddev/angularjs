@@ -79,7 +79,7 @@ async function minifyAsset(source, target) {
   fs.writeFileSync(target + '.map', result.map);
 }
 
-function copyComponent(component, pattern='/**/*', base='', sourceFolder='node_modules', packageFile='package.json') {
+function copyComponent(component, pattern = '/**/*', base = '', sourceFolder = 'node_modules', packageFile = 'package.json') {
   const srcRoot = path.join(rootDir, sourceFolder, component);
   const version = JSON.parse(fs.readFileSync(path.join(srcRoot, packageFile), 'utf8')).version;
   const destRoot = path.join(outputFolder, 'components', `${component}-${version}`);

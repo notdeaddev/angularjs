@@ -460,7 +460,6 @@ MessageFormatParser.prototype.ruleInAngularExpression = function ruleInAngularEx
       this.expressionFn = this.$parse(this.text.substring(this.expressionStartIndex, this.index));
       // Needed to pretend to be $interpolate for tests copied from interpolateSpec.js
       this.expressionFn['exp'] = this.text.substring(this.expressionStartIndex, this.index);
-      this.expressionFn['expressions'] = this.expressionFn['expressions'];
       this.rule = null;
       return;
     }
@@ -488,7 +487,6 @@ MessageFormatParser.prototype.ruleInAngularExpression = function ruleInAngularEx
       this.expressionFn = this.$parse(this.text.substring(this.expressionStartIndex, match.index));
       // Needed to pretend to be $interpolate for tests copied from interpolateSpec.js
       this.expressionFn['exp'] = this.text.substring(this.expressionStartIndex, match.index);
-      this.expressionFn['expressions'] = this.expressionFn['expressions'];
       this.rule = null;
       this.rule = this.rulePluralOrSelect;
     }
@@ -517,6 +515,5 @@ MessageFormatParser.prototype.ruleInAngularExpression = function ruleInAngularEx
   this.expressionFn = this.$parse(this.text.substring(this.expressionStartIndex, this.index));
   // Needed to pretend to be $interpolate for tests copied from interpolateSpec.js
   this.expressionFn['exp'] = this.text.substring(this.expressionStartIndex, this.index);
-  this.expressionFn['expressions'] = this.expressionFn['expressions'];
   this.rule = null;
 };

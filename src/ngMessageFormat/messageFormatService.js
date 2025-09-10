@@ -5,10 +5,6 @@
 // This file is compiled with Closure compiler's ADVANCED_OPTIMIZATIONS flag! Be wary of using
 // constructs incompatible with that mode.
 
-/* global $interpolateMinErr: true */
-/* global isFunction: true */
-/* global noop: true */
-/* global toJson: true */
 /* global MessageFormatParser: false */
 
 /**

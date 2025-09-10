@@ -1902,7 +1902,7 @@ describe('parser', function() {
         expect(scope.$eval('true===3===3')).toEqual(true === 3 === 3);
         expect(scope.$eval('3===3===true')).toEqual(3 === 3 === true);
         expect(scope.$eval('3 >= 3 > 2')).toEqual(3 >= 3 > 2);
-        /* eslint-enable */
+        /* eslint-enable eqeqeq, no-self-compare */
       });
 
       it('should parse logical', function() {

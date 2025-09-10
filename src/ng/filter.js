@@ -1,15 +1,14 @@
 'use strict';
 
-/* global currencyFilter: true,
- dateFilter: true,
- filterFilter: true,
- jsonFilter: true,
- limitToFilter: true,
- lowercaseFilter: true,
- numberFilter: true,
- orderByFilter: true,
- uppercaseFilter: true,
- */
+/* exported dateFilter,
+  filterFilter,
+  jsonFilter,
+  limitToFilter,
+  lowercaseFilter,
+  numberFilter,
+  orderByFilter,
+  uppercaseFilter
+*/
 
 /**
  * @ngdoc provider

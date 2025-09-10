@@ -1,8 +1,6 @@
 'use strict';
 
 describe('HTML', function() {
-  var ua = window.navigator.userAgent;
-  var isChrome = /Chrome/.test(ua) && !/Edge/.test(ua);
 
   var expectHTML;
 
