@@ -1599,7 +1599,7 @@ function createDateInputType(type, regexp, parseDate, format) {
 
     function isValidDate(value) {
       // Invalid Date: getTime() returns NaN
-      return value && !(value.getTime && value.getTime() !== value.getTime());
+      return value && !(value.getTime && isNumberNaN(value.getTime()));
     }
 
     function parseObservedDateValue(val) {

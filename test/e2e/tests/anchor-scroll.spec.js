@@ -68,7 +68,6 @@ describe('$anchorScroll', function() {
   describe('with `yOffset`', function() {
     var yOffset = 50;
     var buttons = element.all(by.repeater('x in [1, 2, 3, 4, 5]'));
-    var anchors = element.all(by.repeater('y in [1, 2, 3, 4, 5]'));
 
     beforeEach(async function() {
       await loadFixture('anchor-scroll-y-offset');

@@ -2,6 +2,10 @@
   "root": true,
   "extends": "../.eslintrc-browser.json",
 
+  "rules": {
+    "no-redeclare": ["error", {"builtinGlobals": false}]
+  },
+
   "globals": {
     /* auto/injector.js */
     "createInjector": false,

@@ -1,4 +1,4 @@
-/* global _jQuery: true, _jqLiteMode: true */
+/* exported _jQuery, _jqLiteMode */
 'use strict';
 
 var _jQuery = jQuery.noConflict(true),

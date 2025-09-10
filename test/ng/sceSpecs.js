@@ -23,7 +23,6 @@ describe('SCE', function() {
   });
 
   describe('IE<11 quirks mode', function() {
-    /* global msie: true */
     var msieBackup;
 
     beforeEach(function() {

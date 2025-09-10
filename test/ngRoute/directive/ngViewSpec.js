@@ -59,10 +59,9 @@ describe('ngView', function() {
 
 
     it('should instantiate the associated controller when an empty template is downloaded', function() {
-      var log = [], controllerScope,
+      var controllerScope,
           Ctrl = function($scope) {
             controllerScope = $scope;
-            log.push('ctrl-init');
           };
 
       module(function($routeProvider) {
@@ -83,7 +82,7 @@ describe('ngView', function() {
 
 
     it('should instantiate controller with an alias', function() {
-      var log = [], controllerScope;
+      var controllerScope;
 
       function Ctrl($scope) {
         this.name = 'alias';
@@ -783,7 +782,6 @@ describe('ngView', function() {
       it('should fire off the leave animation',
           inject(function($compile, $rootScope, $location, $templateCache, $timeout, $animate) {
 
-        var item;
         $templateCache.put('/foo.html', [200, '<div>foo</div>', {}]);
         element = $compile(html('<div ng-view></div>'))($rootScope);
 
@@ -800,7 +798,6 @@ describe('ngView', function() {
 
       it('should animate two separate ngView elements',
         inject(function($compile, $rootScope, $templateCache, $location, $animate) {
-          var item;
           $rootScope.tpl = 'one';
           element = $compile(html('<div ng-view></div>'))($rootScope);
           $rootScope.$digest();
@@ -877,7 +874,6 @@ describe('ngView', function() {
 
       it('should not double compile when the route changes', function() {
 
-        var window;
         module(function($routeProvider, $animateProvider, $provide) {
           $routeProvider.when('/foo', {template: '<div ng-repeat="i in [1,2]">{{i}}</div>'});
           $routeProvider.when('/bar', {template: '<div ng-repeat="i in [3,4]">{{i}}</div>'});
@@ -918,9 +914,6 @@ describe('ngView', function() {
 
           expect(element.text()).toEqual('34');
 
-          function n(text) {
-            return text.replace(/\r\n/m, '').replace(/\r\n/m, '');
-          }
         });
       });
 

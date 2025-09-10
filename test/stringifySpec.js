@@ -5,7 +5,7 @@ describe('toDebugString', function() {
     expect(toDebugString('string')).toEqual('string');
     expect(toDebugString(123)).toEqual('123');
     expect(toDebugString({a:{b:'c'}})).toEqual('{"a":{"b":"c"}}');
-    expect(toDebugString(function fn() { var a = 10; })).toEqual('function fn()');
+    expect(toDebugString(function fn() {})).toEqual('function fn()');
     expect(toDebugString()).toEqual('undefined');
     var a = { };
     a.a = a;

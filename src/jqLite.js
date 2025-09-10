@@ -11,11 +11,7 @@
  *     Or gives undesired access to variables likes document or window?    *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/* global
-  JQLitePrototype: true,
-  BOOLEAN_ATTR: true,
-  ALIASED_ATTR: true
-*/
+/* global */
 
 //////////////////////////////////
 //JQLite

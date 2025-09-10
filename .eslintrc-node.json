@@ -2,7 +2,8 @@
   "extends": "./.eslintrc-base.json",
   "env": {
     "browser": false,
-    "node": true
+    "node": true,
+    "es2021": true
   },
   "parserOptions": {
     "ecmaVersion": 2017

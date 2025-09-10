@@ -12,7 +12,8 @@
     // those ones here.
     "no-invalid-this": "off",
     "no-throw-literal": "off",
-    "no-unused-vars": "off"
+    "no-unused-vars": "warn",
+    "no-redeclare": ["error", {"builtinGlobals": false}]
   },
 
   "globals": {
@@ -27,9 +28,9 @@
     "angular": false,
     "minErrConfig": false,
     "errorHandlingConfig": false,
-    "msie": false,
+    "msie": true,
     "jqLite": false,
-    "jQuery": false,
+    "jQuery": true,
     "slice": false,
     "push": false,
     "toString": false,
@@ -37,7 +38,7 @@
     "_angular": false,
     "angularModule": false,
     "nodeName_": false,
-    "uid": false,
+    "uid": true,
     "toDebugString": false,
     "serializeObject": false,
 
@@ -157,26 +158,27 @@
     "dump": false,
     "they": false,
     "fthey": false,
-    "xthey": false,
-    "assertCompareNodes": false,
+    "xthey": true,
+    "assertCompareNodes": true,
 
     /* testabilityPatch / matchers */
-    "inject": false,
-    "module": false,
-    "dealoc": false,
-    "_jQuery": false,
-    "_jqLiteMode": false,
-    "sortedHtml": false,
-    "childrenTagsOf": false,
-    "assertHidden": false,
-    "assertVisible": false,
-    "provideLog": false,
-    "spyOnlyCallsWithArgs": false,
-    "createMockStyleSheet": false,
-    "browserSupportsCssAnimations": false,
-    "browserTrigger": false,
-    "jqLiteCacheSize": false,
-    "createAsync": false,
-    "support": false
+    "inject": true,
+    "module": true,
+    "dealoc": true,
+    "_jQuery": true,
+    "_jqLiteMode": true,
+    "sortedHtml": true,
+    "childrenTagsOf": true,
+    "assertHidden": true,
+    "assertVisible": true,
+    "provideLog": true,
+    "spyOnlyCallsWithArgs": true,
+    "createMockStyleSheet": true,
+    "browserSupportsCssAnimations": true,
+    "browserTrigger": true,
+    "jqLiteCacheSize": true,
+    "createAsync": true,
+    "support": true,
+    "pending": true
   }
 }

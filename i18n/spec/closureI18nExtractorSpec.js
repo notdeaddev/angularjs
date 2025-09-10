@@ -277,6 +277,7 @@ describe('serializeContent', function() {
   });
   it('should only have ascii characters', function() {
     var serializedContent = closureI18nExtractor.serializeContent(newTestLocaleInfo());
+    // eslint-disable-next-line no-control-regex
     expect((/[^\u0001-\u007f]/).test(serializedContent)).toBe(false);
   });
   it('should not transform arrays into objects', function() {
