@@ -1062,8 +1062,8 @@ describe('ngView', function () {
       })
     );
 
-    it('should work correctly upon initial page load', // Injecting `$location` here is necessary, so that it gets instantiated early
-    inject(function ($compile, $location, $rootScope, $timeout) {
+    // Injecting `$location` here is necessary, so that it gets instantiated early
+    it('should work correctly upon initial page load', inject(function ($compile, $location, $rootScope, $timeout) {
       var elem = $compile('<async-view></async-view>')($rootScope);
       $rootScope.$digest();
       $timeout.flush(500);
