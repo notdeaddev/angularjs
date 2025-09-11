@@ -1,0 +1,12 @@
+build/**
+docs/app/assets/js/angular-bootstrap/**
+node_modules/**
+lib/htmlparser/**
+src/angular.bind.js
+src/ngParseExt/ucd.js
+i18n/**
+tmp/**
+vendor/**
+package-lock.json
+benchmarks/**/*.html
+docs/config/templates/**

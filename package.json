@@ -28,6 +28,8 @@
     "test:e2e": "CHROMEDRIVER_PATH=${CHROMEDRIVER_PATH:-/usr/bin/chromedriver} npx protractor protractor-conf.js",
     "lint": "node scripts/validate-angular-files.js && npm run lint:eslint",
     "lint:eslint": "npx eslint *.js benchmarks docs lib scripts src test i18n",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
     "docs": "npm run build && node scripts/build-docs.js"
   },
   "devDependencies": {
@@ -75,6 +77,7 @@
     "node-html-encoder": "0.0.2",
     "npm-run": "^4.1.0",
     "open-sans-fontface": "^1.4.0",
+    "prettier": "^3.6.2",
     "promises-aplus-tests": "~2.1.0",
     "protractor": "^7.0.0",
     "puppeteer": "^23.0.2",

@@ -16,10 +16,11 @@
 
 ## 1) Toolchain & Environment
 
-* **Node.js**: Use the version declared in `.nvmrc` or `engines.node` in `package.json`. If both exist, prefer `.nvmrc`.
-* **Package manager**: Use **npm** with the provided `package-lock.json`.
-* **Lockfiles are mandatory.** Never delete or regenerate with a different tool unless the PR is explicitly about migrating package managers.
-* **Chrome for tests**: Karma/Jasmine run headless. If touching the Karma config, ensure `ChromeHeadless` with `--no-sandbox` and `--disable-dev-shm-usage` flags remains supported.
+- **Node.js**: Use the version declared in `.nvmrc` or `engines.node` in `package.json`. If both exist, prefer `.nvmrc`.
+- **Package manager**: Use **npm** with the provided `package-lock.json`.
+- **Formatting**: Don't hand-format code. Always run `npm run prettier` before committing any changes.
+- **Lockfiles are mandatory.** Never delete or regenerate with a different tool unless the PR is explicitly about migrating package managers.
+- **Chrome for tests**: Karma/Jasmine run headless. If touching the Karma config, ensure `ChromeHeadless` with `--no-sandbox` and `--disable-dev-shm-usage` flags remains supported.
 
 ### Allowed commands (examples)
 
@@ -38,9 +39,9 @@ npm run docs
 
 ## 2) Git & Branching
 
-* **Branch from `main`**: `feature/<short-topic>`, `fix/<short-topic>`, or `chore/<short-topic>`.
-* **Keep history clean**: Rebase your branch on latest `main` before opening/updating PRs.
-* **No force‑push to protected branches.**
+- **Branch from `main`**: `feature/<short-topic>`, `fix/<short-topic>`, or `chore/<short-topic>`.
+- **Keep history clean**: Rebase your branch on latest `main` before opening/updating PRs.
+- **No force‑push to protected branches.**
 
 ### Commit messages — Conventional Commits
 
@@ -58,9 +59,9 @@ Allowed `<type>`: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `b
 
 Examples:
 
-* `fix(auth): prevent double bootstrap on token refresh`
-* `test(directives): add specs for date parser`
-* `build(deps): bump angular 1.8.x to latest patch`
+- `fix(auth): prevent double bootstrap on token refresh`
+- `test(directives): add specs for date parser`
+- `build(deps): bump angular 1.8.x to latest patch`
 
 ---
 
@@ -68,14 +69,13 @@ Examples:
 
 1. **Match existing semver style** used in the repo (e.g., caret `^`, tilde `~`, or pinned). Do not mix styles.
 2. **Lockfile discipline**:
+   - If you change `package.json`, you **must** update the lockfile in the **same commit**:
+     - npm: `npm install --package-lock-only` (or run the actual install) → commit `package-lock.json`.
 
-   * If you change `package.json`, you **must** update the lockfile in the **same commit**:
-
-     * npm: `npm install --package-lock-only` (or run the actual install) → commit `package-lock.json`.
 3. **Dependency upgrades**:
+   - Patch/minor: allowed if tests and type checks pass.
+   - Major: open a separate PR with migration notes, links to changelogs, and code mods if needed.
 
-   * Patch/minor: allowed if tests and type checks pass.
-   * Major: open a separate PR with migration notes, links to changelogs, and code mods if needed.
 4. **Do not add transient, unused deps.** If added, show usage in code or remove.
 5. **Security**: Prefer fixes suggested by `npm audit`. When suppressing, document why in the PR.
 
@@ -83,23 +83,23 @@ Examples:
 
 ## 4) AngularJS Code Standards
 
-* **Component first**: Prefer `angular.module(...).component()` over legacy controllers where feasible.
-* **DI safety**: Use array annotation or `ng-annotate`/`ng-strict-di` so minification is safe.
-* **Modules**: Keep module names stable; avoid circular deps.
-* **Templates**: Put HTML in template files; test them via `ng-html2js` preprocessor.
-* **Avoid global state**: Use services/factories; avoid leaking to `window`.
-* **Controllers**: Use `controllerAs` syntax; avoid `$scope` unless required by legacy zones. When necessary, scope usage must be minimal.
-* **Async**: Prefer `$http`/`$q`/promises consistent with existing code; don’t introduce new async libs casually.
-* **Performance**: Avoid deep `$watch`. Use one‑time bindings `::` where safe.
+- **Component first**: Prefer `angular.module(...).component()` over legacy controllers where feasible.
+- **DI safety**: Use array annotation or `ng-annotate`/`ng-strict-di` so minification is safe.
+- **Modules**: Keep module names stable; avoid circular deps.
+- **Templates**: Put HTML in template files; test them via `ng-html2js` preprocessor.
+- **Avoid global state**: Use services/factories; avoid leaking to `window`.
+- **Controllers**: Use `controllerAs` syntax; avoid `$scope` unless required by legacy zones. When necessary, scope usage must be minimal.
+- **Async**: Prefer `$http`/`$q`/promises consistent with existing code; don’t introduce new async libs casually.
+- **Performance**: Avoid deep `$watch`. Use one‑time bindings `::` where safe.
 
 ---
 
 ## 5) Testing Policy (Karma + Jasmine)
 
-* **Mandatory**: All new logic must come with Jasmine specs.
-* **Coverage**: Maintain or improve coverage. If the repo defines thresholds, they must stay green.
-* **Headless**: Ensure tests run in `ChromeHeadless` in CI; do not remove `--no-sandbox`/`--disable-dev-shm-usage` flags.
-* **Fixtures & Templates**: If a test relies on HTML templates, configure `ng-html2js` and load the `templates` module.
+- **Mandatory**: All new logic must come with Jasmine specs.
+- **Coverage**: Maintain or improve coverage. If the repo defines thresholds, they must stay green.
+- **Headless**: Ensure tests run in `ChromeHeadless` in CI; do not remove `--no-sandbox`/`--disable-dev-shm-usage` flags.
+- **Fixtures & Templates**: If a test relies on HTML templates, configure `ng-html2js` and load the `templates` module.
 
 Example snippet for `karma.conf.js` (reference):
 
@@ -123,9 +123,9 @@ browsers: ['ChromeHeadlessNoSandbox'],
 
 ## 6) Linting & Formatting
 
-* **ESLint**: Run `lint` and fix autofixable issues (`--fix`) when appropriate.
-* **Prettier** (if present): Do not change its configuration; run the repo’s format script if it exists.
-* **No style churn**: Do not reformat unrelated files; limit formatting to the changed lines/files.
+- **ESLint**: Run `lint` and fix autofixable issues (`--fix`) when appropriate.
+- **Prettier**: Formatting is automated. Run `npm run prettier` before committing; do not tweak its config.
+- **No style churn**: Do not reformat unrelated files; limit formatting to the changed lines/files.
 
 ---
 
@@ -151,24 +151,25 @@ CI must pass on all required jobs (lint, tests, build). If CI scripts live in `.
 
 ## 8) Files & Project Hygiene
 
-* **Respect folder layout** (e.g., `src/`, `test/`, `app/`, `lib/`). Add new files where similar ones live.
-* **No build artifacts**: Don’t commit `dist/` unless the repo historically does and the PR is about releases.
-* **Docs**: Update README/CHANGELOG when user‑visible behavior or public APIs change.
-* **Feature flags**: Follow existing patterns; default to disabled unless specified.
+- **Respect folder layout** (e.g., `src/`, `test/`, `app/`, `lib/`). Add new files where similar ones live.
+- **No build artifacts**: Don’t commit `dist/` unless the repo historically does and the PR is about releases.
+- **Docs**: Update README/CHANGELOG when user‑visible behavior or public APIs change.
+- **Feature flags**: Follow existing patterns; default to disabled unless specified.
 
 ---
 
 ## 9) PR Checklist (Agent MUST verify all)
 
-* [ ] Branch created from latest `main` and rebased
-* [ ] Conventional Commit messages used
-* [ ] Only one logical topic in this PR
-* [ ] `package.json` and lockfile updated together (if applicable)
-* [ ] Lint passes locally
-* [ ] Docs build passes locally (`npm run docs`)
-* [ ] Tests added/updated and passing locally
-* [ ] CI green (tests, lint, build)
-* [ ] Docs/notes updated (if behavior changed)
+- [ ] Branch created from latest `main` and rebased
+- [ ] Conventional Commit messages used
+- [ ] Only one logical topic in this PR
+- [ ] `package.json` and lockfile updated together (if applicable)
+- [ ] `npm run prettier` executed
+- [ ] Lint passes locally
+- [ ] Docs build passes locally (`npm run docs`)
+- [ ] Tests added/updated and passing locally
+- [ ] CI green (tests, lint, build)
+- [ ] Docs/notes updated (if behavior changed)
 
 ---
 
@@ -176,33 +177,33 @@ CI must pass on all required jobs (lint, tests, build). If CI scripts live in `.
 
 When refactoring legacy AngularJS code:
 
-* **No behavior changes** without tests first.
-* Introduce components gradually; keep APIs stable.
-* Use codemods or scripted edits where possible; include the script in the PR for traceability.
-* Run tests after each logical step; keep commits small.
+- **No behavior changes** without tests first.
+- Introduce components gradually; keep APIs stable.
+- Use codemods or scripted edits where possible; include the script in the PR for traceability.
+- Run tests after each logical step; keep commits small.
 
 ---
 
 ## 11) Dependency & Browser Support
 
-* **Target browsers**: Keep compatibility as declared in the repo (e.g., Chrome headless in CI). Do not drop support without approval.
-* **Polyfills**: If adding/removing, document rationale and verify bundle impact.
+- **Target browsers**: Keep compatibility as declared in the repo (e.g., Chrome headless in CI). Do not drop support without approval.
+- **Polyfills**: If adding/removing, document rationale and verify bundle impact.
 
 ---
 
 ## 12) Security & Compliance
 
-* No secrets in code, configs, or tests. Use environment variables or CI secrets.
-* For third‑party code: include license headers or NOTICE updates if required.
-* Avoid introducing network access in tests unless mocked.
+- No secrets in code, configs, or tests. Use environment variables or CI secrets.
+- For third‑party code: include license headers or NOTICE updates if required.
+- Avoid introducing network access in tests unless mocked.
 
 ---
 
 ## 13) Communication in PRs
 
-* Provide a clear description, screenshots/GIFs for UI changes, and migration notes when relevant.
-* Link issues, RFCs, or discussion threads.
-* For breaking changes, include a **Migration** section and mark `BREAKING CHANGE` in the commit trailer.
+- Provide a clear description, screenshots/GIFs for UI changes, and migration notes when relevant.
+- Link issues, RFCs, or discussion threads.
+- For breaking changes, include a **Migration** section and mark `BREAKING CHANGE` in the commit trailer.
 
 ---
 
@@ -244,11 +245,11 @@ git commit -m "fix(date-parser): handle empty input correctly"
 
 ## 15) What Agents MUST NOT Do
 
-* Do **not** change package manager or Node version casually.
-* Do **not** reformat the entire codebase.
-* Do **not** commit failing tests or `xit`/`xdescribe` to bypass failures.
-* Do **not** disable linters/TypeScript rules unless tightly scoped and justified.
-* Do **not** introduce new libraries when built‑ins or existing deps suffice.
+- Do **not** change package manager or Node version casually.
+- Do **not** reformat the entire codebase.
+- Do **not** commit failing tests or `xit`/`xdescribe` to bypass failures.
+- Do **not** disable linters/TypeScript rules unless tightly scoped and justified.
+- Do **not** introduce new libraries when built‑ins or existing deps suffice.
 
 ---
 
