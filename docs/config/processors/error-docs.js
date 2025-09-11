@@ -9,8 +9,7 @@ module.exports = function errorDocsProcessor(log, errorNamespaceMap, getMinerrIn
   return {
     $runAfter: ['tags-extracted'],
     $runBefore: ['extra-docs-added'],
-    $process: function(docs) {
-
+    $process: function (docs) {
       // Get the extracted min errors to compare with the error docs, and report any mismatch
       var collectedErrors = {};
       try {
@@ -27,11 +26,10 @@ module.exports = function errorDocsProcessor(log, errorNamespaceMap, getMinerrIn
       }
 
       // Create error namespace docs and attach error docs to each
-      docs.forEach(function(doc) {
+      docs.forEach(function (doc) {
         var parts, namespaceDoc;
 
         if (doc.docType === 'error') {
-
           var matchingMinErr = flatErrors.indexOf(doc.name);
 
           if (matchingMinErr === -1) {
@@ -65,11 +63,11 @@ module.exports = function errorDocsProcessor(log, errorNamespaceMap, getMinerrIn
         }
       });
 
-      flatErrors.forEach(function(value) {
+      flatErrors.forEach(function (value) {
         log.warn('No error doc exists for min error: ' + value);
       });
 
-      errorNamespaceMap.forEach(function(errorNamespace) {
+      errorNamespaceMap.forEach(function (errorNamespace) {
         docs.push(errorNamespace);
       });
     }

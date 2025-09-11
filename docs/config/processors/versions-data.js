@@ -15,8 +15,7 @@ module.exports = function generateVersionDocProcessor(gitData, log) {
     $runBefore: ['rendering-docs'],
     // Remove rogue builds that are in the npm repository but not on code.angularjs.org
     ignoredBuilds: ['1.3.4-build.3588'],
-    $process: function(docs) {
-
+    $process: function (docs) {
       var ignoredBuilds = this.ignoredBuilds;
       var currentVersion;
       try {
@@ -55,66 +54,57 @@ module.exports = function generateVersionDocProcessor(gitData, log) {
         serviceValue: allVersions
       });
 
-
       function processAllVersionsResponse(versions) {
-
         var latestMap = {};
 
         // When the docs are built on a tagged commit, npm view won't include the latest release,
         // so we add it manually based on the local version.json file.
-        var missesCurrentVersion = !currentVersion.isSnapshot && !versions.find(function(version) {
-          return version === currentVersion.version;
-        });
+        var missesCurrentVersion =
+          !currentVersion.isSnapshot &&
+          !versions.find(function (version) {
+            return version === currentVersion.version;
+          });
 
         if (missesCurrentVersion) versions.push(currentVersion.version);
 
         versions = versions
-            .filter(function(versionStr) {
-              return ignoredBuilds.indexOf(versionStr) === -1;
-            })
-            .map(function(versionStr) {
-              return semver.parse(versionStr);
-            })
-            .filter(function(version) {
-              return version && version.major > 0;
-            })
-            .map(function(version) {
-              var key = version.major + '.' + version.minor;
-              var latest = latestMap[key];
-              if (!latest || version.compare(latest) > 0) {
-                latestMap[key] = version;
-              }
-              return version;
-            })
-            .map(function(version) {
-              return makeOption(version);
-            })
-            .reverse();
+          .filter(function (versionStr) {
+            return ignoredBuilds.indexOf(versionStr) === -1;
+          })
+          .map(function (versionStr) {
+            return semver.parse(versionStr);
+          })
+          .filter(function (version) {
+            return version && version.major > 0;
+          })
+          .map(function (version) {
+            var key = version.major + '.' + version.minor;
+            var latest = latestMap[key];
+            if (!latest || version.compare(latest) > 0) {
+              latestMap[key] = version;
+            }
+            return version;
+          })
+          .map(function (version) {
+            return makeOption(version);
+          })
+          .reverse();
 
         // List the latest version for each branch
-        var latest = sortObject(latestMap, reverse(semver.compare))
-            .map(function(version) { return makeOption(version, 'Latest'); });
+        var latest = sortObject(latestMap, reverse(semver.compare)).map(function (version) {
+          return makeOption(version, 'Latest');
+        });
 
         // Get the stable release with the highest version
         var highestStableRelease = versions.find(semverIsStable);
 
         // Generate master and stable snapshots
         var snapshots = [
-          makeOption(
-            {version: 'snapshot'},
-            'Latest',
-            'master-snapshot'
-          ),
-          makeOption(
-            {version: 'snapshot-stable'},
-            'Latest',
-            createSnapshotStableLabel(highestStableRelease)
-          )
+          makeOption({ version: 'snapshot' }, 'Latest', 'master-snapshot'),
+          makeOption({ version: 'snapshot-stable' }, 'Latest', createSnapshotStableLabel(highestStableRelease))
         ];
 
-        return snapshots
-            .concat(latest)
-            .concat(versions);
+        return snapshots.concat(latest).concat(versions);
       }
 
       function makeOption(version, group, label) {
@@ -136,11 +126,17 @@ module.exports = function generateVersionDocProcessor(gitData, log) {
       }
 
       function reverse(fn) {
-        return function(left, right) { return -fn(left, right); };
+        return function (left, right) {
+          return -fn(left, right);
+        };
       }
 
       function sortObject(obj, cmp) {
-        return Object.keys(obj).map(function(key) { return obj[key]; }).sort(cmp);
+        return Object.keys(obj)
+          .map(function (key) {
+            return obj[key];
+          })
+          .sort(cmp);
       }
 
       // Adapted from

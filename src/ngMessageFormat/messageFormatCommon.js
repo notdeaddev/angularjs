@@ -30,14 +30,18 @@ function parseTextLiteral(text) {
   if (cachedFn != null) {
     return cachedFn;
   }
-  function parsedFn(context) { return text; }
+  function parsedFn(context) {
+    return text;
+  }
   parsedFn['$$watchDelegate'] = function watchDelegate(scope, listener, objectEquality) {
-    var unwatch = scope['$watch'](noop,
-        function textLiteralWatcher() {
-          listener(text, text, scope);
-          unwatch();
-        },
-        objectEquality);
+    var unwatch = scope['$watch'](
+      noop,
+      function textLiteralWatcher() {
+        listener(text, text, scope);
+        unwatch();
+      },
+      objectEquality
+    );
     return unwatch;
   };
   PARSE_CACHE_FOR_TEXT_LITERALS[text] = parsedFn;
@@ -51,16 +55,20 @@ function subtractOffset(expressionFn, offset) {
     return expressionFn;
   }
   function minusOffset(value) {
-    return (value == null) ? value : value - offset;
+    return value == null ? value : value - offset;
   }
-  function parsedFn(context) { return minusOffset(expressionFn(context)); }
+  function parsedFn(context) {
+    return minusOffset(expressionFn(context));
+  }
   var unwatch;
   parsedFn['$$watchDelegate'] = function watchDelegate(scope, listener, objectEquality) {
-    unwatch = scope['$watch'](expressionFn,
-        function pluralExpressionWatchListener(newValue, oldValue) {
-          listener(minusOffset(newValue), minusOffset(oldValue), scope);
-        },
-        objectEquality);
+    unwatch = scope['$watch'](
+      expressionFn,
+      function pluralExpressionWatchListener(newValue, oldValue) {
+        listener(minusOffset(newValue), minusOffset(oldValue), scope);
+      },
+      objectEquality
+    );
     return unwatch;
   };
   return parsedFn;

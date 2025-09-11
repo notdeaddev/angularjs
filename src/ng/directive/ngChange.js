@@ -71,8 +71,8 @@
 var ngChangeDirective = valueFn({
   restrict: 'A',
   require: 'ngModel',
-  link: function(scope, element, attr, ctrl) {
-    ctrl.$viewChangeListeners.push(function() {
+  link: function (scope, element, attr, ctrl) {
+    ctrl.$viewChangeListeners.push(function () {
       scope.$eval(attr.ngChange);
     });
   }

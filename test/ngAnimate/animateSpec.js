@@ -1,39 +1,39 @@
 'use strict';
 
-describe('animations', function() {
-
+describe('animations', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));
 
   var element, applyAnimationClasses;
 
-  beforeEach(module(function() {
-    return function($$jqLite) {
-      applyAnimationClasses = applyAnimationClassesFactory($$jqLite);
-    };
-  }));
+  beforeEach(
+    module(function () {
+      return function ($$jqLite) {
+        applyAnimationClasses = applyAnimationClassesFactory($$jqLite);
+      };
+    })
+  );
 
-  afterEach(inject(function() {
+  afterEach(inject(function () {
     dealoc(element);
   }));
 
-
-  it('should allow animations if the application is bootstrapped on the document node', function() {
+  it('should allow animations if the application is bootstrapped on the document node', function () {
     var capturedAnimation;
 
-    module(function($provide) {
-      $provide.factory('$rootElement', function($document) {
+    module(function ($provide) {
+      $provide.factory('$rootElement', function ($document) {
         return $document;
       });
-      $provide.factory('$$animation', function($$AnimateRunner) {
-        return function() {
+      $provide.factory('$$animation', function ($$AnimateRunner) {
+        return function () {
           capturedAnimation = arguments;
           return new $$AnimateRunner();
         };
       });
     });
 
-    inject(function($animate, $rootScope, $document) {
+    inject(function ($animate, $rootScope, $document) {
       $animate.enabled(true);
 
       element = jqLite('<div></div>');
@@ -45,12 +45,13 @@ describe('animations', function() {
     });
   });
 
-  describe('during bootstrap', function() {
-    it('should be enabled only after the first digest is fired and the postDigest queue is empty',
-      inject(function($animate, $rootScope) {
-
+  describe('during bootstrap', function () {
+    it('should be enabled only after the first digest is fired and the postDigest queue is empty', inject(function (
+      $animate,
+      $rootScope
+    ) {
       var capturedEnabledState;
-      $rootScope.$$postDigest(function() {
+      $rootScope.$$postDigest(function () {
         capturedEnabledState = $animate.enabled();
       });
 
@@ -61,15 +62,15 @@ describe('animations', function() {
       expect($animate.enabled()).toBe(true);
     }));
 
-    it('should be disabled until all pending template requests have been downloaded', function() {
+    it('should be disabled until all pending template requests have been downloaded', function () {
       var mockTemplateRequest = {
         totalPendingRequests: 2
       };
 
-      module(function($provide) {
+      module(function ($provide) {
         $provide.value('$templateRequest', mockTemplateRequest);
       });
-      inject(function($animate, $rootScope) {
+      inject(function ($animate, $rootScope) {
         expect($animate.enabled()).toBe(false);
 
         $rootScope.$digest();
@@ -81,15 +82,15 @@ describe('animations', function() {
       });
     });
 
-    it('should stay disabled if set to be disabled even after all templates have been fully downloaded', function() {
+    it('should stay disabled if set to be disabled even after all templates have been fully downloaded', function () {
       var mockTemplateRequest = {
         totalPendingRequests: 2
       };
 
-      module(function($provide) {
+      module(function ($provide) {
         $provide.value('$templateRequest', mockTemplateRequest);
       });
-      inject(function($animate, $rootScope) {
+      inject(function ($animate, $rootScope) {
         $animate.enabled(false);
         expect($animate.enabled()).toBe(false);
 
@@ -103,7 +104,7 @@ describe('animations', function() {
     });
   });
 
-  describe('$animate', function() {
+  describe('$animate', function () {
     var parent;
     var parent2;
     var options;
@@ -112,32 +113,37 @@ describe('animations', function() {
     var overriddenAnimationRunner;
     var defaultFakeAnimationRunner;
 
-    beforeEach(module(function($provide) {
-      overriddenAnimationRunner = null;
-      capturedAnimation = null;
-      capturedAnimationHistory = [];
+    beforeEach(
+      module(function ($provide) {
+        overriddenAnimationRunner = null;
+        capturedAnimation = null;
+        capturedAnimationHistory = [];
 
-      options = {};
-      $provide.value('$$animation', function() {
-        capturedAnimationHistory.push(capturedAnimation = arguments);
-        return overriddenAnimationRunner || defaultFakeAnimationRunner;
-      });
+        options = {};
+        $provide.value('$$animation', function () {
+          capturedAnimationHistory.push((capturedAnimation = arguments));
+          return overriddenAnimationRunner || defaultFakeAnimationRunner;
+        });
 
-      return function($rootElement, $q, $animate, $$AnimateRunner, $document) {
-        defaultFakeAnimationRunner = new $$AnimateRunner();
-        $animate.enabled(true);
+        return function ($rootElement, $q, $animate, $$AnimateRunner, $document) {
+          defaultFakeAnimationRunner = new $$AnimateRunner();
+          $animate.enabled(true);
 
-        element = jqLite('<div class="element">element</div>');
-        parent = jqLite('<div class="parent1">parent</div>');
-        parent2 = jqLite('<div class="parent2">parent</div>');
+          element = jqLite('<div class="element">element</div>');
+          parent = jqLite('<div class="parent1">parent</div>');
+          parent2 = jqLite('<div class="parent2">parent</div>');
 
-        $rootElement.append(parent);
-        $rootElement.append(parent2);
-        jqLite($document[0].body).append($rootElement);
-      };
-    }));
+          $rootElement.append(parent);
+          $rootElement.append(parent2);
+          jqLite($document[0].body).append($rootElement);
+        };
+      })
+    );
 
-    it('should not alter the provided options input in any way throughout the animation', inject(function($animate, $rootScope) {
+    it('should not alter the provided options input in any way throughout the animation', inject(function (
+      $animate,
+      $rootScope
+    ) {
       var initialOptions = {
         from: { height: '50px' },
         to: { width: '50px' },
@@ -156,16 +162,16 @@ describe('animations', function() {
       expect(copiedOptions).toEqual(initialOptions);
     }));
 
-    it('should skip animations entirely if the document is hidden', function() {
+    it('should skip animations entirely if the document is hidden', function () {
       var hidden = true;
 
-      module(function($provide) {
-        $provide.value('$$isDocumentHidden', function() {
+      module(function ($provide) {
+        $provide.value('$$isDocumentHidden', function () {
           return hidden;
         });
       });
 
-      inject(function($animate, $rootScope) {
+      inject(function ($animate, $rootScope) {
         $animate.enter(element, parent);
         $rootScope.$digest();
         expect(capturedAnimation).toBeNull();
@@ -179,11 +185,11 @@ describe('animations', function() {
       });
     });
 
-    it('should animate only the specified CSS className matched within $animateProvider.classNameFilter for div', function() {
-      module(function($animateProvider) {
+    it('should animate only the specified CSS className matched within $animateProvider.classNameFilter for div', function () {
+      module(function ($animateProvider) {
         $animateProvider.classNameFilter(/only-allow-this-animation/);
       });
-      inject(function($animate, $rootScope) {
+      inject(function ($animate, $rootScope) {
         expect(element).not.toHaveClass('only-allow-this-animation');
 
         $animate.enter(element, parent);
@@ -198,11 +204,11 @@ describe('animations', function() {
       });
     });
 
-    it('should animate only the specified CSS className matched within $animateProvider.classNameFilter for svg', function() {
-      module(function($animateProvider) {
+    it('should animate only the specified CSS className matched within $animateProvider.classNameFilter for svg', function () {
+      module(function ($animateProvider) {
         $animateProvider.classNameFilter(/only-allow-this-animation-svg/);
       });
-      inject(function($animate, $rootScope, $compile) {
+      inject(function ($animate, $rootScope, $compile) {
         var svgElement = $compile('<svg class="element"></svg>')($rootScope);
         expect(svgElement).not.toHaveClass('only-allow-this-animation-svg');
 
@@ -218,45 +224,50 @@ describe('animations', function() {
       });
     });
 
-    they('should not apply the provided options.$prop value unless it\'s a string or string-based array', ['addClass', 'removeClass'], function(prop) {
-      inject(function($animate, $rootScope) {
-        var startingCssClasses = element.attr('class') || '';
+    they(
+      "should not apply the provided options.$prop value unless it's a string or string-based array",
+      ['addClass', 'removeClass'],
+      function (prop) {
+        inject(function ($animate, $rootScope) {
+          var startingCssClasses = element.attr('class') || '';
 
-        var options1 = {};
-        options1[prop] = function() {};
-        $animate.enter(element, parent, null, options1);
+          var options1 = {};
+          options1[prop] = function () {};
+          $animate.enter(element, parent, null, options1);
 
-        expect(element.attr('class')).toEqual(startingCssClasses);
+          expect(element.attr('class')).toEqual(startingCssClasses);
 
-        $rootScope.$digest();
+          $rootScope.$digest();
 
-        var options2 = {};
-        options2[prop] = true;
-        $animate.leave(element, options2);
+          var options2 = {};
+          options2[prop] = true;
+          $animate.leave(element, options2);
 
-        expect(element.attr('class')).toEqual(startingCssClasses);
+          expect(element.attr('class')).toEqual(startingCssClasses);
 
-        $rootScope.$digest();
+          $rootScope.$digest();
 
-        capturedAnimation = null;
+          capturedAnimation = null;
 
-        var options3 = {};
-        if (prop === 'removeClass') {
-          element.addClass('fatias');
-          startingCssClasses = element.attr('class');
-        }
+          var options3 = {};
+          if (prop === 'removeClass') {
+            element.addClass('fatias');
+            startingCssClasses = element.attr('class');
+          }
 
-        options3[prop] = ['fatias'];
-        $animate.enter(element, parent, null, options3);
+          options3[prop] = ['fatias'];
+          $animate.enter(element, parent, null, options3);
 
-        $rootScope.$digest();
+          $rootScope.$digest();
 
-        expect(element.attr('class')).not.toEqual(startingCssClasses);
-      });
-    });
+          expect(element.attr('class')).not.toEqual(startingCssClasses);
+        });
+      }
+    );
 
-    it('should throw a minErr if a regex value is used which partially contains or fully matches the `ng-animate` CSS class',
-      module(function($animateProvider) {
+    it(
+      'should throw a minErr if a regex value is used which partially contains or fully matches the `ng-animate` CSS class',
+      module(function ($animateProvider) {
         expect(setFilter(/ng-animate/)).toThrowMinErr('$animate', 'nongcls');
         expect(setFilter(/first ng-animate last/)).toThrowMinErr('$animate', 'nongcls');
         expect(setFilter(/first ng-animate ng-animate-special last/)).toThrowMinErr('$animate', 'nongcls');
@@ -270,15 +281,16 @@ describe('animations', function() {
         expect(setFilter(/first my-ng-animate last/)).not.toThrow();
 
         function setFilter(regex) {
-          return function() {
+          return function () {
             $animateProvider.classNameFilter(regex);
           };
         }
       })
     );
 
-    it('should clear the `classNameFilter` if a disallowed RegExp is passed',
-      module(function($animateProvider) {
+    it(
+      'should clear the `classNameFilter` if a disallowed RegExp is passed',
+      module(function ($animateProvider) {
         var validRegex = /no-ng-animate/;
         var invalidRegex = /no ng-animate/;
 
@@ -286,16 +298,18 @@ describe('animations', function() {
         expect($animateProvider.classNameFilter()).toEqual(validRegex);
 
         // eslint-disable-next-line no-empty
-        try { $animateProvider.classNameFilter(invalidRegex); } catch (err) {}
+        try {
+          $animateProvider.classNameFilter(invalidRegex);
+        } catch (err) {}
         expect($animateProvider.classNameFilter()).toBeNull();
       })
     );
 
-    it('should complete the leave DOM operation in case the classNameFilter fails', function() {
-      module(function($animateProvider) {
+    it('should complete the leave DOM operation in case the classNameFilter fails', function () {
+      module(function ($animateProvider) {
         $animateProvider.classNameFilter(/memorable-animation/);
       });
-      inject(function($animate, $rootScope) {
+      inject(function ($animate, $rootScope) {
         expect(element).not.toHaveClass('memorable-animation');
 
         parent.append(element);
@@ -307,39 +321,41 @@ describe('animations', function() {
       });
     });
 
-    it('should not try to match the `classNameFilter` RegExp if animations are globally disabled',
-      function() {
-        var regex = /foo/;
-        var regexTestSpy = spyOn(regex, 'test').and.callThrough();
+    it('should not try to match the `classNameFilter` RegExp if animations are globally disabled', function () {
+      var regex = /foo/;
+      var regexTestSpy = spyOn(regex, 'test').and.callThrough();
 
-        module(function($animateProvider) {
-          $animateProvider.classNameFilter(regex);
-        });
+      module(function ($animateProvider) {
+        $animateProvider.classNameFilter(regex);
+      });
 
-        inject(function($animate) {
-          $animate.addClass(element, 'foo');
-          expect(regexTestSpy).toHaveBeenCalled();
+      inject(function ($animate) {
+        $animate.addClass(element, 'foo');
+        expect(regexTestSpy).toHaveBeenCalled();
 
-          regexTestSpy.calls.reset();
-          $animate.enabled(false);
-          $animate.addClass(element, 'bar');
-          expect(regexTestSpy).not.toHaveBeenCalled();
+        regexTestSpy.calls.reset();
+        $animate.enabled(false);
+        $animate.addClass(element, 'bar');
+        expect(regexTestSpy).not.toHaveBeenCalled();
 
-          regexTestSpy.calls.reset();
-          $animate.enabled(true);
-          $animate.addClass(element, 'baz');
-          expect(regexTestSpy).toHaveBeenCalled();
-        });
-      }
-    );
+        regexTestSpy.calls.reset();
+        $animate.enabled(true);
+        $animate.addClass(element, 'baz');
+        expect(regexTestSpy).toHaveBeenCalled();
+      });
+    });
 
-    describe('customFilter()', function() {
-      it('should be `null` by default', module(function($animateProvider) {
-        expect($animateProvider.customFilter()).toBeNull();
-      }));
+    describe('customFilter()', function () {
+      it(
+        'should be `null` by default',
+        module(function ($animateProvider) {
+          expect($animateProvider.customFilter()).toBeNull();
+        })
+      );
 
-      it('should clear the `customFilter` if no function is passed',
-        module(function($animateProvider) {
+      it(
+        'should clear the `customFilter` if no function is passed',
+        module(function ($animateProvider) {
           $animateProvider.customFilter(angular.noop);
           expect($animateProvider.customFilter()).toEqual(jasmine.any(Function));
 
@@ -354,81 +370,81 @@ describe('animations', function() {
         })
       );
 
-      it('should only perform animations for which the function returns a truthy value',
-        function() {
-          var animationsAllowed = false;
+      it('should only perform animations for which the function returns a truthy value', function () {
+        var animationsAllowed = false;
 
-          module(function($animateProvider) {
-            $animateProvider.customFilter(function() { return animationsAllowed; });
+        module(function ($animateProvider) {
+          $animateProvider.customFilter(function () {
+            return animationsAllowed;
           });
+        });
 
-          inject(function($animate, $rootScope) {
-            $animate.enter(element, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).toBeNull();
+        inject(function ($animate, $rootScope) {
+          $animate.enter(element, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-            $animate.leave(element, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).toBeNull();
+          $animate.leave(element, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-            animationsAllowed = true;
+          animationsAllowed = true;
 
-            $animate.enter(element, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).not.toBeNull();
+          $animate.enter(element, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).not.toBeNull();
 
-            capturedAnimation = null;
+          capturedAnimation = null;
 
-            $animate.leave(element, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).not.toBeNull();
+          $animate.leave(element, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).not.toBeNull();
+        });
+      });
+
+      it('should only perform animations for which the function returns a truthy value (SVG)', function () {
+        var animationsAllowed = false;
+
+        module(function ($animateProvider) {
+          $animateProvider.customFilter(function () {
+            return animationsAllowed;
           });
-        }
-      );
+        });
 
-      it('should only perform animations for which the function returns a truthy value (SVG)',
-        function() {
-          var animationsAllowed = false;
+        inject(function ($animate, $compile, $rootScope) {
+          var svgElement = $compile('<svg class="element"></svg>')($rootScope);
 
-          module(function($animateProvider) {
-            $animateProvider.customFilter(function() { return animationsAllowed; });
-          });
+          $animate.enter(svgElement, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-          inject(function($animate, $compile, $rootScope) {
-            var svgElement = $compile('<svg class="element"></svg>')($rootScope);
+          $animate.leave(svgElement, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-            $animate.enter(svgElement, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).toBeNull();
+          animationsAllowed = true;
 
-            $animate.leave(svgElement, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).toBeNull();
+          $animate.enter(svgElement, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).not.toBeNull();
 
-            animationsAllowed = true;
+          capturedAnimation = null;
 
-            $animate.enter(svgElement, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).not.toBeNull();
+          $animate.leave(svgElement, parent);
+          $rootScope.$digest();
+          expect(capturedAnimation).not.toBeNull();
+        });
+      });
 
-            capturedAnimation = null;
-
-            $animate.leave(svgElement, parent);
-            $rootScope.$digest();
-            expect(capturedAnimation).not.toBeNull();
-          });
-        }
-      );
-
-      it('should pass the DOM element, event name and options to the filter function', function() {
+      it('should pass the DOM element, event name and options to the filter function', function () {
         var filterFn = jasmine.createSpy('filterFn');
         var options = {};
 
-        module(function($animateProvider) {
+        module(function ($animateProvider) {
           $animateProvider.customFilter(filterFn);
         });
 
-        inject(function($animate, $rootScope) {
+        inject(function ($animate, $rootScope) {
           $animate.enter(element, parent, null, options);
           expect(filterFn).toHaveBeenCalledOnceWith(element[0], 'enter', options);
 
@@ -439,12 +455,14 @@ describe('animations', function() {
         });
       });
 
-      it('should complete the DOM operation even if filtered out', function() {
-        module(function($animateProvider) {
-          $animateProvider.customFilter(function() { return false; });
+      it('should complete the DOM operation even if filtered out', function () {
+        module(function ($animateProvider) {
+          $animateProvider.customFilter(function () {
+            return false;
+          });
         });
 
-        inject(function($animate, $rootScope) {
+        inject(function ($animate, $rootScope) {
           expect(element.parent()[0]).toBeUndefined();
 
           $animate.enter(element, parent);
@@ -461,14 +479,14 @@ describe('animations', function() {
         });
       });
 
-      it('should not execute the function if animations are globally disabled', function() {
+      it('should not execute the function if animations are globally disabled', function () {
         var customFilterSpy = jasmine.createSpy('customFilterFn');
 
-        module(function($animateProvider) {
+        module(function ($animateProvider) {
           $animateProvider.customFilter(customFilterSpy);
         });
 
-        inject(function($animate) {
+        inject(function ($animate) {
           $animate.addClass(element, 'foo');
           expect(customFilterSpy).toHaveBeenCalled();
 
@@ -485,9 +503,8 @@ describe('animations', function() {
       });
     });
 
-    describe('enabled()', function() {
-      it('should work for all animations', inject(function($animate) {
-
+    describe('enabled()', function () {
+      it('should work for all animations', inject(function ($animate) {
         expect($animate.enabled()).toBe(true);
 
         expect($animate.enabled(0)).toBe(false);
@@ -497,9 +514,7 @@ describe('animations', function() {
         expect($animate.enabled()).toBe(true);
       }));
 
-      it('should fully disable all animations in the application if false',
-        inject(function($animate, $rootScope) {
-
+      it('should fully disable all animations in the application if false', inject(function ($animate, $rootScope) {
         $animate.enabled(false);
 
         $animate.enter(element, parent);
@@ -509,9 +524,7 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('should disable all animations on the given element',
-        inject(function($animate, $rootScope) {
-
+      it('should disable all animations on the given element', inject(function ($animate, $rootScope) {
         parent.append(element);
 
         $animate.enabled(element, false);
@@ -531,9 +544,7 @@ describe('animations', function() {
         expect(capturedAnimation).toBeTruthy();
       }));
 
-      it('should disable all animations for a given element\'s children',
-        inject(function($animate, $rootScope) {
-
+      it("should disable all animations for a given element's children", inject(function ($animate, $rootScope) {
         $animate.enabled(parent, false);
 
         $animate.enter(element, parent);
@@ -549,9 +560,10 @@ describe('animations', function() {
         expect(capturedAnimation).toBeTruthy();
       }));
 
-      it('should run animations on an element and its children if explicitly enabled, even if animations are disabled on the parent',
-        inject(function($animate, $rootScope) {
-
+      it('should run animations on an element and its children if explicitly enabled, even if animations are disabled on the parent', inject(function (
+        $animate,
+        $rootScope
+      ) {
         var child = jqLite('<div></div>');
         element.append(child);
         parent.append(element);
@@ -578,9 +590,11 @@ describe('animations', function() {
         expect(capturedAnimation).toBeTruthy();
       }));
 
-      it('should remove the element from the `disabledElementsLookup` map on `$destroy`',
-        inject(function($$Map, $animate, $rootScope) {
-
+      it('should remove the element from the `disabledElementsLookup` map on `$destroy`', inject(function (
+        $$Map,
+        $animate,
+        $rootScope
+      ) {
         var setSpy = spyOn($$Map.prototype, 'set').and.callThrough();
         var deleteSpy = spyOn($$Map.prototype, 'delete').and.callThrough();
 
@@ -614,25 +628,22 @@ describe('animations', function() {
       }));
     });
 
-    it('should strip all comment nodes from the animation and not issue an animation if not real elements are found',
-      inject(function($rootScope, $compile) {
-
+    it('should strip all comment nodes from the animation and not issue an animation if not real elements are found', inject(function (
+      $rootScope,
+      $compile
+    ) {
       // since the ng-if results to false then only comments will be fed into the animation
-      element = $compile(
-        '<div><div class="animated" ng-if="false" ng-repeat="item in items"></div></div>'
-      )($rootScope);
+      element = $compile('<div><div class="animated" ng-if="false" ng-repeat="item in items"></div></div>')($rootScope);
 
       parent.append(element);
 
-      $rootScope.items = [1,2,3,4,5];
+      $rootScope.items = [1, 2, 3, 4, 5];
       $rootScope.$digest();
 
       expect(capturedAnimation).toBeNull();
     }));
 
-    it('should not attempt to perform an animation on a text node element',
-      inject(function($rootScope, $animate) {
-
+    it('should not attempt to perform an animation on a text node element', inject(function ($rootScope, $animate) {
       element.html('hello there');
       var textNode = jqLite(element[0].firstChild);
 
@@ -642,22 +653,20 @@ describe('animations', function() {
       expect(capturedAnimation).toBeNull();
     }));
 
-    it('should not attempt to perform an animation on an empty jqLite collection',
-      inject(function($rootScope, $animate) {
+    it('should not attempt to perform an animation on an empty jqLite collection', inject(function (
+      $rootScope,
+      $animate
+    ) {
+      element.html('');
+      var emptyNode = jqLite(element[0].firstChild);
 
-        element.html('');
-        var emptyNode = jqLite(element[0].firstChild);
+      $animate.addClass(emptyNode, 'some-class');
+      $rootScope.$digest();
 
-        $animate.addClass(emptyNode, 'some-class');
-        $rootScope.$digest();
+      expect(capturedAnimation).toBeNull();
+    }));
 
-        expect(capturedAnimation).toBeNull();
-      })
-    );
-
-    it('should perform the leave domOperation if a text node is used',
-      inject(function($rootScope, $animate) {
-
+    it('should perform the leave domOperation if a text node is used', inject(function ($rootScope, $animate) {
       element.html('hello there');
       var textNode = jqLite(element[0].firstChild);
       var parentNode = textNode[0].parentNode;
@@ -668,9 +677,11 @@ describe('animations', function() {
       expect(textNode[0].parentNode).not.toBe(parentNode);
     }));
 
-    it('should perform the leave domOperation if a comment node is used',
-      inject(function($rootScope, $animate, $document) {
-
+    it('should perform the leave domOperation if a comment node is used', inject(function (
+      $rootScope,
+      $animate,
+      $document
+    ) {
       var doc = $document[0];
 
       element.html('hello there');
@@ -684,14 +695,14 @@ describe('animations', function() {
       expect(commentNode[0].parentNode).not.toBe(parentNode);
     }));
 
-    it('enter() should animate a transcluded clone with `templateUrl`', function() {
-      module(function($compileProvider) {
-        $compileProvider.directive('foo', function() {
-          return {templateUrl: 'foo.html'};
+    it('enter() should animate a transcluded clone with `templateUrl`', function () {
+      module(function ($compileProvider) {
+        $compileProvider.directive('foo', function () {
+          return { templateUrl: 'foo.html' };
         });
       });
 
-      inject(function($animate, $compile, $rootScope, $templateCache) {
+      inject(function ($animate, $compile, $rootScope, $templateCache) {
         parent.append(jqLite('<foo ng-if="showFoo"></foo>'));
         $templateCache.put('foo.html', '<div>FOO</div>');
         $compile(parent)($rootScope);
@@ -706,7 +717,10 @@ describe('animations', function() {
       });
     });
 
-    it('enter() should issue an enter animation and fire the DOM operation right away before the animation kicks off', inject(function($animate, $rootScope) {
+    it('enter() should issue an enter animation and fire the DOM operation right away before the animation kicks off', inject(function (
+      $animate,
+      $rootScope
+    ) {
       expect(parent.children().length).toBe(0);
 
       options.foo = 'bar';
@@ -721,7 +735,10 @@ describe('animations', function() {
       expect(capturedAnimation[2].foo).toEqual(options.foo);
     }));
 
-    it('move() should issue an enter animation and fire the DOM operation right away before the animation kicks off', inject(function($animate, $rootScope) {
+    it('move() should issue an enter animation and fire the DOM operation right away before the animation kicks off', inject(function (
+      $animate,
+      $rootScope
+    ) {
       parent.append(element);
 
       expect(parent.children().length).toBe(1);
@@ -740,31 +757,36 @@ describe('animations', function() {
       expect(capturedAnimation[2].foo).toEqual(options.foo);
     }));
 
-    they('$prop() should insert the element adjacent to the after element if provided',
-      ['enter', 'move'], function(event) {
+    they(
+      '$prop() should insert the element adjacent to the after element if provided',
+      ['enter', 'move'],
+      function (event) {
+        inject(function ($animate, $rootScope) {
+          parent.append(element);
+          assertCompareNodes(parent2.next(), element, true);
+          $animate[event](element, null, parent2, options);
+          assertCompareNodes(parent2.next(), element);
+          $rootScope.$digest();
+          expect(capturedAnimation[1]).toBe(event);
+        });
+      }
+    );
 
-      inject(function($animate, $rootScope) {
-        parent.append(element);
-        assertCompareNodes(parent2.next(), element, true);
-        $animate[event](element, null, parent2, options);
-        assertCompareNodes(parent2.next(), element);
-        $rootScope.$digest();
-        expect(capturedAnimation[1]).toBe(event);
-      });
-    });
+    they(
+      '$prop() should append to the parent incase the after element is destroyed before the DOM operation is issued',
+      ['enter', 'move'],
+      function (event) {
+        inject(function ($animate, $rootScope) {
+          parent2.remove();
+          $animate[event](element, parent, parent2, options);
+          expect(parent2.next()).not.toEqual(element);
+          $rootScope.$digest();
+          expect(capturedAnimation[1]).toBe(event);
+        });
+      }
+    );
 
-    they('$prop() should append to the parent incase the after element is destroyed before the DOM operation is issued',
-      ['enter', 'move'], function(event) {
-      inject(function($animate, $rootScope) {
-        parent2.remove();
-        $animate[event](element, parent, parent2, options);
-        expect(parent2.next()).not.toEqual(element);
-        $rootScope.$digest();
-        expect(capturedAnimation[1]).toBe(event);
-      });
-    });
-
-    it('leave() should issue a leave animation with the correct DOM operation', inject(function($animate, $rootScope) {
+    it('leave() should issue a leave animation with the correct DOM operation', inject(function ($animate, $rootScope) {
       parent.append(element);
       options.foo = 'bar';
       $animate.leave(element, options);
@@ -779,19 +801,22 @@ describe('animations', function() {
       expect(element.parent().length).toBe(0);
     }));
 
-    it('should remove all element and comment nodes during leave animation',
-      inject(function($compile, $rootScope, $animate, $$AnimateRunner) {
-
+    it('should remove all element and comment nodes during leave animation', inject(function (
+      $compile,
+      $rootScope,
+      $animate,
+      $$AnimateRunner
+    ) {
       element = $compile(
         '<div>' +
-        '  <div class="animated" ng-repeat-start="item in items">start</div>' +
-        '  <div ng-repeat-end>end</div>' +
-        '</div>'
+          '  <div class="animated" ng-repeat-start="item in items">start</div>' +
+          '  <div ng-repeat-end>end</div>' +
+          '</div>'
       )($rootScope);
 
       parent.append(element);
 
-      $rootScope.items = [1,2,3,4,5];
+      $rootScope.items = [1, 2, 3, 4, 5];
       $rootScope.$digest();
 
       // all the start/end repeat anchors + their adjacent comments
@@ -809,8 +834,10 @@ describe('animations', function() {
       expect(element[0].childNodes.length).toBeLessThan(3);
     }));
 
-
-    it('addClass() should issue an addClass animation with the correct DOM operation', inject(function($animate, $rootScope) {
+    it('addClass() should issue an addClass animation with the correct DOM operation', inject(function (
+      $animate,
+      $rootScope
+    ) {
       parent.append(element);
       options.foo = 'bar';
       $animate.addClass(element, 'red', options);
@@ -825,8 +852,10 @@ describe('animations', function() {
       expect(element).toHaveClass('red');
     }));
 
-
-    it('removeClass() should issue a removeClass animation with the correct DOM operation', inject(function($animate, $rootScope) {
+    it('removeClass() should issue a removeClass animation with the correct DOM operation', inject(function (
+      $animate,
+      $rootScope
+    ) {
       parent.append(element);
       element.addClass('blue');
 
@@ -843,7 +872,10 @@ describe('animations', function() {
       expect(element).not.toHaveClass('blue');
     }));
 
-    it('setClass() should issue a setClass animation with the correct DOM operation', inject(function($animate, $rootScope) {
+    it('setClass() should issue a setClass animation with the correct DOM operation', inject(function (
+      $animate,
+      $rootScope
+    ) {
       parent.append(element);
       element.addClass('green');
 
@@ -862,55 +894,58 @@ describe('animations', function() {
       expect(element).not.toHaveClass('green');
     }));
 
-    they('$prop() should operate using a native DOM element',
-      ['enter', 'move', 'leave', 'addClass', 'removeClass', 'setClass', 'animate'], function(event) {
+    they(
+      '$prop() should operate using a native DOM element',
+      ['enter', 'move', 'leave', 'addClass', 'removeClass', 'setClass', 'animate'],
+      function (event) {
+        inject(function ($animate, $rootScope, $document) {
+          var element = $document[0].createElement('div');
+          element.setAttribute('id', 'crazy-man');
+          if (event !== 'enter' && event !== 'move') {
+            parent.append(element);
+          }
 
-      inject(function($animate, $rootScope, $document) {
-        var element = $document[0].createElement('div');
-        element.setAttribute('id', 'crazy-man');
-        if (event !== 'enter' && event !== 'move') {
-          parent.append(element);
-        }
+          switch (event) {
+            case 'enter':
+            case 'move':
+              $animate[event](element, parent, parent2, options);
+              break;
 
-        switch (event) {
-          case 'enter':
-          case 'move':
-            $animate[event](element, parent, parent2, options);
-            break;
+            case 'addClass':
+              $animate.addClass(element, 'klass', options);
+              break;
 
-          case 'addClass':
-            $animate.addClass(element, 'klass', options);
-            break;
+            case 'removeClass':
+              element.className = 'klass';
+              $animate.removeClass(element, 'klass', options);
+              break;
 
-          case 'removeClass':
-            element.className = 'klass';
-            $animate.removeClass(element, 'klass', options);
-            break;
+            case 'setClass':
+              element.className = 'two';
+              $animate.setClass(element, 'one', 'two', options);
+              break;
 
-          case 'setClass':
-            element.className = 'two';
-            $animate.setClass(element, 'one', 'two', options);
-            break;
+            case 'leave':
+              $animate.leave(element, options);
+              break;
 
-          case 'leave':
-            $animate.leave(element, options);
-            break;
+            case 'animate':
+              var toStyles = { color: 'red' };
+              $animate.animate(element, {}, toStyles, 'klass', options);
+              break;
+          }
 
-          case 'animate':
-            var toStyles = { color: 'red' };
-            $animate.animate(element, {}, toStyles, 'klass', options);
-            break;
-        }
+          $rootScope.$digest();
+          expect(capturedAnimation[0].attr('id')).toEqual(element.getAttribute('id'));
+        });
+      }
+    );
 
-        $rootScope.$digest();
-        expect(capturedAnimation[0].attr('id')).toEqual(element.getAttribute('id'));
-      });
-    });
-
-    describe('addClass / removeClass', function() {
-      it('should not perform an animation if there are no valid CSS classes to add',
-        inject(function($animate, $rootScope) {
-
+    describe('addClass / removeClass', function () {
+      it('should not perform an animation if there are no valid CSS classes to add', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
 
         $animate.removeClass(element, 'something-to-remove');
@@ -925,25 +960,21 @@ describe('animations', function() {
       }));
     });
 
-    describe('animate()', function() {
-      they('should not perform an animation if $prop is provided as a `to` style',
-        { '{}': {},
-          'null': null,
-          'false': false,
-          '""': '',
-          '[]': [] }, function(toStyle) {
+    describe('animate()', function () {
+      they(
+        'should not perform an animation if $prop is provided as a `to` style',
+        { '{}': {}, null: null, false: false, '""': '', '[]': [] },
+        function (toStyle) {
+          inject(function ($animate, $rootScope) {
+            parent.append(element);
+            $animate.animate(element, null, toStyle);
+            $rootScope.$digest();
+            expect(capturedAnimation).toBeNull();
+          });
+        }
+      );
 
-        inject(function($animate, $rootScope) {
-          parent.append(element);
-          $animate.animate(element, null, toStyle);
-          $rootScope.$digest();
-          expect(capturedAnimation).toBeNull();
-        });
-      });
-
-      it('should not perform an animation if only from styles are provided',
-        inject(function($animate, $rootScope) {
-
+      it('should not perform an animation if only from styles are provided', inject(function ($animate, $rootScope) {
         var fromStyle = { color: 'pink' };
         parent.append(element);
         $animate.animate(element, fromStyle);
@@ -951,9 +982,10 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('should perform an animation if only from styles are provided as well as any valid classes',
-        inject(function($animate, $rootScope) {
-
+      it('should perform an animation if only from styles are provided as well as any valid classes', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
 
         var fromStyle = { color: 'red' };
@@ -970,10 +1002,8 @@ describe('animations', function() {
       }));
     });
 
-
-    describe('$animate.cancel()', function() {
-
-      it('should cancel enter()', inject(function($animate, $rootScope) {
+    describe('$animate.cancel()', function () {
+      it('should cancel enter()', inject(function ($animate, $rootScope) {
         expect(parent.children().length).toBe(0);
 
         options.foo = 'bar';
@@ -1002,8 +1032,7 @@ describe('animations', function() {
         expect(spy).toHaveBeenCalled();
       }));
 
-
-      it('should cancel move()', inject(function($animate, $rootScope) {
+      it('should cancel move()', inject(function ($animate, $rootScope) {
         parent.append(element);
 
         expect(parent.children().length).toBe(1);
@@ -1036,8 +1065,7 @@ describe('animations', function() {
         expect(spy).toHaveBeenCalled();
       }));
 
-
-      it('cancel leave()', inject(function($animate, $rootScope) {
+      it('cancel leave()', inject(function ($animate, $rootScope) {
         parent.append(element);
         options.foo = 'bar';
         var spy = jasmine.createSpy('cancelCatch');
@@ -1063,7 +1091,7 @@ describe('animations', function() {
         expect(spy).toHaveBeenCalled();
       }));
 
-      it('should cancel addClass()', inject(function($animate, $rootScope) {
+      it('should cancel addClass()', inject(function ($animate, $rootScope) {
         parent.append(element);
         options.foo = 'bar';
         var runner = $animate.addClass(element, 'red', options);
@@ -1084,8 +1112,7 @@ describe('animations', function() {
         expect(spy).toHaveBeenCalled();
       }));
 
-
-      it('should cancel setClass()', inject(function($animate, $rootScope) {
+      it('should cancel setClass()', inject(function ($animate, $rootScope) {
         parent.append(element);
         element.addClass('red');
         options.foo = 'bar';
@@ -1109,8 +1136,7 @@ describe('animations', function() {
         expect(spy).toHaveBeenCalled();
       }));
 
-
-      it('should cancel removeClass()', inject(function($animate, $rootScope) {
+      it('should cancel removeClass()', inject(function ($animate, $rootScope) {
         parent.append(element);
         element.addClass('red blue');
 
@@ -1133,10 +1159,7 @@ describe('animations', function() {
         expect(spy).toHaveBeenCalled();
       }));
 
-
-      it('should cancel animate()',
-        inject(function($animate, $rootScope) {
-
+      it('should cancel animate()', inject(function ($animate, $rootScope) {
         parent.append(element);
 
         var fromStyle = { color: 'blue' };
@@ -1158,83 +1181,86 @@ describe('animations', function() {
       }));
     });
 
+    describe('parent animations', function () {
+      they(
+        'should not cancel a pre-digest parent class-based animation if a child $prop animation is set to run',
+        ['structural', 'class-based'],
+        function (animationType) {
+          inject(function ($rootScope, $animate) {
+            parent.append(element);
+            var child = jqLite('<div></div>');
 
-    describe('parent animations', function() {
-      they('should not cancel a pre-digest parent class-based animation if a child $prop animation is set to run',
-        ['structural', 'class-based'], function(animationType) {
+            if (animationType === 'structural') {
+              $animate.enter(child, element);
+            } else {
+              element.append(child);
+              $animate.addClass(child, 'test');
+            }
 
-        inject(function($rootScope, $animate) {
-          parent.append(element);
-          var child = jqLite('<div></div>');
+            $animate.addClass(parent, 'abc');
+            expect(capturedAnimationHistory.length).toBe(0);
+            $rootScope.$digest();
+            expect(capturedAnimationHistory.length).toBe(2);
+          });
+        }
+      );
 
-          if (animationType === 'structural') {
-            $animate.enter(child, element);
-          } else {
-            element.append(child);
-            $animate.addClass(child, 'test');
-          }
+      they(
+        'should not cancel a post-digest parent class-based animation if a child $prop animation is set to run',
+        ['structural', 'class-based'],
+        function (animationType) {
+          inject(function ($rootScope, $animate) {
+            parent.append(element);
+            var child = jqLite('<div></div>');
 
-          $animate.addClass(parent, 'abc');
-          expect(capturedAnimationHistory.length).toBe(0);
-          $rootScope.$digest();
-          expect(capturedAnimationHistory.length).toBe(2);
-        });
-      });
+            $animate.addClass(parent, 'abc');
+            $rootScope.$digest();
 
-      they('should not cancel a post-digest parent class-based animation if a child $prop animation is set to run',
-        ['structural', 'class-based'], function(animationType) {
+            if (animationType === 'structural') {
+              $animate.enter(child, element);
+            } else {
+              element.append(child);
+              $animate.addClass(child, 'test');
+            }
 
-        inject(function($rootScope, $animate) {
-          parent.append(element);
-          var child = jqLite('<div></div>');
+            expect(capturedAnimationHistory.length).toBe(1);
 
-          $animate.addClass(parent, 'abc');
-          $rootScope.$digest();
+            $rootScope.$digest();
 
-          if (animationType === 'structural') {
-            $animate.enter(child, element);
-          } else {
-            element.append(child);
-            $animate.addClass(child, 'test');
-          }
+            expect(capturedAnimationHistory.length).toBe(2);
+          });
+        }
+      );
 
-          expect(capturedAnimationHistory.length).toBe(1);
+      they(
+        'should not cancel a post-digest $prop child animation if a class-based parent animation is set to run',
+        ['structural', 'class-based'],
+        function (animationType) {
+          inject(function ($rootScope, $animate) {
+            parent.append(element);
 
-          $rootScope.$digest();
+            var child = jqLite('<div></div>');
+            if (animationType === 'structural') {
+              $animate.enter(child, element);
+            } else {
+              element.append(child);
+              $animate.addClass(child, 'test');
+            }
 
-          expect(capturedAnimationHistory.length).toBe(2);
-        });
-      });
+            $rootScope.$digest();
 
-      they('should not cancel a post-digest $prop child animation if a class-based parent animation is set to run',
-        ['structural', 'class-based'], function(animationType) {
+            $animate.addClass(parent, 'abc');
 
-        inject(function($rootScope, $animate) {
-          parent.append(element);
+            expect(capturedAnimationHistory.length).toBe(1);
+            $rootScope.$digest();
 
-          var child = jqLite('<div></div>');
-          if (animationType === 'structural') {
-            $animate.enter(child, element);
-          } else {
-            element.append(child);
-            $animate.addClass(child, 'test');
-          }
-
-          $rootScope.$digest();
-
-          $animate.addClass(parent, 'abc');
-
-          expect(capturedAnimationHistory.length).toBe(1);
-          $rootScope.$digest();
-
-          expect(capturedAnimationHistory.length).toBe(2);
-        });
-      });
+            expect(capturedAnimationHistory.length).toBe(2);
+          });
+        }
+      );
     });
 
-    it('should NOT clobber all data on an element when animation is finished',
-      inject(function($animate, $rootScope) {
-
+    it('should NOT clobber all data on an element when animation is finished', inject(function ($animate, $rootScope) {
       element.data('foo', 'bar');
 
       $animate.removeClass(element, 'ng-hide');
@@ -1245,10 +1271,12 @@ describe('animations', function() {
       expect(element.data('foo')).toEqual('bar');
     }));
 
-    describe('child animations', function() {
-      it('should skip animations if the element is not attached to the $rootElement',
-        inject(function($compile, $rootScope, $animate) {
-
+    describe('child animations', function () {
+      it('should skip animations if the element is not attached to the $rootElement', inject(function (
+        $compile,
+        $rootScope,
+        $animate
+      ) {
         $animate.enabled(true);
 
         var elm1 = $compile('<div class="animated"></div>')($rootScope);
@@ -1260,9 +1288,12 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('should skip animations if the element is attached to the $rootElement, but not apart of the body',
-        inject(function($compile, $rootScope, $animate, $rootElement) {
-
+      it('should skip animations if the element is attached to the $rootElement, but not apart of the body', inject(function (
+        $compile,
+        $rootScope,
+        $animate,
+        $rootElement
+      ) {
         $animate.enabled(true);
 
         var elm1 = $compile('<div class="animated"></div>')($rootScope);
@@ -1278,9 +1309,10 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('should skip the animation if the element is removed from the DOM before the post digest kicks in',
-        inject(function($animate, $rootScope) {
-
+      it('should skip the animation if the element is removed from the DOM before the post digest kicks in', inject(function (
+        $animate,
+        $rootScope
+      ) {
         $animate.enter(element, parent);
         expect(capturedAnimation).toBeNull();
 
@@ -1289,9 +1321,11 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('should be blocked when there is an ongoing structural parent animation occurring',
-        inject(function($rootScope, $rootElement, $animate) {
-
+      it('should be blocked when there is an ongoing structural parent animation occurring', inject(function (
+        $rootScope,
+        $rootElement,
+        $animate
+      ) {
         parent.append(element);
 
         expect(capturedAnimation).toBeNull();
@@ -1307,15 +1341,20 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('should disable all child animations for atleast one turn when a structural animation is issued',
-        inject(function($animate, $rootScope, $compile, $document, $rootElement, $$AnimateRunner) {
-
+      it('should disable all child animations for atleast one turn when a structural animation is issued', inject(function (
+        $animate,
+        $rootScope,
+        $compile,
+        $document,
+        $rootElement,
+        $$AnimateRunner
+      ) {
         element = $compile(
           '<div><div class="if-animation" ng-if="items.length">' +
-          '  <div class="repeat-animation" ng-repeat="item in items">' +
-          '    {{ item }}' +
-          '  </div>' +
-          '</div></div>'
+            '  <div class="repeat-animation" ng-repeat="item in items">' +
+            '    {{ item }}' +
+            '  </div>' +
+            '</div></div>'
         )($rootScope);
 
         jqLite($document[0].body).append($rootElement);
@@ -1349,9 +1388,11 @@ describe('animations', function() {
         expect(element[0].querySelectorAll('.repeat-animation').length).toBe(3);
       }));
 
-      it('should not be blocked when there is an ongoing class-based parent animation occurring',
-        inject(function($rootScope, $rootElement, $animate) {
-
+      it('should not be blocked when there is an ongoing class-based parent animation occurring', inject(function (
+        $rootScope,
+        $rootElement,
+        $animate
+      ) {
         parent.append(element);
 
         expect(capturedAnimation).toBeNull();
@@ -1367,11 +1408,8 @@ describe('animations', function() {
         expect(capturedAnimation[0]).toBe(element);
       }));
 
-      describe('when a parent structural animation is triggered:', function() {
-
-        it('should skip all pre-digest queued child animations',
-          inject(function($rootScope, $rootElement, $animate) {
-
+      describe('when a parent structural animation is triggered:', function () {
+        it('should skip all pre-digest queued child animations', inject(function ($rootScope, $rootElement, $animate) {
           parent.append(element);
 
           $animate.addClass(element, 'rumlow');
@@ -1385,15 +1423,13 @@ describe('animations', function() {
           expect(capturedAnimationHistory.length).toBe(1);
         }));
 
-        it('should end all ongoing post-digest child animations',
-          inject(function($rootScope, $rootElement, $animate) {
-
+        it('should end all ongoing post-digest child animations', inject(function ($rootScope, $rootElement, $animate) {
           parent.append(element);
 
           $animate.addClass(element, 'rumlow');
           var isCancelled = false;
           overriddenAnimationRunner = extend(defaultFakeAnimationRunner, {
-            end: function() {
+            end: function () {
               isCancelled = true;
             }
           });
@@ -1411,9 +1447,11 @@ describe('animations', function() {
           expect(isCancelled).toBe(true);
         }));
 
-        it('should ignore children that have animation data-attributes but no animation data',
-          inject(function($rootScope, $rootElement, $animate) {
-
+        it('should ignore children that have animation data-attributes but no animation data', inject(function (
+          $rootScope,
+          $rootElement,
+          $animate
+        ) {
           parent.append(element);
 
           $animate.addClass(element, 'rumlow');
@@ -1432,9 +1470,11 @@ describe('animations', function() {
         }));
       });
 
-      it('should not end any child animations if a parent class-based animation is issued',
-        inject(function($rootScope, $rootElement, $animate) {
-
+      it('should not end any child animations if a parent class-based animation is issued', inject(function (
+        $rootScope,
+        $rootElement,
+        $animate
+      ) {
         parent.append(element);
 
         var element2 = jqLite('<div>element2</div>');
@@ -1442,7 +1482,7 @@ describe('animations', function() {
 
         var isCancelled = false;
         overriddenAnimationRunner = extend(defaultFakeAnimationRunner, {
-          end: function() {
+          end: function () {
             isCancelled = true;
           }
         });
@@ -1460,14 +1500,15 @@ describe('animations', function() {
         expect(isCancelled).toBe(false);
       }));
 
-      it('should allow follow-up class-based animations to run in parallel on the same element',
-        inject(function($rootScope, $animate) {
-
+      it('should allow follow-up class-based animations to run in parallel on the same element', inject(function (
+        $rootScope,
+        $animate
+      ) {
         parent.append(element);
 
         var runner1done = false;
         var runner1 = $animate.addClass(element, 'red');
-        runner1.done(function() {
+        runner1.done(function () {
           runner1done = true;
         });
 
@@ -1479,14 +1520,14 @@ describe('animations', function() {
 
         // make sure it's a different runner
         overriddenAnimationRunner = extend(defaultFakeAnimationRunner, {
-          end: function() {
+          end: function () {
             // this code will still end the animation, just not at any deeper level
           }
         });
 
         var runner2done = false;
         var runner2 = $animate.addClass(element, 'blue');
-        runner2.done(function() {
+        runner2.done(function () {
           runner2done = true;
         });
 
@@ -1502,9 +1543,12 @@ describe('animations', function() {
         expect(runner1done).toBeFalsy();
       }));
 
-      it('should remove the animation block on child animations once the parent animation is complete',
-        inject(function($rootScope, $rootElement, $animate, $$AnimateRunner) {
-
+      it('should remove the animation block on child animations once the parent animation is complete', inject(function (
+        $rootScope,
+        $rootElement,
+        $animate,
+        $$AnimateRunner
+      ) {
         var runner = new $$AnimateRunner();
         overriddenAnimationRunner = runner;
         parent.append(element);
@@ -1526,13 +1570,14 @@ describe('animations', function() {
       }));
     });
 
-    describe('cancellations', function() {
-      it('should cancel the previous animation if a follow-up structural animation takes over',
-        inject(function($animate, $rootScope) {
-
+    describe('cancellations', function () {
+      it('should cancel the previous animation if a follow-up structural animation takes over', inject(function (
+        $animate,
+        $rootScope
+      ) {
         var enterComplete = false;
         overriddenAnimationRunner = extend(defaultFakeAnimationRunner, {
-          end: function() {
+          end: function () {
             enterComplete = true;
           }
         });
@@ -1548,9 +1593,9 @@ describe('animations', function() {
         expect(enterComplete).toBe(true);
       }));
 
-      it('should cancel the previous structural animation if a follow-up structural animation takes over before the postDigest',
-        inject(function($animate) {
-
+      it('should cancel the previous structural animation if a follow-up structural animation takes over before the postDigest', inject(function (
+        $animate
+      ) {
         var enterDone = jasmine.createSpy('enter animation done');
         $animate.enter(element, parent).done(enterDone);
         expect(enterDone).not.toHaveBeenCalled();
@@ -1560,9 +1605,10 @@ describe('animations', function() {
         expect(enterDone).toHaveBeenCalled();
       }));
 
-      it('should cancel the previously running addClass animation if a follow-up removeClass animation is using the same class value',
-        inject(function($animate, $rootScope) {
-
+      it('should cancel the previously running addClass animation if a follow-up removeClass animation is using the same class value', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         var runner = $animate.addClass(element, 'active-class');
         $rootScope.$digest();
@@ -1579,9 +1625,10 @@ describe('animations', function() {
         expect(doneHandler).toHaveBeenCalledWith(true);
       }));
 
-      it('should cancel the previously running removeClass animation if a follow-up addClass animation is using the same class value',
-        inject(function($animate, $rootScope) {
-
+      it('should cancel the previously running removeClass animation if a follow-up addClass animation is using the same class value', inject(function (
+        $animate,
+        $rootScope
+      ) {
         element.addClass('active-class');
         parent.append(element);
         var runner = $animate.removeClass(element, 'active-class');
@@ -1599,11 +1646,12 @@ describe('animations', function() {
         expect(doneHandler).toHaveBeenCalledWith(true);
       }));
 
-      it('should merge a follow-up animation that does not add classes into the previous animation (pre-digest)',
-        inject(function($animate, $rootScope) {
-
+      it('should merge a follow-up animation that does not add classes into the previous animation (pre-digest)', inject(function (
+        $animate,
+        $rootScope
+      ) {
         $animate.enter(element, parent);
-        $animate.animate(element, {height: 0}, {height: '100px'});
+        $animate.animate(element, { height: 0 }, { height: '100px' });
 
         $rootScope.$digest();
         expect(capturedAnimation).toBeTruthy();
@@ -1614,9 +1662,10 @@ describe('animations', function() {
         expect(element.css('height')).toContain('100px');
       }));
 
-      it('should immediately skip the class-based animation if there is an active structural animation',
-        inject(function($animate, $rootScope) {
-
+      it('should immediately skip the class-based animation if there is an active structural animation', inject(function (
+        $animate,
+        $rootScope
+      ) {
         $animate.enter(element, parent);
         $rootScope.$digest();
         expect(capturedAnimation).toBeTruthy();
@@ -1626,9 +1675,10 @@ describe('animations', function() {
         expect(element).toHaveClass('red');
       }));
 
-      it('should join the class-based animation into the structural animation if the structural animation is pre-digest',
-        inject(function($animate, $rootScope) {
-
+      it('should join the class-based animation into the structural animation if the structural animation is pre-digest', inject(function (
+        $animate,
+        $rootScope
+      ) {
         $animate.enter(element, parent);
         expect(capturedAnimation).toBeNull();
 
@@ -1642,9 +1692,10 @@ describe('animations', function() {
         expect(capturedAnimation[2].addClass).toBe('red');
       }));
 
-      it('should issue a new runner instance if a previous structural animation was cancelled',
-        inject(function($animate, $rootScope) {
-
+      it('should issue a new runner instance if a previous structural animation was cancelled', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
 
         var runner1 = $animate.move(element, parent2);
@@ -1656,9 +1707,10 @@ describe('animations', function() {
         expect(runner1).not.toBe(runner2);
       }));
 
-      it('should properly cancel out animations when the same class is added/removed within the same digest',
-        inject(function($animate, $rootScope) {
-
+      it('should properly cancel out animations when the same class is added/removed within the same digest', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         $animate.addClass(element, 'red');
         $animate.removeClass(element, 'red');
@@ -1672,32 +1724,35 @@ describe('animations', function() {
         expect(capturedAnimation[2].addClass).toBe('blue');
       }));
 
-      it('should NOT cancel a previously joined addClass+structural animation if a follow-up ' +
-        'removeClass animation is using the same class value (pre-digest)',
-        inject(function($animate, $rootScope) {
+      it(
+        'should NOT cancel a previously joined addClass+structural animation if a follow-up ' +
+          'removeClass animation is using the same class value (pre-digest)',
+        inject(function ($animate, $rootScope) {
+          var runner = $animate.enter(element, parent);
+          $animate.addClass(element, 'active-class');
 
-        var runner = $animate.enter(element, parent);
-        $animate.addClass(element, 'active-class');
+          var doneHandler = jasmine.createSpy('enter done');
+          runner.done(doneHandler);
 
-        var doneHandler = jasmine.createSpy('enter done');
-        runner.done(doneHandler);
+          expect(doneHandler).not.toHaveBeenCalled();
 
-        expect(doneHandler).not.toHaveBeenCalled();
+          $animate.removeClass(element, 'active-class');
+          $rootScope.$digest();
 
-        $animate.removeClass(element, 'active-class');
-        $rootScope.$digest();
+          expect(capturedAnimation[1]).toBe('enter');
+          expect(capturedAnimation[2].addClass).toBe(null);
+          expect(capturedAnimation[2].removeClass).toBe(null);
 
-        expect(capturedAnimation[1]).toBe('enter');
-        expect(capturedAnimation[2].addClass).toBe(null);
-        expect(capturedAnimation[2].removeClass).toBe(null);
-
-        expect(doneHandler).not.toHaveBeenCalled();
-      }));
-
+          expect(doneHandler).not.toHaveBeenCalled();
+        })
+      );
     });
 
-    describe('should merge', function() {
-      it('multiple class-based animations together into one before the digest passes', inject(function($animate, $rootScope) {
+    describe('should merge', function () {
+      it('multiple class-based animations together into one before the digest passes', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         element.addClass('green');
 
@@ -1725,7 +1780,10 @@ describe('animations', function() {
         expect(element).not.toHaveClass('green');
       }));
 
-      it('multiple class-based animations together into a single structural event before the digest passes', inject(function($animate, $rootScope) {
+      it('multiple class-based animations together into a single structural event before the digest passes', inject(function (
+        $animate,
+        $rootScope
+      ) {
         element.addClass('green');
 
         expect(element.parent().length).toBe(0);
@@ -1753,9 +1811,10 @@ describe('animations', function() {
         expect(element).not.toHaveClass('green');
       }));
 
-      it('should automatically cancel out class-based animations if the element already contains or doesn\'t contain the applied classes',
-        inject(function($animate, $rootScope) {
-
+      it("should automatically cancel out class-based animations if the element already contains or doesn't contain the applied classes", inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         element.addClass('one three');
 
@@ -1771,9 +1830,10 @@ describe('animations', function() {
         expect(options.removeClass).toEqual('three');
       }));
 
-      it('and skip the animation entirely if no class-based animations remain and if there is no structural animation applied',
-        inject(function($animate, $rootScope) {
-
+      it('and skip the animation entirely if no class-based animations remain and if there is no structural animation applied', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         element.addClass('one three');
 
@@ -1784,9 +1844,10 @@ describe('animations', function() {
         expect(capturedAnimation).toBeNull();
       }));
 
-      it('but not skip the animation if it is a structural animation and if there are no classes to be animated',
-        inject(function($animate, $rootScope) {
-
+      it('but not skip the animation if it is a structural animation and if there are no classes to be animated', inject(function (
+        $animate,
+        $rootScope
+      ) {
         element.addClass('one three');
 
         $animate.addClass(element, 'one');
@@ -1798,9 +1859,10 @@ describe('animations', function() {
         expect(capturedAnimation[1]).toBe('enter');
       }));
 
-      it('class-based animations, however it should also cancel former structural animations in the process',
-        inject(function($animate, $rootScope) {
-
+      it('class-based animations, however it should also cancel former structural animations in the process', inject(function (
+        $animate,
+        $rootScope
+      ) {
         element.addClass('green lime');
 
         $animate.enter(element, parent);
@@ -1829,9 +1891,10 @@ describe('animations', function() {
         expect(options.removeClass).toEqual('lime');
       }));
 
-      it('should retain the instance to the very first runner object when multiple element-level animations are issued',
-        inject(function($animate, $rootScope) {
-
+      it('should retain the instance to the very first runner object when multiple element-level animations are issued', inject(function (
+        $animate,
+        $rootScope
+      ) {
         element.addClass('green');
 
         var r1 = $animate.enter(element, parent);
@@ -1842,9 +1905,11 @@ describe('animations', function() {
         expect(r2).toBe(r3);
       }));
 
-      it('should not skip or miss the animations when animations are executed sequential',
-        inject(function($animate, $rootScope, $rootElement) {
-
+      it('should not skip or miss the animations when animations are executed sequential', inject(function (
+        $animate,
+        $rootScope,
+        $rootElement
+      ) {
         element = jqLite('<div></div>');
 
         $rootElement.append(element);
@@ -1860,21 +1925,21 @@ describe('animations', function() {
     });
   });
 
-  they('should allow an animation to run on the $prop element', ['$rootElement', 'body'], function(name) {
+  they('should allow an animation to run on the $prop element', ['$rootElement', 'body'], function (name) {
     var capturedAnimation;
 
-    module(function($provide) {
-      $provide.factory('$rootElement', function($document) {
+    module(function ($provide) {
+      $provide.factory('$rootElement', function ($document) {
         return jqLite($document[0].querySelector('html'));
       });
-      $provide.factory('$$animation', function($$AnimateRunner) {
-        return function(element, method, options) {
+      $provide.factory('$$animation', function ($$AnimateRunner) {
+        return function (element, method, options) {
           capturedAnimation = arguments;
           return new $$AnimateRunner();
         };
       });
     });
-    inject(function($animate, $rootScope, $document, $rootElement) {
+    inject(function ($animate, $rootScope, $document, $rootElement) {
       $animate.enabled(true);
 
       var body = jqLite($document[0].body);
@@ -1888,30 +1953,35 @@ describe('animations', function() {
     });
   });
 
-  describe('[ng-animate-children]', function() {
+  describe('[ng-animate-children]', function () {
     var parent, element, child, capturedAnimation, captureLog;
-    beforeEach(module(function($provide) {
-      capturedAnimation = null;
-      captureLog = [];
-      $provide.factory('$$animation', function($$AnimateRunner) {
-        return function(element, method, options) {
-          options.domOperation();
-          captureLog.push(capturedAnimation = arguments);
-          return new $$AnimateRunner();
+    beforeEach(
+      module(function ($provide) {
+        capturedAnimation = null;
+        captureLog = [];
+        $provide.factory('$$animation', function ($$AnimateRunner) {
+          return function (element, method, options) {
+            options.domOperation();
+            captureLog.push((capturedAnimation = arguments));
+            return new $$AnimateRunner();
+          };
+        });
+        return function ($rootElement, $document, $animate) {
+          jqLite($document[0].body).append($rootElement);
+          parent = jqLite('<div class="parent"></div>');
+          element = jqLite('<div class="element"></div>');
+          child = jqLite('<div class="child"></div>');
+          $animate.enabled(true);
         };
-      });
-      return function($rootElement, $document, $animate) {
-        jqLite($document[0].body).append($rootElement);
-        parent  = jqLite('<div class="parent"></div>');
-        element = jqLite('<div class="element"></div>');
-        child   = jqLite('<div class="child"></div>');
-        $animate.enabled(true);
-      };
-    }));
+      })
+    );
 
-    it('should allow child animations to run when the attribute is used',
-      inject(function($animate, $rootScope, $rootElement, $compile) {
-
+    it('should allow child animations to run when the attribute is used', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $compile
+    ) {
       $animate.enter(parent, $rootElement);
       $animate.enter(element, parent);
       $animate.enter(child, element);
@@ -1934,9 +2004,12 @@ describe('animations', function() {
       expect(captureLog.length).toBe(3);
     }));
 
-    it('should fully disallow all parallel child animations from running if `off` is used',
-      inject(function($animate, $rootScope, $rootElement, $compile) {
-
+    it('should fully disallow all parallel child animations from running if `off` is used', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $compile
+    ) {
       $rootElement.append(parent);
       parent.append(element);
       element.append(child);
@@ -1959,9 +2032,12 @@ describe('animations', function() {
       dealoc(child);
     }));
 
-    it('should watch to see if the ng-animate-children attribute changes',
-      inject(function($animate, $rootScope, $rootElement, $compile) {
-
+    it('should watch to see if the ng-animate-children attribute changes', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $compile
+    ) {
       $rootElement.append(parent);
       $rootScope.val = 'on';
       parent.attr('ng-animate-children', '{{ val }}');
@@ -1990,9 +2066,11 @@ describe('animations', function() {
       dealoc(child);
     }));
 
-    it('should respect the value if the directive is on an element with ngIf',
-      inject(function($rootScope, $rootElement, $compile) {
-
+    it('should respect the value if the directive is on an element with ngIf', inject(function (
+      $rootScope,
+      $rootElement,
+      $compile
+    ) {
       parent.attr('ng-animate-children', 'true');
       parent.attr('ng-if', 'true');
       element.attr('ng-if', 'true');
@@ -2007,198 +2085,209 @@ describe('animations', function() {
     }));
   });
 
-  describe('.pin()', function() {
+  describe('.pin()', function () {
     var capturedAnimation;
 
-    beforeEach(module(function($provide) {
-      capturedAnimation = null;
-      $provide.factory('$$animation', function($$AnimateRunner) {
-        return function() {
-          capturedAnimation = arguments;
-          return new $$AnimateRunner();
+    beforeEach(
+      module(function ($provide) {
+        capturedAnimation = null;
+        $provide.factory('$$animation', function ($$AnimateRunner) {
+          return function () {
+            capturedAnimation = arguments;
+            return new $$AnimateRunner();
+          };
+        });
+
+        return function ($animate) {
+          $animate.enabled(true);
         };
-      });
+      })
+    );
 
-      return function($animate) {
-        $animate.enabled(true);
-      };
-    }));
-
-    it('should throw if the arguments are not elements',
-      inject(function($animate, $rootElement) {
-
+    it('should throw if the arguments are not elements', inject(function ($animate, $rootElement) {
       var element = jqLite('<div></div>');
 
-      expect(function() {
+      expect(function () {
         $animate.pin(element);
-      }).toThrowMinErr('ng', 'areq', 'Argument \'parentElement\' is not an element');
+      }).toThrowMinErr('ng', 'areq', "Argument 'parentElement' is not an element");
 
-      expect(function() {
+      expect(function () {
         $animate.pin(null, $rootElement);
-      }).toThrowMinErr('ng', 'areq', 'Argument \'element\' is not an element');
+      }).toThrowMinErr('ng', 'areq', "Argument 'element' is not an element");
 
       dealoc(element);
     }));
 
-
-    they('should animate an element inside a pinned element that is the $prop element',
+    they(
+      'should animate an element inside a pinned element that is the $prop element',
       ['same', 'parent', 'grandparent'],
-      function(elementRelation) {
-        inject(function($animate, $document, $rootElement, $rootScope) {
+      function (elementRelation) {
+        inject(function ($animate, $document, $rootElement, $rootScope) {
+          var pinElement, animateElement;
 
-        var pinElement, animateElement;
+          var innerParent = jqLite('<div></div>');
+          jqLite($document[0].body).append(innerParent);
+          innerParent.append($rootElement);
 
-        var innerParent = jqLite('<div></div>');
-        jqLite($document[0].body).append(innerParent);
-        innerParent.append($rootElement);
+          switch (elementRelation) {
+            case 'same':
+              pinElement = jqLite('<div id="animate"></div>');
+              break;
+            case 'parent':
+              pinElement = jqLite('<div><div id="animate"></div></div>');
+              break;
+            case 'grandparent':
+              pinElement = jqLite('<div><div><div id="animate"></div></div></div>');
+              break;
+          }
 
-        switch (elementRelation) {
-          case 'same':
-            pinElement = jqLite('<div id="animate"></div>');
-            break;
-          case 'parent':
-            pinElement = jqLite('<div><div id="animate"></div></div>');
-            break;
-          case 'grandparent':
-            pinElement = jqLite('<div><div><div id="animate"></div></div></div>');
-            break;
-        }
+          jqLite($document[0].body).append(pinElement);
+          animateElement = jqLite($document[0].getElementById('animate'));
 
-        jqLite($document[0].body).append(pinElement);
-        animateElement = jqLite($document[0].getElementById('animate'));
+          $animate.addClass(animateElement, 'red');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-        $animate.addClass(animateElement, 'red');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeNull();
+          // Pin the element to the app root to enable animations
+          $animate.pin(pinElement, $rootElement);
 
-        // Pin the element to the app root to enable animations
-        $animate.pin(pinElement, $rootElement);
+          $animate.addClass(animateElement, 'blue');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeTruthy();
 
-        $animate.addClass(animateElement, 'blue');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeTruthy();
+          dealoc(pinElement);
+        });
+      }
+    );
 
-        dealoc(pinElement);
-      });
-    });
-
-    they('should not animate an element when the pinned ($prop) element, is pinned to an element that is not a child of the $rootElement',
+    they(
+      'should not animate an element when the pinned ($prop) element, is pinned to an element that is not a child of the $rootElement',
       ['same', 'parent', 'grandparent'],
-      function(elementRelation) {
-        inject(function($animate, $document, $rootElement, $rootScope) {
+      function (elementRelation) {
+        inject(function ($animate, $document, $rootElement, $rootScope) {
+          var pinElement,
+            animateElement,
+            pinTargetElement = jqLite('<div></div>');
 
-        var pinElement, animateElement, pinTargetElement = jqLite('<div></div>');
+          var innerParent = jqLite('<div></div>');
+          jqLite($document[0].body).append(innerParent);
+          innerParent.append($rootElement);
 
-        var innerParent = jqLite('<div></div>');
-        jqLite($document[0].body).append(innerParent);
-        innerParent.append($rootElement);
+          switch (elementRelation) {
+            case 'same':
+              pinElement = jqLite('<div id="animate"></div>');
+              break;
+            case 'parent':
+              pinElement = jqLite('<div><div id="animate"></div></div>');
+              break;
+            case 'grandparent':
+              pinElement = jqLite('<div><div><div id="animate"></div></div></div>');
+              break;
+          }
 
-        switch (elementRelation) {
-          case 'same':
-            pinElement = jqLite('<div id="animate"></div>');
-            break;
-          case 'parent':
-            pinElement = jqLite('<div><div id="animate"></div></div>');
-            break;
-          case 'grandparent':
-            pinElement = jqLite('<div><div><div id="animate"></div></div></div>');
-            break;
-        }
+          // Append both the pin element and the pinTargetElement outside the app root
+          jqLite($document[0].body).append(pinElement);
+          jqLite($document[0].body).append(pinTargetElement);
 
-        // Append both the pin element and the pinTargetElement outside the app root
-        jqLite($document[0].body).append(pinElement);
-        jqLite($document[0].body).append(pinTargetElement);
+          animateElement = jqLite($document[0].getElementById('animate'));
 
-        animateElement = jqLite($document[0].getElementById('animate'));
+          $animate.addClass(animateElement, 'red');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-        $animate.addClass(animateElement, 'red');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeNull();
+          $animate.pin(pinElement, pinTargetElement);
 
-        $animate.pin(pinElement, pinTargetElement);
+          $animate.addClass(animateElement, 'blue');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-        $animate.addClass(animateElement, 'blue');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeNull();
+          dealoc(pinElement);
+        });
+      }
+    );
 
-        dealoc(pinElement);
-      });
-    });
-
-    they('should adhere to the disabled state of the hosted parent when the $prop element is pinned',
+    they(
+      'should adhere to the disabled state of the hosted parent when the $prop element is pinned',
       ['same', 'parent', 'grandparent'],
-      function(elementRelation) {
-        inject(function($animate, $document, $rootElement, $rootScope) {
+      function (elementRelation) {
+        inject(function ($animate, $document, $rootElement, $rootScope) {
+          var pinElement,
+            animateElement,
+            pinHostElement = jqLite('<div></div>');
 
-        var pinElement, animateElement, pinHostElement = jqLite('<div></div>');
+          var innerParent = jqLite('<div></div>');
+          jqLite($document[0].body).append(innerParent);
+          innerParent.append($rootElement);
 
-        var innerParent = jqLite('<div></div>');
-        jqLite($document[0].body).append(innerParent);
-        innerParent.append($rootElement);
+          switch (elementRelation) {
+            case 'same':
+              pinElement = jqLite('<div id="animate"></div>');
+              break;
+            case 'parent':
+              pinElement = jqLite('<div><div id="animate"></div></div>');
+              break;
+            case 'grandparent':
+              pinElement = jqLite('<div><div><div id="animate"></div></div></div>');
+              break;
+          }
 
-        switch (elementRelation) {
-          case 'same':
-            pinElement = jqLite('<div id="animate"></div>');
-            break;
-          case 'parent':
-            pinElement = jqLite('<div><div id="animate"></div></div>');
-            break;
-          case 'grandparent':
-            pinElement = jqLite('<div><div><div id="animate"></div></div></div>');
-            break;
-        }
+          $rootElement.append(pinHostElement);
+          jqLite($document[0].body).append(pinElement);
+          animateElement = jqLite($document[0].getElementById('animate'));
 
-        $rootElement.append(pinHostElement);
-        jqLite($document[0].body).append(pinElement);
-        animateElement = jqLite($document[0].getElementById('animate'));
+          $animate.pin(pinElement, pinHostElement);
+          $animate.enabled(pinHostElement, false);
 
-        $animate.pin(pinElement, pinHostElement);
-        $animate.enabled(pinHostElement, false);
+          $animate.addClass(animateElement, 'blue');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeNull();
 
-        $animate.addClass(animateElement, 'blue');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeNull();
+          $animate.enabled(pinHostElement, true);
 
-        $animate.enabled(pinHostElement, true);
+          $animate.addClass(animateElement, 'red');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeTruthy();
 
-        $animate.addClass(animateElement, 'red');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeTruthy();
-
-        dealoc(pinElement);
-      });
-    });
+          dealoc(pinElement);
+        });
+      }
+    );
   });
 
-  describe('callbacks', function() {
+  describe('callbacks', function () {
     var captureLog = [];
     var capturedAnimation = [];
     var runner;
     var body;
-    beforeEach(module(function($provide) {
-      runner = null;
-      capturedAnimation = null;
-      $provide.factory('$$animation', function($$AnimateRunner) {
-        return function() {
-          captureLog.push(capturedAnimation = arguments);
-          runner = new $$AnimateRunner();
-          return runner;
+    beforeEach(
+      module(function ($provide) {
+        runner = null;
+        capturedAnimation = null;
+        $provide.factory('$$animation', function ($$AnimateRunner) {
+          return function () {
+            captureLog.push((capturedAnimation = arguments));
+            runner = new $$AnimateRunner();
+            return runner;
+          };
+        });
+
+        return function ($document, $rootElement, $animate) {
+          if ($document !== $rootElement) {
+            jqLite($document[0].body).append($rootElement);
+          }
+          $animate.enabled(true);
         };
-      });
+      })
+    );
 
-      return function($document, $rootElement, $animate) {
-        if ($document !== $rootElement) {
-          jqLite($document[0].body).append($rootElement);
-        }
-        $animate.enabled(true);
-      };
-    }));
-
-    it('should trigger a callback for an enter animation',
-      inject(function($animate, $rootScope, $rootElement, $document) {
-
+    it('should trigger a callback for an enter animation', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document
+    ) {
       var callbackTriggered = false;
-      $animate.on('enter', jqLite($document[0].body), function() {
+      $animate.on('enter', jqLite($document[0].body), function () {
         callbackTriggered = true;
       });
 
@@ -2211,15 +2300,16 @@ describe('animations', function() {
       expect(callbackTriggered).toBe(true);
     }));
 
-    it('should fire the callback with the signature of (element, phase, data)',
-      inject(function($animate, $rootScope, $rootElement, $document) {
-
+    it('should fire the callback with the signature of (element, phase, data)', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document
+    ) {
       var capturedElement;
       var capturedPhase;
       var capturedData;
-      $animate.on('enter', jqLite($document[0].body),
-        function(element, phase, data) {
-
+      $animate.on('enter', jqLite($document[0].body), function (element, phase, data) {
         capturedElement = element;
         capturedPhase = phase;
         capturedData = data;
@@ -2235,16 +2325,16 @@ describe('animations', function() {
       expect(isObject(capturedData)).toBe(true);
     }));
 
-    it('should not fire a callback if the element is outside of the given container',
-      inject(function($animate, $rootScope, $rootElement) {
-
+    it('should not fire a callback if the element is outside of the given container', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement
+    ) {
       var callbackTriggered = false;
       var innerContainer = jqLite('<div></div>');
       $rootElement.append(innerContainer);
 
-      $animate.on('enter', innerContainer,
-        function(element, phase, data) {
-
+      $animate.on('enter', innerContainer, function (element, phase, data) {
         callbackTriggered = true;
       });
 
@@ -2255,15 +2345,15 @@ describe('animations', function() {
       expect(callbackTriggered).toBe(false);
     }));
 
-    it('should fire a callback if the element is the given container',
-      inject(function($animate, $rootScope, $rootElement) {
-
+    it('should fire a callback if the element is the given container', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement
+    ) {
       element = jqLite('<div></div>');
 
       var callbackTriggered = false;
-      $animate.on('enter', element,
-        function(element, phase, data) {
-
+      $animate.on('enter', element, function (element, phase, data) {
         callbackTriggered = true;
       });
 
@@ -2274,9 +2364,12 @@ describe('animations', function() {
       expect(callbackTriggered).toBe(true);
     }));
 
-    it('should remove all the event-based event listeners when $animate.off(event) is called',
-      inject(function($animate, $rootScope, $rootElement, $document) {
-
+    it('should remove all the event-based event listeners when $animate.off(event) is called', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document
+    ) {
       element = jqLite('<div></div>');
 
       var count = 0;
@@ -2302,9 +2395,12 @@ describe('animations', function() {
       expect(count).toBe(2);
     }));
 
-    it('should remove the container-based event listeners when $animate.off(event, container) is called',
-      inject(function($animate, $rootScope, $rootElement, $document) {
-
+    it('should remove the container-based event listeners when $animate.off(event, container) is called', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document
+    ) {
       element = jqLite('<div></div>');
 
       var count = 0;
@@ -2332,9 +2428,11 @@ describe('animations', function() {
       expect(count).toBe(3);
     }));
 
-    it('should remove the callback-based event listener when $animate.off(event, container, callback) is called',
-      inject(function($animate, $rootScope, $rootElement) {
-
+    it('should remove the callback-based event listener when $animate.off(event, container, callback) is called', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement
+    ) {
       element = jqLite('<div></div>');
 
       var count = 0;
@@ -2368,9 +2466,13 @@ describe('animations', function() {
       expect(count).toBe(3);
     }));
 
-    it('should remove all event listeners for an element when $animate.off(element) is called',
-      inject(function($animate, $rootScope, $rootElement, $document, $$rAF) {
-
+    it('should remove all event listeners for an element when $animate.off(element) is called', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document,
+      $$rAF
+    ) {
       element = jqLite('<div></div>');
       var otherElement = jqLite('<div></div>');
       $rootElement.append(otherElement);
@@ -2418,7 +2520,7 @@ describe('animations', function() {
       runner.end();
 
       // Try to flush all remaining callbacks
-      expect(function() {
+      expect(function () {
         $$rAF.flush();
       }).toThrowError('No rAF callbacks present');
 
@@ -2430,26 +2532,29 @@ describe('animations', function() {
       expect(count).toBe(5);
     }));
 
-    it('should not get affected by custom, enumerable properties on `Object.prototype`',
-      inject(function($animate) {
-        // eslint-disable-next-line no-extend-native
-        Object.prototype.foo = 'ENUMARABLE_AND_NOT_AN_ARRAY';
+    it('should not get affected by custom, enumerable properties on `Object.prototype`', inject(function ($animate) {
+      // eslint-disable-next-line no-extend-native
+      Object.prototype.foo = 'ENUMARABLE_AND_NOT_AN_ARRAY';
 
-        element = jqLite('<div></div>');
-        expect(function() { $animate.off(element); }).not.toThrow();
+      element = jqLite('<div></div>');
+      expect(function () {
+        $animate.off(element);
+      }).not.toThrow();
 
-        delete Object.prototype.foo;
-      })
-    );
+      delete Object.prototype.foo;
+    }));
 
-    it('should fire a `start` callback when the animation starts with the matching element',
-      inject(function($animate, $rootScope, $rootElement, $document) {
-
+    it('should fire a `start` callback when the animation starts with the matching element', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document
+    ) {
       element = jqLite('<div></div>');
 
       var capturedState;
       var capturedElement;
-      $animate.on('enter', jqLite($document[0].body), function(element, phase) {
+      $animate.on('enter', jqLite($document[0].body), function (element, phase) {
         capturedState = phase;
         capturedElement = element;
       });
@@ -2462,14 +2567,17 @@ describe('animations', function() {
       expect(capturedElement).toBe(element);
     }));
 
-    it('should fire a `close` callback when the animation ends with the matching element',
-      inject(function($animate, $rootScope, $rootElement, $document) {
-
+    it('should fire a `close` callback when the animation ends with the matching element', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $document
+    ) {
       element = jqLite('<div></div>');
 
       var capturedState;
       var capturedElement;
-      $animate.on('enter', jqLite($document[0].body), function(element, phase) {
+      $animate.on('enter', jqLite($document[0].body), function (element, phase) {
         capturedState = phase;
         capturedElement = element;
       });
@@ -2483,100 +2591,103 @@ describe('animations', function() {
       expect(capturedElement).toBe(element);
     }));
 
+    they(
+      'should remove all event listeners when the element is removed via $prop',
+      ['leave()', 'remove()'],
+      function (method) {
+        inject(function ($animate, $rootScope, $rootElement, $$rAF) {
+          element = jqLite('<div></div>');
 
-    they('should remove all event listeners when the element is removed via $prop',
-      ['leave()', 'remove()'], function(method) {
-      inject(function($animate, $rootScope, $rootElement, $$rAF) {
+          var count = 0;
+          var enterSpy = jasmine.createSpy();
+          var addClassSpy = jasmine.createSpy();
+          var runner;
 
-        element = jqLite('<div></div>');
+          $animate.on('enter', element, enterSpy);
+          $animate.on('addClass', element[0], addClassSpy);
 
-        var count = 0;
-        var enterSpy = jasmine.createSpy();
-        var addClassSpy = jasmine.createSpy();
-        var runner;
-
-        $animate.on('enter', element, enterSpy);
-        $animate.on('addClass', element[0], addClassSpy);
-
-        function counter(element, phase) {
-          if (phase === 'start') {
-            count++;
+          function counter(element, phase) {
+            if (phase === 'start') {
+              count++;
+            }
           }
-        }
 
-        runner = $animate.enter(element, $rootElement);
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeTruthy();
+          runner = $animate.enter(element, $rootElement);
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeTruthy();
 
-        $animate.flush();
-        expect(enterSpy.calls.count()).toBe(1);
-        expect(enterSpy.calls.mostRecent().args[1]).toBe('start');
-
-        runner.end(); // Otherwise the class animation won't run because enter is still in progress
-        $$rAF.flush();
-        expect(enterSpy.calls.count()).toBe(2);
-        expect(enterSpy.calls.mostRecent().args[1]).toBe('close');
-
-        enterSpy.calls.reset();
-        capturedAnimation = null;
-
-        runner = $animate.addClass(element, 'blue');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeTruthy();
-
-        $animate.flush();
-        expect(addClassSpy.calls.count()).toBe(1);
-        expect(addClassSpy.calls.mostRecent().args[1]).toBe('start');
-
-        runner.end();
-        $$rAF.flush();
-        expect(addClassSpy.calls.count()).toBe(2);
-        expect(addClassSpy.calls.mostRecent().args[1]).toBe('close');
-
-        addClassSpy.calls.reset();
-        capturedAnimation = null;
-
-        if (method === 'leave()') {
-          runner = $animate.leave(element);
           $animate.flush();
+          expect(enterSpy.calls.count()).toBe(1);
+          expect(enterSpy.calls.mostRecent().args[1]).toBe('start');
+
+          runner.end(); // Otherwise the class animation won't run because enter is still in progress
+          $$rAF.flush();
+          expect(enterSpy.calls.count()).toBe(2);
+          expect(enterSpy.calls.mostRecent().args[1]).toBe('close');
+
+          enterSpy.calls.reset();
+          capturedAnimation = null;
+
+          runner = $animate.addClass(element, 'blue');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeTruthy();
+
+          $animate.flush();
+          expect(addClassSpy.calls.count()).toBe(1);
+          expect(addClassSpy.calls.mostRecent().args[1]).toBe('start');
+
           runner.end();
-        } else if (method === 'remove()') {
-          element.remove();
-        }
-
-        runner = $animate.enter(element, $rootElement);
-        $rootScope.$digest();
-
-        $animate.flush();
-        expect(enterSpy.calls.count()).toBe(0);
-
-        runner.end(); // Otherwise the class animation won't run because enter is still in progress
-        expect(function() {
           $$rAF.flush();
-        }).toThrowError('No rAF callbacks present'); // Try to flush any callbacks
-        expect(enterSpy.calls.count()).toBe(0);
+          expect(addClassSpy.calls.count()).toBe(2);
+          expect(addClassSpy.calls.mostRecent().args[1]).toBe('close');
 
-        capturedAnimation = null;
+          addClassSpy.calls.reset();
+          capturedAnimation = null;
 
-        $animate.addClass(element, 'red');
-        $rootScope.$digest();
-        expect(capturedAnimation).toBeTruthy();
+          if (method === 'leave()') {
+            runner = $animate.leave(element);
+            $animate.flush();
+            runner.end();
+          } else if (method === 'remove()') {
+            element.remove();
+          }
 
-        $animate.flush();
-        expect(addClassSpy.calls.count()).toBe(0);
+          runner = $animate.enter(element, $rootElement);
+          $rootScope.$digest();
 
-        runner.end();
-        expect(function() {
-          $$rAF.flush();
-        }).toThrowError('No rAF callbacks present'); // Try to flush any callbacks
-        expect(addClassSpy.calls.count()).toBe(0);
-        expect(enterSpy.calls.count()).toBe(0);
-      });
-    });
+          $animate.flush();
+          expect(enterSpy.calls.count()).toBe(0);
 
-    it('should always detect registered callbacks after one postDigest has fired',
-      inject(function($animate, $rootScope, $rootElement) {
+          runner.end(); // Otherwise the class animation won't run because enter is still in progress
+          expect(function () {
+            $$rAF.flush();
+          }).toThrowError('No rAF callbacks present'); // Try to flush any callbacks
+          expect(enterSpy.calls.count()).toBe(0);
 
+          capturedAnimation = null;
+
+          $animate.addClass(element, 'red');
+          $rootScope.$digest();
+          expect(capturedAnimation).toBeTruthy();
+
+          $animate.flush();
+          expect(addClassSpy.calls.count()).toBe(0);
+
+          runner.end();
+          expect(function () {
+            $$rAF.flush();
+          }).toThrowError('No rAF callbacks present'); // Try to flush any callbacks
+          expect(addClassSpy.calls.count()).toBe(0);
+          expect(enterSpy.calls.count()).toBe(0);
+        });
+      }
+    );
+
+    it('should always detect registered callbacks after one postDigest has fired', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement
+    ) {
       element = jqLite('<div></div>');
 
       var spy = jasmine.createSpy();
@@ -2611,9 +2722,12 @@ describe('animations', function() {
       }
     }));
 
-    it('should use RAF if there are detected callbacks within the hierarchy of the element being animated',
-      inject(function($animate, $rootScope, $rootElement, $$rAF) {
-
+    it('should use RAF if there are detected callbacks within the hierarchy of the element being animated', inject(function (
+      $animate,
+      $rootScope,
+      $rootElement,
+      $$rAF
+    ) {
       var runner;
 
       element = jqLite('<div></div>');
@@ -2637,18 +2751,19 @@ describe('animations', function() {
       }
     }));
 
-    describe('for leave', function() {
-
-      it('should remove the element even if another animation is called afterwards',
-        inject(function($animate, $rootScope, $rootElement) {
-
+    describe('for leave', function () {
+      it('should remove the element even if another animation is called afterwards', inject(function (
+        $animate,
+        $rootScope,
+        $rootElement
+      ) {
         var outerContainer = jqLite('<div></div>');
         element = jqLite('<div></div>');
         outerContainer.append(element);
         $rootElement.append(outerContainer);
 
         var runner = $animate.leave(element, $rootElement);
-        $animate.removeClass(element,'rclass');
+        $animate.removeClass(element, 'rclass');
         $rootScope.$digest();
         runner.end();
         $animate.flush();
@@ -2657,10 +2772,13 @@ describe('animations', function() {
         expect(isElementRemoved).toBe(true);
       }));
 
-      they('should trigger callbacks when the listener is on the $prop element', ['same', 'parent'],
-        function(elementRelation) {
-          inject(function($animate, $rootScope, $$rAF, $rootElement, $document) {
-            var listenerElement, callbackSpy = jasmine.createSpy();
+      they(
+        'should trigger callbacks when the listener is on the $prop element',
+        ['same', 'parent'],
+        function (elementRelation) {
+          inject(function ($animate, $rootScope, $$rAF, $rootElement, $document) {
+            var listenerElement,
+              callbackSpy = jasmine.createSpy();
 
             element = jqLite('<div></div>');
             listenerElement = elementRelation === 'same' ? element : jqLite($document[0].body);
@@ -2684,9 +2802,13 @@ describe('animations', function() {
         }
       );
 
-      it('should trigger callbacks for a leave animation',
-        inject(function($animate, $rootScope, $$rAF, $rootElement, $document) {
-
+      it('should trigger callbacks for a leave animation', inject(function (
+        $animate,
+        $rootScope,
+        $$rAF,
+        $rootElement,
+        $document
+      ) {
         var callbackSpy = jasmine.createSpy();
         $animate.on('leave', jqLite($document[0].body), callbackSpy);
 
@@ -2701,9 +2823,13 @@ describe('animations', function() {
         expect(callbackSpy.calls.count()).toBe(1);
       }));
 
-      it('should trigger a callback for an leave animation (same element)',
-        inject(function($animate, $rootScope, $$rAF, $rootElement, $document) {
-
+      it('should trigger a callback for an leave animation (same element)', inject(function (
+        $animate,
+        $rootScope,
+        $$rAF,
+        $rootElement,
+        $document
+      ) {
         var callbackSpy = jasmine.createSpy();
 
         element = jqLite('<div></div>');
@@ -2725,15 +2851,17 @@ describe('animations', function() {
         expect(callbackSpy.calls.mostRecent().args[1]).toBe('close');
       }));
 
-      it('should not fire a callback if the element is outside of the given container',
-        inject(function($animate, $rootScope, $$rAF, $rootElement) {
-
+      it('should not fire a callback if the element is outside of the given container', inject(function (
+        $animate,
+        $rootScope,
+        $$rAF,
+        $rootElement
+      ) {
         var callbackTriggered = false;
         var innerContainer = jqLite('<div></div>');
         $rootElement.append(innerContainer);
 
-        $animate.on('leave', innerContainer,
-          function(element, phase, data) {
+        $animate.on('leave', innerContainer, function (element, phase, data) {
           callbackTriggered = true;
         });
 
@@ -2745,14 +2873,18 @@ describe('animations', function() {
         expect(callbackTriggered).toBe(false);
       }));
 
-      it('should fire a `start` callback when the animation starts',
-        inject(function($animate, $rootScope, $$rAF, $rootElement, $document) {
-
+      it('should fire a `start` callback when the animation starts', inject(function (
+        $animate,
+        $rootScope,
+        $$rAF,
+        $rootElement,
+        $document
+      ) {
         element = jqLite('<div></div>');
 
         var capturedState;
         var capturedElement;
-        $animate.on('leave', jqLite($document[0].body), function(element, phase) {
+        $animate.on('leave', jqLite($document[0].body), function (element, phase) {
           capturedState = phase;
           capturedElement = element;
         });
@@ -2766,14 +2898,18 @@ describe('animations', function() {
         expect(capturedElement).toBe(element);
       }));
 
-      it('should fire a `close` callback when the animation ends',
-        inject(function($animate, $rootScope, $$rAF, $rootElement, $document) {
-
+      it('should fire a `close` callback when the animation ends', inject(function (
+        $animate,
+        $rootScope,
+        $$rAF,
+        $rootElement,
+        $document
+      ) {
         element = jqLite('<div></div>');
 
         var capturedState;
         var capturedElement;
-        $animate.on('leave', jqLite($document[0].body), function(element, phase) {
+        $animate.on('leave', jqLite($document[0].body), function (element, phase) {
           capturedState = phase;
           capturedElement = element;
         });
@@ -2788,9 +2924,12 @@ describe('animations', function() {
         expect(capturedElement).toBe(element);
       }));
 
-      it('should remove all event listeners after all callbacks for the "leave:close" phase have been called',
-        inject(function($animate, $rootScope, $rootElement, $$rAF) {
-
+      it('should remove all event listeners after all callbacks for the "leave:close" phase have been called', inject(function (
+        $animate,
+        $rootScope,
+        $rootElement,
+        $$rAF
+      ) {
         var leaveSpy = jasmine.createSpy();
         var addClassSpy = jasmine.createSpy();
 
@@ -2810,185 +2949,172 @@ describe('animations', function() {
 
         $animate.flush();
         runner.end();
-        expect(function() {
+        expect(function () {
           $$rAF.flush();
         }).toThrowError('No rAF callbacks present');
 
         expect(addClassSpy.calls.count()).toBe(0);
       }));
-
     });
 
-    describe('event data', function() {
+    describe('event data', function () {
+      it('should be included for enter', inject(function ($animate, $rootScope, $rootElement, $document) {
+        var eventData;
 
-      it('should be included for enter',
-        inject(function($animate, $rootScope, $rootElement, $document) {
-          var eventData;
+        $animate.on('enter', jqLite($document[0].body), function (element, phase, data) {
+          eventData = data;
+        });
 
-          $animate.on('enter', jqLite($document[0].body), function(element, phase, data) {
-            eventData = data;
-          });
+        element = jqLite('<div></div>');
+        $animate.enter(element, $rootElement, null, {
+          addClass: 'red blue',
+          removeClass: 'yellow green',
+          from: { opacity: 0 },
+          to: { opacity: 1 }
+        });
+        $rootScope.$digest();
 
-          element = jqLite('<div></div>');
-          $animate.enter(element, $rootElement, null, {
-            addClass: 'red blue',
-            removeClass: 'yellow green',
-            from: {opacity: 0},
-            to: {opacity: 1}
-          });
-          $rootScope.$digest();
+        $animate.flush();
 
-          $animate.flush();
-
-          expect(eventData).toEqual({
-            addClass: 'red blue',
-            removeClass: null,
-            from: {opacity: 0},
-            to: {opacity: 1}
-          });
+        expect(eventData).toEqual({
+          addClass: 'red blue',
+          removeClass: null,
+          from: { opacity: 0 },
+          to: { opacity: 1 }
+        });
       }));
 
+      it('should be included for leave', inject(function ($animate, $rootScope, $rootElement, $document) {
+        var eventData;
 
-      it('should be included for leave',
-        inject(function($animate, $rootScope, $rootElement, $document) {
-          var eventData;
+        $animate.on('leave', jqLite($document[0].body), function (element, phase, data) {
+          eventData = data;
+        });
 
-          $animate.on('leave', jqLite($document[0].body), function(element, phase, data) {
-            eventData = data;
-          });
+        var outerContainer = jqLite('<div></div>');
+        element = jqLite('<div></div>');
+        outerContainer.append(element);
+        $rootElement.append(outerContainer);
 
-          var outerContainer = jqLite('<div></div>');
-          element = jqLite('<div></div>');
-          outerContainer.append(element);
-          $rootElement.append(outerContainer);
+        $animate.leave(element, {
+          addClass: 'red blue',
+          removeClass: 'yellow green',
+          from: { opacity: 0 },
+          to: { opacity: 1 }
+        });
 
-          $animate.leave(element, {
-            addClass: 'red blue',
-            removeClass: 'yellow green',
-            from: {opacity: 0},
-            to: {opacity: 1}
-          });
+        $animate.flush();
 
-          $animate.flush();
+        expect(eventData).toEqual({
+          addClass: 'red blue',
+          removeClass: null,
+          from: { opacity: 0 },
+          to: { opacity: 1 }
+        });
+      }));
 
-          expect(eventData).toEqual({
-            addClass: 'red blue',
-            removeClass: null,
-            from: {opacity: 0},
-            to: {opacity: 1}
-          });
-        })
-      );
+      it('should be included for move', inject(function ($animate, $rootScope, $rootElement, $document) {
+        var eventData;
 
+        $animate.on('move', jqLite($document[0].body), function (element, phase, data) {
+          eventData = data;
+        });
 
-      it('should be included for move',
-        inject(function($animate, $rootScope, $rootElement, $document) {
-          var eventData;
+        var parent = jqLite('<div></div>');
+        var parent2 = jqLite('<div></div>');
+        element = jqLite('<div></div>');
+        parent.append(element);
+        $rootElement.append(parent);
+        $rootElement.append(parent2);
 
-          $animate.on('move', jqLite($document[0].body), function(element, phase, data) {
-            eventData = data;
-          });
+        $animate.move(element, parent2, null, {
+          addClass: 'red blue',
+          removeClass: 'yellow green',
+          from: { opacity: 0 },
+          to: { opacity: 1 }
+        });
 
-          var parent = jqLite('<div></div>');
-          var parent2 = jqLite('<div></div>');
-          element = jqLite('<div></div>');
-          parent.append(element);
-          $rootElement.append(parent);
-          $rootElement.append(parent2);
+        $animate.flush();
 
-          $animate.move(element, parent2, null, {
-            addClass: 'red blue',
-            removeClass: 'yellow green',
-            from: {opacity: 0},
-            to: {opacity: 1}
-          });
+        expect(eventData).toEqual({
+          addClass: 'red blue',
+          removeClass: null,
+          from: { opacity: 0 },
+          to: { opacity: 1 }
+        });
+      }));
 
-          $animate.flush();
-
-          expect(eventData).toEqual({
-            addClass: 'red blue',
-            removeClass: null,
-            from: {opacity: 0},
-            to: {opacity: 1}
-          });
-        })
-      );
-
-
-      it('should be included for addClass', inject(function($animate, $rootElement) {
+      it('should be included for addClass', inject(function ($animate, $rootElement) {
         var eventData;
 
         element = jqLite('<div class="purple"></div>');
-        $animate.on('addClass', element, function(element, phase, data) {
+        $animate.on('addClass', element, function (element, phase, data) {
           eventData = data;
         });
 
         $rootElement.append(element);
         $animate.addClass(element, 'red blue', {
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
         $animate.flush();
 
         expect(eventData).toEqual({
           addClass: 'red blue',
           removeClass: null,
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
       }));
 
-
-      it('should be included for removeClass', inject(function($animate, $rootElement) {
+      it('should be included for removeClass', inject(function ($animate, $rootElement) {
         var eventData;
 
         element = jqLite('<div class="red blue purple"></div>');
-        $animate.on('removeClass', element, function(element, phase, data) {
+        $animate.on('removeClass', element, function (element, phase, data) {
           eventData = data;
         });
 
         $rootElement.append(element);
         $animate.removeClass(element, 'red blue', {
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
         $animate.flush();
 
         expect(eventData).toEqual({
           removeClass: 'red blue',
           addClass: null,
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
       }));
 
-
-      it('should be included for setClass', inject(function($animate, $rootElement) {
+      it('should be included for setClass', inject(function ($animate, $rootElement) {
         var eventData;
 
         element = jqLite('<div class="yellow green purple"></div>');
 
-        $animate.on('setClass', element, function(element, phase, data) {
-
+        $animate.on('setClass', element, function (element, phase, data) {
           eventData = data;
         });
 
         $rootElement.append(element);
         $animate.setClass(element, 'red blue', 'yellow green', {
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
         $animate.flush();
 
         expect(eventData).toEqual({
           addClass: 'red blue',
           removeClass: 'yellow green',
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
       }));
 
-      it('should be included for animate', inject(function($animate, $rootElement) {
+      it('should be included for animate', inject(function ($animate, $rootElement) {
         // The event for animate changes to 'setClass' if both addClass and removeClass
         // are definded, because the operations are merged. However, it is still 'animate'
         // and not 'addClass' if only 'addClass' is defined.
@@ -2997,18 +3123,18 @@ describe('animations', function() {
 
         element = jqLite('<div class="yellow green purple"></div>');
 
-        $animate.on('setClass', element, function(element, phase, data) {
+        $animate.on('setClass', element, function (element, phase, data) {
           eventData = data;
           eventName = 'setClass';
         });
 
-        $animate.on('animate', element, function(element, phase, data) {
+        $animate.on('animate', element, function (element, phase, data) {
           eventData = data;
           eventName = 'animate';
         });
 
         $rootElement.append(element);
-        var runner = $animate.animate(element, {opacity: 0}, {opacity: 1}, null, {
+        var runner = $animate.animate(element, { opacity: 0 }, { opacity: 1 }, null, {
           addClass: 'red blue',
           removeClass: 'yellow green'
         });
@@ -3019,12 +3145,12 @@ describe('animations', function() {
         expect(eventData).toEqual({
           addClass: 'red blue',
           removeClass: 'yellow green',
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
 
         eventData = eventName = null;
-        runner = $animate.animate(element, {opacity: 0}, {opacity: 1}, null, {
+        runner = $animate.animate(element, { opacity: 0 }, { opacity: 1 }, null, {
           addClass: 'yellow green'
         });
 
@@ -3035,12 +3161,12 @@ describe('animations', function() {
         expect(eventData).toEqual({
           addClass: 'yellow green',
           removeClass: null,
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
 
         eventData = eventName = null;
-        runner = $animate.animate(element, {opacity: 0}, {opacity: 1}, null, {
+        runner = $animate.animate(element, { opacity: 0 }, { opacity: 1 }, null, {
           removeClass: 'yellow green'
         });
 
@@ -3051,26 +3177,27 @@ describe('animations', function() {
         expect(eventData).toEqual({
           addClass: null,
           removeClass: 'yellow green',
-          from: {opacity: 0},
-          to: {opacity: 1}
+          from: { opacity: 0 },
+          to: { opacity: 1 }
         });
       }));
     });
 
-    they('should trigger a callback for a $prop animation if the listener is on the document',
-      ['enter', 'leave'], function($event) {
-        module(function($provide) {
-          $provide.factory('$rootElement', function($document) {
+    they(
+      'should trigger a callback for a $prop animation if the listener is on the document',
+      ['enter', 'leave'],
+      function ($event) {
+        module(function ($provide) {
+          $provide.factory('$rootElement', function ($document) {
             // Since we listen on document, $document must be the $rootElement for animations to work
             return $document;
           });
         });
 
-        inject(function($animate, $rootScope, $document) {
-
+        inject(function ($animate, $rootScope, $document) {
           var callbackTriggered = false;
 
-          $animate.on($event, $document[0], function() {
+          $animate.on($event, $document[0], function () {
             callbackTriggered = true;
           });
 
@@ -3089,10 +3216,10 @@ describe('animations', function() {
 
           expect(callbackTriggered).toBe(true);
         });
-    });
+      }
+    );
 
-    describe('when animations are skipped, disabled, or invalid', function() {
-
+    describe('when animations are skipped, disabled, or invalid', function () {
       var overriddenAnimationRunner;
       var capturedAnimation;
       var capturedAnimationHistory;
@@ -3100,32 +3227,34 @@ describe('animations', function() {
       var parent;
       var parent2;
 
-      beforeEach(module(function($provide) {
-        overriddenAnimationRunner = null;
-        capturedAnimation = null;
-        capturedAnimationHistory = [];
+      beforeEach(
+        module(function ($provide) {
+          overriddenAnimationRunner = null;
+          capturedAnimation = null;
+          capturedAnimationHistory = [];
 
-        $provide.value('$$animation', function() {
-          capturedAnimationHistory.push(capturedAnimation = arguments);
-          return overriddenAnimationRunner || defaultFakeAnimationRunner;
-        });
+          $provide.value('$$animation', function () {
+            capturedAnimationHistory.push((capturedAnimation = arguments));
+            return overriddenAnimationRunner || defaultFakeAnimationRunner;
+          });
 
-        return function($rootElement, $q, $animate, $$AnimateRunner, $document) {
-          defaultFakeAnimationRunner = new $$AnimateRunner();
+          return function ($rootElement, $q, $animate, $$AnimateRunner, $document) {
+            defaultFakeAnimationRunner = new $$AnimateRunner();
 
-          element = jqLite('<div class="element">element</div>');
-          parent = jqLite('<div class="parent1">parent</div>');
-          parent2 = jqLite('<div class="parent2">parent</div>');
+            element = jqLite('<div class="element">element</div>');
+            parent = jqLite('<div class="parent1">parent</div>');
+            parent2 = jqLite('<div class="parent2">parent</div>');
 
-          $rootElement.append(parent);
-          $rootElement.append(parent2);
-        };
-      }));
+            $rootElement.append(parent);
+            $rootElement.append(parent2);
+          };
+        })
+      );
 
-
-      it('should trigger all callbacks if a follow-up structural animation takes over a running animation',
-        inject(function($animate, $rootScope) {
-
+      it('should trigger all callbacks if a follow-up structural animation takes over a running animation', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         var moveSpy = jasmine.createSpy();
         var leaveSpy = jasmine.createSpy();
@@ -3153,10 +3282,10 @@ describe('animations', function() {
         expect(leaveSpy.calls.argsFor(1)[1]).toBe('close');
       }));
 
-
-      it('should not trigger callbacks for the previous structural animation if a follow-up structural animation takes over before the postDigest',
-        inject(function($animate, $rootScope) {
-
+      it('should not trigger callbacks for the previous structural animation if a follow-up structural animation takes over before the postDigest', inject(function (
+        $animate,
+        $rootScope
+      ) {
         var enterDone = jasmine.createSpy('enter animation done');
 
         var enterSpy = jasmine.createSpy();
@@ -3185,10 +3314,12 @@ describe('animations', function() {
         expect(leaveSpy.calls.mostRecent().args[1]).toBe('close');
       }));
 
-
-      it('should not trigger the callback if animations are disabled on the element',
-        inject(function($animate, $rootScope, $rootElement, $document) {
-
+      it('should not trigger the callback if animations are disabled on the element', inject(function (
+        $animate,
+        $rootScope,
+        $rootElement,
+        $document
+      ) {
         var callbackTriggered = false;
         var spy = jasmine.createSpy('enter');
         $animate.on('enter', jqLite($document[0].body), spy);
@@ -3203,10 +3334,10 @@ describe('animations', function() {
         expect(spy).not.toHaveBeenCalled();
       }));
 
-
-      it('should not trigger the callbacks if the animation is skipped because there are no class-based animations and no structural animation',
-        inject(function($animate, $rootScope) {
-
+      it('should not trigger the callbacks if the animation is skipped because there are no class-based animations and no structural animation', inject(function (
+        $animate,
+        $rootScope
+      ) {
         parent.append(element);
         var classSpy = jasmine.createSpy('classChange');
         $animate.on('addClass', element, classSpy);
@@ -3221,21 +3352,23 @@ describe('animations', function() {
         expect(classSpy).not.toHaveBeenCalled();
       }));
 
-
-      describe('because the document is hidden', function() {
+      describe('because the document is hidden', function () {
         var hidden = true;
 
-        beforeEach(function() {
-          module(function($provide) {
-            $provide.value('$$isDocumentHidden', function() {
+        beforeEach(function () {
+          module(function ($provide) {
+            $provide.value('$$isDocumentHidden', function () {
               return hidden;
             });
           });
         });
 
-        it('should trigger callbacks for an enter animation',
-          inject(function($animate, $rootScope, $rootElement, $document) {
-
+        it('should trigger callbacks for an enter animation', inject(function (
+          $animate,
+          $rootScope,
+          $rootElement,
+          $document
+        ) {
           var spy = jasmine.createSpy();
           $animate.on('enter', jqLite($document[0].body), spy);
 
@@ -3250,9 +3383,6 @@ describe('animations', function() {
           expect(spy.calls.argsFor(1)[1]).toBe('close');
         }));
       });
-
-
     });
-
   });
 });

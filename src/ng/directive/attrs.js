@@ -185,7 +185,6 @@
  *     then the `disabled` attribute will be set on the element
  */
 
-
 /**
  * @ngdoc directive
  * @name ngChecked
@@ -221,7 +220,6 @@
  *     then the `checked` attribute will be set on the element
  */
 
-
 /**
  * @ngdoc directive
  * @name ngReadonly
@@ -256,7 +254,6 @@
  * @param {expression} ngReadonly If the {@link guide/expression expression} is truthy,
  *     then special attribute "readonly" will be set on the element
  */
-
 
 /**
  * @ngdoc directive
@@ -349,7 +346,7 @@
 var ngAttributeAliasDirectives = {};
 
 // boolean attrs are evaluated
-forEach(BOOLEAN_ATTR, function(propName, attrName) {
+forEach(BOOLEAN_ATTR, function (propName, attrName) {
   // binding to multiple is not supported
   if (propName === 'multiple') return;
 
@@ -363,7 +360,7 @@ forEach(BOOLEAN_ATTR, function(propName, attrName) {
   var linkFn = defaultLinkFn;
 
   if (propName === 'checked') {
-    linkFn = function(scope, element, attr) {
+    linkFn = function (scope, element, attr) {
       // ensuring ngChecked doesn't interfere with ngModel when both are set on the same input
       if (attr.ngModel !== attr[normalized]) {
         defaultLinkFn(scope, element, attr);
@@ -371,7 +368,7 @@ forEach(BOOLEAN_ATTR, function(propName, attrName) {
     };
   }
 
-  ngAttributeAliasDirectives[normalized] = function() {
+  ngAttributeAliasDirectives[normalized] = function () {
     return {
       restrict: 'A',
       priority: 100,
@@ -381,11 +378,11 @@ forEach(BOOLEAN_ATTR, function(propName, attrName) {
 });
 
 // aliased input attrs are evaluated
-forEach(ALIASED_ATTR, function(htmlAttr, ngAttr) {
-  ngAttributeAliasDirectives[ngAttr] = function() {
+forEach(ALIASED_ATTR, function (htmlAttr, ngAttr) {
+  ngAttributeAliasDirectives[ngAttr] = function () {
     return {
       priority: 100,
-      link: function(scope, element, attr) {
+      link: function (scope, element, attr) {
         //special case ngPattern when a literal regular expression value
         //is used as the expression (this way we don't have to watch anything).
         if (ngAttr === 'ngPattern' && attr.ngPattern.charAt(0) === '/') {
@@ -405,44 +402,46 @@ forEach(ALIASED_ATTR, function(htmlAttr, ngAttr) {
 });
 
 // ng-src, ng-srcset, ng-href are interpolated
-forEach(['src', 'srcset', 'href'], function(attrName) {
+forEach(['src', 'srcset', 'href'], function (attrName) {
   var normalized = directiveNormalize('ng-' + attrName);
-  ngAttributeAliasDirectives[normalized] = ['$sce', function($sce) {
-    return {
-      priority: 99, // it needs to run after the attributes are interpolated
-      link: function(scope, element, attr) {
-        var propName = attrName,
+  ngAttributeAliasDirectives[normalized] = [
+    '$sce',
+    function ($sce) {
+      return {
+        priority: 99, // it needs to run after the attributes are interpolated
+        link: function (scope, element, attr) {
+          var propName = attrName,
             name = attrName;
 
-        if (attrName === 'href' &&
-            toString.call(element.prop('href')) === '[object SVGAnimatedString]') {
-          name = 'xlinkHref';
-          attr.$attr[name] = 'xlink:href';
-          propName = null;
-        }
-
-        // We need to sanitize the url at least once, in case it is a constant
-        // non-interpolated attribute.
-        attr.$set(normalized, $sce.getTrustedMediaUrl(attr[normalized]));
-
-        attr.$observe(normalized, function(value) {
-          if (!value) {
-            if (attrName === 'href') {
-              attr.$set(name, null);
-            }
-            return;
+          if (attrName === 'href' && toString.call(element.prop('href')) === '[object SVGAnimatedString]') {
+            name = 'xlinkHref';
+            attr.$attr[name] = 'xlink:href';
+            propName = null;
           }
 
-          attr.$set(name, value);
+          // We need to sanitize the url at least once, in case it is a constant
+          // non-interpolated attribute.
+          attr.$set(normalized, $sce.getTrustedMediaUrl(attr[normalized]));
 
-          // Support: IE 9-11 only
-          // On IE, if "ng:src" directive declaration is used and "src" attribute doesn't exist
-          // then calling element.setAttribute('src', 'foo') doesn't do anything, so we need
-          // to set the property as well to achieve the desired effect.
-          // We use attr[attrName] value since $set might have sanitized the url.
-          if (msie && propName) element.prop(propName, attr[name]);
-        });
-      }
-    };
-  }];
+          attr.$observe(normalized, function (value) {
+            if (!value) {
+              if (attrName === 'href') {
+                attr.$set(name, null);
+              }
+              return;
+            }
+
+            attr.$set(name, value);
+
+            // Support: IE 9-11 only
+            // On IE, if "ng:src" directive declaration is used and "src" attribute doesn't exist
+            // then calling element.setAttribute('src', 'foo') doesn't do anything, so we need
+            // to set the property as well to achieve the desired effect.
+            // We use attr[attrName] value since $set might have sanitized the url.
+            if (msie && propName) element.prop(propName, attr[name]);
+          });
+        }
+      };
+    }
+  ];
 });

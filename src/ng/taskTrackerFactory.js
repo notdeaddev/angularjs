@@ -16,7 +16,9 @@
  * @this
  */
 function $$TaskTrackerFactoryProvider() {
-  this.$get = valueFn(function(log) { return new TaskTracker(log); });
+  this.$get = valueFn(function (log) {
+    return new TaskTracker(log);
+  });
 }
 
 function TaskTracker(log) {
@@ -24,8 +26,8 @@ function TaskTracker(log) {
   var taskCounts = {};
   var taskCallbacks = [];
 
-  var ALL_TASKS_TYPE = self.ALL_TASKS_TYPE = '$$all$$';
-  var DEFAULT_TASK_TYPE = self.DEFAULT_TASK_TYPE = '$$default$$';
+  var ALL_TASKS_TYPE = (self.ALL_TASKS_TYPE = '$$all$$');
+  var DEFAULT_TASK_TYPE = (self.DEFAULT_TASK_TYPE = '$$default$$');
 
   /**
    * Execute the specified function and decrement the appropriate `taskCounts` counter.
@@ -116,7 +118,7 @@ function TaskTracker(log) {
     if (!taskCounts[taskType]) {
       callback();
     } else {
-      taskCallbacks.push({type: taskType, cb: callback});
+      taskCallbacks.push({ type: taskType, cb: callback });
     }
   }
 }

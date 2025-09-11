@@ -60,7 +60,6 @@ function isValidObjectMaxDepth(maxDepth) {
   return isNumber(maxDepth) && maxDepth > 0;
 }
 
-
 /**
  * @description
  *
@@ -98,21 +97,22 @@ function minErr(module, ErrorConstructor) {
   var regex = url.replace('.', '\\.') + '[\\s\\S]*';
   var errRegExp = new RegExp(regex, 'g');
 
-  return function() {
+  return function () {
     var code = arguments[0],
       template = arguments[1],
       message = '[' + (module ? module + ':' : '') + code + '] ',
-      templateArgs = sliceArgs(arguments, 2).map(function(arg) {
+      templateArgs = sliceArgs(arguments, 2).map(function (arg) {
         return toDebugString(arg, minErrConfig.objectMaxDepth);
       }),
-      paramPrefix, i;
+      paramPrefix,
+      i;
 
     // A minErr message has two parts: the message itself and the url that contains the
     // encoded message.
     // The message's parameters can contain other error messages which also include error urls.
     // To prevent the messages from getting too long, we strip the error urls from the parameters.
 
-    message += template.replace(/\{\d+\}/g, function(match) {
+    message += template.replace(/\{\d+\}/g, function (match) {
       var index = +match.slice(1, -1);
 
       if (index < templateArgs.length) {

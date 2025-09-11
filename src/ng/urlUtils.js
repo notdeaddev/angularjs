@@ -92,9 +92,7 @@ function urlResolve(url) {
     hash: urlParsingNode.hash ? urlParsingNode.hash.replace(/^#/, '') : '',
     hostname: hostname,
     port: urlParsingNode.port,
-    pathname: (urlParsingNode.pathname.charAt(0) === '/')
-      ? urlParsingNode.pathname
-      : '/' + urlParsingNode.pathname
+    pathname: urlParsingNode.pathname.charAt(0) === '/' ? urlParsingNode.pathname : '/' + urlParsingNode.pathname
   };
 }
 
@@ -166,8 +164,7 @@ function urlsAreSameOrigin(url1, url2) {
   url1 = urlResolve(url1);
   url2 = urlResolve(url2);
 
-  return (url1.protocol === url2.protocol &&
-          url1.host === url2.host);
+  return url1.protocol === url2.protocol && url1.host === url2.host;
 }
 
 /**

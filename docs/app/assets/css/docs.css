@@ -1,38 +1,45 @@
 @font-face {
   font-family: 'Open Sans';
-  src: url("../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.eot?v=1.1.0");
-  src: url("../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.eot?#iefix&v=1.1.0") format("embedded-opentype"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.woff?v=1.1.0") format("woff"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.ttf?v=1.1.0") format("truetype"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.svg?v=1.1.0#OpenSansBold") format("svg");
+  src: url('../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.eot?v=1.1.0');
+  src:
+    url('../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.eot?#iefix&v=1.1.0')
+      format('embedded-opentype'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.woff?v=1.1.0') format('woff'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.ttf?v=1.1.0') format('truetype'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Regular/OpenSans-Regular.svg?v=1.1.0#OpenSansBold') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 @font-face {
   font-family: 'Open Sans';
-  src: url("../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.eot?v=1.1.0");
-  src: url("../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.eot?#iefix&v=1.1.0") format("embedded-opentype"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.woff?v=1.1.0") format("woff"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.ttf?v=1.1.0") format("truetype"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.svg?v=1.1.0#OpenSansBold") format("svg");
+  src: url('../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.eot?v=1.1.0');
+  src:
+    url('../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.eot?#iefix&v=1.1.0')
+      format('embedded-opentype'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.woff?v=1.1.0') format('woff'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.ttf?v=1.1.0') format('truetype'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Semibold/OpenSans-Semibold.svg?v=1.1.0#OpenSansBold')
+      format('svg');
   font-weight: 600;
   font-style: normal;
 }
 
-
 @font-face {
   font-family: 'Open Sans';
-  src: url("../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.eot?v=1.1.0");
-  src: url("../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.eot?#iefix&v=1.1.0") format("embedded-opentype"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.woff?v=1.1.0") format("woff"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.ttf?v=1.1.0") format("truetype"),
-    url("../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.svg?v=1.1.0#OpenSansBold") format("svg");
+  src: url('../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.eot?v=1.1.0');
+  src:
+    url('../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.eot?#iefix&v=1.1.0')
+      format('embedded-opentype'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.woff?v=1.1.0') format('woff'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.ttf?v=1.1.0') format('truetype'),
+    url('../components/open-sans-fontface-1.4.0/fonts/Bold/OpenSans-Bold.svg?v=1.1.0#OpenSansBold') format('svg');
   font-weight: bold;
   font-style: normal;
 }
 
-html, body {
+html,
+body {
   position: relative;
   height: 100%;
 }
@@ -78,8 +85,13 @@ html, body {
   display:none;
 }
 */
-h1,h2,h3,h4,h5,h6 {
-  font-family: "Open Sans";
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Open Sans';
 }
 
 .subnav-body {
@@ -127,11 +139,9 @@ h1,h2,h3,h4,h5,h6 {
 
 /* end: Logo */
 
-
 .spacer {
   height: 1em;
 }
-
 
 .icon-cog {
   line-height: 13px;
@@ -147,7 +157,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .nav-index-section a {
   font-weight: bold;
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   color: black !important;
   margin-top: 10px;
   display: block;
@@ -158,7 +168,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .nav-index-group-heading {
-  color: #6F0101;
+  color: #6f0101;
   font-weight: bold;
   font-size: 1.2em;
   padding: 0;
@@ -168,7 +178,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .nav-index-group .nav-index-listing.current a {
-  color: #B52E31;
+  color: #b52e31;
 }
 
 .nav-breadcrumb {
@@ -177,7 +187,7 @@ h1,h2,h3,h4,h5,h6 {
 }
 
 .nav-breadcrumb-entry {
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   padding: 0;
   margin: 0;
   font-size: 18px;
@@ -193,7 +203,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .nav-breadcrumb-entry > span,
 .nav-breadcrumb-entry > a {
-  color: #6F0101;
+  color: #6f0101;
 }
 
 .step-list > li:nth-child(1) {
@@ -215,7 +225,7 @@ h1,h2,h3,h4,h5,h6 {
 
 .api-profile-header-structure,
 .api-profile-header-structure a {
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   font-weight: bold;
   color: #999;
 }
@@ -275,7 +285,7 @@ ul + p {
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   font-weight: 600;
   height: auto;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f2f2f2));
@@ -306,7 +316,7 @@ ul + p {
 }
 
 .picker:after {
-  content: "";
+  content: '';
   position: absolute;
   right: 8%;
   top: 50%;
@@ -350,7 +360,7 @@ iframe.example {
 }
 
 .search-results-group-heading {
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   padding-left: 10px;
   color: white;
 }
@@ -402,7 +412,7 @@ iframe.example {
   -webkit-column-break-inside: avoid;
   -moz-column-break-inside: avoid; /* Unsupported */
   column-break-inside: avoid;
-  text-indent: -0.65em;  /* Make sure line wrapped words are aligned vertically */
+  text-indent: -0.65em; /* Make sure line wrapped words are aligned vertically */
 }
 
 @supports (-moz-column-count: 2) {
@@ -415,7 +425,7 @@ iframe.example {
 }
 
 .search-result:before {
-  content: "\002D\00A0"; /* Dash and non-breaking space as List item type */
+  content: '\002D\00A0'; /* Dash and non-breaking space as List item type */
   position: relative;
 }
 
@@ -478,7 +488,7 @@ iframe.example {
 #navbar-sub {
   padding-top: 10px;
   padding-bottom: 5px;
-  background: rgba(245,245,245,1);
+  background: rgba(245, 245, 245, 1);
   box-shadow: 0 0 2px #999;
   z-index: 1028;
   top: 57px;
@@ -522,7 +532,7 @@ iframe.example {
 }
 
 .main-body-grid .side-navigation.ng-hide {
-  display: block!important;
+  display: block !important;
 }
 
 .variables-matrix td {
@@ -566,7 +576,7 @@ iframe.example {
 }
 
 .type-hint-array {
-  background: #F90;;
+  background: #f90;
 }
 
 .type-hint-boolean {
@@ -601,12 +611,18 @@ iframe.example {
   display: block;
 }
 
-h1 + ul, h1 + ul > li,
-h2 + ul, h2 + ul > li,
-ul.tutorial-nav, ul.tutorial-nav > li,
-.usage > ul, .usage > ul > li,
-ul.methods, ul.methods > li,
-ul.events, ul.events > li {
+h1 + ul,
+h1 + ul > li,
+h2 + ul,
+h2 + ul > li,
+ul.tutorial-nav,
+ul.tutorial-nav > li,
+.usage > ul,
+.usage > ul > li,
+ul.methods,
+ul.methods > li,
+ul.events,
+ul.events > li {
   list-style: none;
   padding: 0;
 }
@@ -635,7 +651,7 @@ h4 {
   -ms-border-radius: 4px;
   -o-border-radius: 4px;
   border-radius: 4px;
-  font-family: "Open Sans";
+  font-family: 'Open Sans';
   font-weight: 600;
   height: auto;
   background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f2f2f2));
@@ -649,13 +665,15 @@ h4 {
   margin-left: 10px;
 }
 
-.btn:hover, .btn:focus {
+.btn:hover,
+.btn:focus {
   color: black !important;
   border: 1px solid #ddd !important;
   background: white !important;
 }
 
-.view-source, .improve-docs {
+.view-source,
+.improve-docs {
   position: relative;
   z-index: 100;
 }
@@ -714,7 +732,7 @@ ul.events > li {
 }
 
 @media only screen and (min-width: 768px) {
-  [ng-include="partialPath"].ng-hide {
+  [ng-include='partialPath'].ng-hide {
     display: block !important;
     visibility: hidden;
   }
@@ -730,7 +748,8 @@ ul.events > li {
 }
 
 @media only screen and (max-width: 767px) {
-  .picker, .picker select {
+  .picker,
+  .picker select {
     width: auto;
     display: block;
     margin-bottom: 10px;
@@ -751,7 +770,8 @@ ul.events > li {
     margin-left: 0;
   }
   .main-body-grid > .grid-left,
-  .header-fixed, .footer {
+  .header-fixed,
+  .footer {
     position: static !important;
   }
   .main-body-grid > .grid-left {
@@ -780,10 +800,10 @@ ul.events > li {
   .nav-index-group .nav-index-listing:not(.nav-index-section):after {
     padding-right: 5px;
     margin-left: -3px;
-    content: ",  ";
+    content: ',  ';
   }
   .nav-index-group .nav-index-listing:last-child:after {
-    content: "";
+    content: '';
     display: inline-block;
   }
   .nav-index-group .nav-index-section {
@@ -822,8 +842,8 @@ ul.events > li {
     float: none !important;
     display: block !important;
     width: auto !important;
-    border: 0! important;
-    padding: 0! important;
+    border: 0 !important;
+    padding: 0 !important;
   }
 
   @supports ((column-count: 2) or (-moz-column-count: 2) or (-ms-column-count: 2) or (-webkit-column-count: 2)) {
@@ -844,11 +864,11 @@ ul.events > li {
   }
 
   .search-results-group .search-result:after {
-    content: ", ";
+    content: ', ';
   }
 
   .search-results-group .search-result:before {
-    content: "";
+    content: '';
   }
 
   @supports ((column-count: 2) or (-moz-column-count: 2) or (-ms-column-count: 2) or (-webkit-column-count: 2)) {
@@ -857,7 +877,7 @@ ul.events > li {
     }
 
     .search-results-group .search-result:after {
-      content: "";
+      content: '';
     }
   }
 
@@ -866,7 +886,7 @@ ul.events > li {
   }
 }
 
-iframe[name="example-anchoringExample"] {
+iframe[name='example-anchoringExample'] {
   height: 400px;
 }
 
@@ -893,7 +913,8 @@ iframe[name="example-anchoringExample"] {
   line-height: 48px;
 }
 
-#navbar-main .navbar-inner, #navbar-notice .navbar-inner {
+#navbar-main .navbar-inner,
+#navbar-notice .navbar-inner {
   box-shadow: none;
 }
 
@@ -901,7 +922,9 @@ iframe[name="example-anchoringExample"] {
   max-width: 970px;
 }
 
-.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+.nav .open > a,
+.nav .open > a:hover,
+.nav .open > a:focus {
   background-color: inherit;
 }
 
@@ -938,11 +961,19 @@ toc-container > div > toc-tree > ul > li > toc-tree > ul > li toc-tree > ul li {
   padding: 2px 8px;
   border-radius: 5px;
 }
-.security span { background-color: orange; }
-.stable span { background-color: green; color: white; }
-.current span { background-color: blue; color: white; }
+.security span {
+  background-color: orange;
+}
+.stable span {
+  background-color: green;
+  color: white;
+}
+.current span {
+  background-color: blue;
+  color: white;
+}
 
-@media handheld and (max-width:800px), screen and (max-device-width:800px), screen and (max-width:800px) {
+@media handheld and (max-width: 800px), screen and (max-device-width: 800px), screen and (max-width: 800px) {
   .navbar {
     min-height: auto;
   }
@@ -968,7 +999,8 @@ toc-container > div > toc-tree > ul > li > toc-tree > ul > li toc-tree > ul li {
     left: auto;
   }
 
-  .navbar-nav .open .dropdown-menu > li > a, .navbar-nav .open .dropdown-menu .dropdown-header {
+  .navbar-nav .open .dropdown-menu > li > a,
+  .navbar-nav .open .dropdown-menu .dropdown-header {
     padding: 0 8px;
   }
 
@@ -977,7 +1009,9 @@ toc-container > div > toc-tree > ul > li > toc-tree > ul > li toc-tree > ul li {
   }
 
   #navbar-notice .navbar-inner {
-    box-shadow: 0 0 3px rgba(0, 0, 0, .12), 0 3px 3px rgba(0, 0, 0, .24)
+    box-shadow:
+      0 0 3px rgba(0, 0, 0, 0.12),
+      0 3px 3px rgba(0, 0, 0, 0.24);
   }
 
   #navbar-sub {
@@ -987,5 +1021,4 @@ toc-container > div > toc-tree > ul > li > toc-tree > ul > li toc-tree > ul li {
     padding-bottom: 0;
     margin-bottom: 0;
   }
-
 }

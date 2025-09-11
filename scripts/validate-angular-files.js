@@ -19,7 +19,7 @@ for (const section in combinedFiles) {
   if (section !== 'angularLoader') {
     directories.push('src/' + section);
   }
-  sectionFiles.forEach((file) => {
+  sectionFiles.forEach(file => {
     detectedFiles[file] = true;
     if (!fs.existsSync(file)) {
       console.error(file + ' does not exist in the local file structure.');
@@ -28,13 +28,13 @@ for (const section in combinedFiles) {
   });
 }
 
-directories.forEach((directory) => {
-  glob.sync(directory + '/**/*').forEach((filePath) => {
+directories.forEach(directory => {
+  glob.sync(directory + '/**/*').forEach(filePath => {
     if (!fs.lstatSync(filePath).isDirectory()) {
       const fileName = path.basename(filePath);
       const isHiddenFile = fileName[0] === '.';
       if (!isHiddenFile && !detectedFiles[filePath]) {
-        console.error(filePath + ' exists in the local file structure but isn\'t used by any module.');
+        console.error(filePath + " exists in the local file structure but isn't used by any module.");
         errorsDetected = true;
       }
     }

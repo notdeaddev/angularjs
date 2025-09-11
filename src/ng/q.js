@@ -226,11 +226,19 @@
  */
 function $QProvider() {
   var errorOnUnhandledRejections = true;
-  this.$get = ['$rootScope', '$exceptionHandler', function($rootScope, $exceptionHandler) {
-    return qFactory(function(callback) {
-      $rootScope.$evalAsync(callback);
-    }, $exceptionHandler, errorOnUnhandledRejections);
-  }];
+  this.$get = [
+    '$rootScope',
+    '$exceptionHandler',
+    function ($rootScope, $exceptionHandler) {
+      return qFactory(
+        function (callback) {
+          $rootScope.$evalAsync(callback);
+        },
+        $exceptionHandler,
+        errorOnUnhandledRejections
+      );
+    }
+  ];
 
   /**
    * @ngdoc method
@@ -245,7 +253,7 @@ function $QProvider() {
    * @returns {boolean|ng.$qProvider} Current value when called without a new value or self for
    *    chaining otherwise.
    */
-  this.errorOnUnhandledRejections = function(value) {
+  this.errorOnUnhandledRejections = function (value) {
     if (isDefined(value)) {
       errorOnUnhandledRejections = value;
       return this;
@@ -258,13 +266,21 @@ function $QProvider() {
 /** @this */
 function $$QProvider() {
   var errorOnUnhandledRejections = true;
-  this.$get = ['$browser', '$exceptionHandler', function($browser, $exceptionHandler) {
-    return qFactory(function(callback) {
-      $browser.defer(callback);
-    }, $exceptionHandler, errorOnUnhandledRejections);
-  }];
+  this.$get = [
+    '$browser',
+    '$exceptionHandler',
+    function ($browser, $exceptionHandler) {
+      return qFactory(
+        function (callback) {
+          $browser.defer(callback);
+        },
+        $exceptionHandler,
+        errorOnUnhandledRejections
+      );
+    }
+  ];
 
-  this.errorOnUnhandledRejections = function(value) {
+  this.errorOnUnhandledRejections = function (value) {
     if (isDefined(value)) {
       errorOnUnhandledRejections = value;
       return this;
@@ -304,20 +320,25 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
   }
 
   function Deferred() {
-    var promise = this.promise = new Promise();
+    var promise = (this.promise = new Promise());
     //Non prototype methods necessary to support unbound execution :/
-    this.resolve = function(val) { resolvePromise(promise, val); };
-    this.reject = function(reason) { rejectPromise(promise, reason); };
-    this.notify = function(progress) { notifyPromise(promise, progress); };
+    this.resolve = function (val) {
+      resolvePromise(promise, val);
+    };
+    this.reject = function (reason) {
+      rejectPromise(promise, reason);
+    };
+    this.notify = function (progress) {
+      notifyPromise(promise, progress);
+    };
   }
-
 
   function Promise() {
     this.$$state = { status: 0 };
   }
 
   extend(Promise.prototype, {
-    then: function(onFulfilled, onRejected, progressBack) {
+    then: function (onFulfilled, onRejected, progressBack) {
       if (isUndefined(onFulfilled) && isUndefined(onRejected) && isUndefined(progressBack)) {
         return this;
       }
@@ -330,16 +351,20 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
       return result;
     },
 
-    'catch': function(callback) {
+    catch: function (callback) {
       return this.then(null, callback);
     },
 
-    'finally': function(callback, progressBack) {
-      return this.then(function(value) {
-        return handleCallback(value, resolve, callback);
-      }, function(error) {
-        return handleCallback(error, reject, callback);
-      }, progressBack);
+    finally: function (callback, progressBack) {
+      return this.then(
+        function (value) {
+          return handleCallback(value, resolve, callback);
+        },
+        function (error) {
+          return handleCallback(error, reject, callback);
+        },
+        progressBack
+      );
     }
   });
 
@@ -404,20 +429,18 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
     if (state.processScheduled || !state.pending) return;
     state.processScheduled = true;
     ++queueSize;
-    nextTick(function() { processQueue(state); });
+    nextTick(function () {
+      processQueue(state);
+    });
   }
 
   function resolvePromise(promise, val) {
     if (promise.$$state.status) return;
     if (val === promise) {
-      $$reject(promise, $qMinErr(
-        'qcycle',
-        'Expected promise to be resolved with value other than itself \'{0}\'',
-        val));
+      $$reject(promise, $qMinErr('qcycle', "Expected promise to be resolved with value other than itself '{0}'", val));
     } else {
       $$resolve(promise, val);
     }
-
   }
 
   function $$resolve(promise, val) {
@@ -466,8 +489,8 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
   function notifyPromise(promise, progress) {
     var callbacks = promise.$$state.pending;
 
-    if ((promise.$$state.status <= 0) && callbacks && callbacks.length) {
-      nextTick(function() {
+    if (promise.$$state.status <= 0 && callbacks && callbacks.length) {
+      nextTick(function () {
         var callback, result;
         for (var i = 0, ii = callbacks.length; i < ii; i++) {
           result = callbacks[i][0];
@@ -532,7 +555,7 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
       return reject(e);
     }
     if (isPromiseLike(callbackOutput)) {
-      return callbackOutput.then(function() {
+      return callbackOutput.then(function () {
         return resolver(value);
       }, reject);
     } else {
@@ -556,7 +579,6 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
    * @param {Function=} progressCallback
    * @returns {Promise} Returns a promise of the passed value or promise
    */
-
 
   function when(value, callback, errback, progressBack) {
     var result = new Promise();
@@ -598,17 +620,20 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
 
   function all(promises) {
     var result = new Promise(),
-        counter = 0,
-        results = isArray(promises) ? [] : {};
+      counter = 0,
+      results = isArray(promises) ? [] : {};
 
-    forEach(promises, function(promise, key) {
+    forEach(promises, function (promise, key) {
       counter++;
-      when(promise).then(function(value) {
-        results[key] = value;
-        if (!(--counter)) resolvePromise(result, results);
-      }, function(reason) {
-        rejectPromise(result, reason);
-      });
+      when(promise).then(
+        function (value) {
+          results[key] = value;
+          if (!--counter) resolvePromise(result, results);
+        },
+        function (reason) {
+          rejectPromise(result, reason);
+        }
+      );
     });
 
     if (counter === 0) {
@@ -635,7 +660,7 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
   function race(promises) {
     var deferred = defer();
 
-    forEach(promises, function(promise) {
+    forEach(promises, function (promise) {
       when(promise).then(deferred.resolve, deferred.reject);
     });
 
@@ -644,7 +669,7 @@ function qFactory(nextTick, exceptionHandler, errorOnUnhandledRejections) {
 
   function $Q(resolver) {
     if (!isFunction(resolver)) {
-      throw $qMinErr('norslvr', 'Expected resolverFn, got \'{0}\'', resolver);
+      throw $qMinErr('norslvr', "Expected resolverFn, got '{0}'", resolver);
     }
 
     var promise = new Promise();

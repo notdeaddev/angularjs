@@ -1,29 +1,25 @@
 'use strict';
 
-describe('errors', function() {
+describe('errors', function () {
   // Mock `ngSanitize` module
-  angular.
-    module('ngSanitize', []).
-    value('$sanitize', jasmine.createSpy('$sanitize').and.callFake(angular.identity));
+  angular.module('ngSanitize', []).value('$sanitize', jasmine.createSpy('$sanitize').and.callFake(angular.identity));
 
   beforeEach(module('errors'));
 
-
-  describe('errorDisplay', function() {
+  describe('errorDisplay', function () {
     var $sanitize;
     var errorLinkFilter;
 
-    beforeEach(inject(function(_$sanitize_, _errorLinkFilter_) {
+    beforeEach(inject(function (_$sanitize_, _errorLinkFilter_) {
       $sanitize = _$sanitize_;
       errorLinkFilter = _errorLinkFilter_;
     }));
 
-
-    it('should return empty input unchanged', function() {
+    it('should return empty input unchanged', function () {
       var inputs = [undefined, null, false, 0, ''];
       var remaining = inputs.length;
 
-      inputs.forEach(function(falsyValue) {
+      inputs.forEach(function (falsyValue) {
         expect(errorLinkFilter(falsyValue)).toBe(falsyValue);
         remaining--;
       });
@@ -31,8 +27,7 @@ describe('errors', function() {
       expect(remaining).toBe(0);
     });
 
-
-    it('should recognize URLs and convert them to `<a>`', function() {
+    it('should recognize URLs and convert them to `<a>`', function () {
       var urls = [
         ['ftp://foo/bar?baz#qux'],
         ['http://foo/bar?baz#qux'],
@@ -42,7 +37,7 @@ describe('errors', function() {
       ];
       var remaining = urls.length;
 
-      urls.forEach(function(values) {
+      urls.forEach(function (values) {
         var actualUrl = values[0];
         var expectedUrl = values[1] || actualUrl;
         var expectedText = values[2] || expectedUrl;
@@ -58,8 +53,7 @@ describe('errors', function() {
       expect(remaining).toBe(0);
     });
 
-
-    it('should not recognize stack-traces as URLs', function() {
+    it('should not recognize stack-traces as URLs', function () {
       var urls = [
         'ftp://foo/bar?baz#qux:4:2',
         'http://foo/bar?baz#qux:4:2',
@@ -69,7 +63,7 @@ describe('errors', function() {
       ];
       var remaining = urls.length;
 
-      urls.forEach(function(url) {
+      urls.forEach(function (url) {
         var input = 'start ' + url + ' end';
 
         expect(errorLinkFilter(input)).toBe(input);
@@ -79,8 +73,7 @@ describe('errors', function() {
       expect(remaining).toBe(0);
     });
 
-
-    it('should should set `[target]` if specified', function() {
+    it('should should set `[target]` if specified', function () {
       var url = 'https://foo/bar?baz#qux';
       var target = '_blank';
       var outputWithoutTarget = '<a href="' + url + '">' + url + '</a>';
@@ -90,8 +83,7 @@ describe('errors', function() {
       expect(errorLinkFilter(url, target)).toBe(outputWithTarget);
     });
 
-
-    it('should truncate the contents of the generated `<a>` to 60 characters', function() {
+    it('should truncate the contents of the generated `<a>` to 60 characters', function () {
       var looongUrl = 'https://foooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo';
       var truncatedUrl = 'https://foooooooooooooooooooooooooooooooooooooooooooooooo...';
       var output = '<a href="' + looongUrl + '">' + truncatedUrl + '</a>';
@@ -101,8 +93,7 @@ describe('errors', function() {
       expect(errorLinkFilter(looongUrl)).toBe(output);
     });
 
-
-    it('should pass the final string through `$sanitize`', function() {
+    it('should pass the final string through `$sanitize`', function () {
       $sanitize.calls.reset();
 
       var input = 'start https://foo/bar?baz#qux end';
@@ -113,52 +104,49 @@ describe('errors', function() {
     });
   });
 
-
-  describe('errorDisplay', function() {
+  describe('errorDisplay', function () {
     var $compile;
     var $location;
     var $rootScope;
     var errorLinkFilter;
 
-    beforeEach(module(function($provide) {
-      $provide.decorator('errorLinkFilter', function() {
-        errorLinkFilter = jasmine.createSpy('errorLinkFilter');
-        errorLinkFilter.and.callFake(angular.identity);
+    beforeEach(
+      module(function ($provide) {
+        $provide.decorator('errorLinkFilter', function () {
+          errorLinkFilter = jasmine.createSpy('errorLinkFilter');
+          errorLinkFilter.and.callFake(angular.identity);
 
-        return errorLinkFilter;
-      });
-    }));
-    beforeEach(inject(function(_$compile_, _$location_, _$rootScope_) {
+          return errorLinkFilter;
+        });
+      })
+    );
+    beforeEach(inject(function (_$compile_, _$location_, _$rootScope_) {
       $compile = _$compile_;
       $location = _$location_;
       $rootScope = _$rootScope_;
     }));
 
-
-    it('should set the element\'s HTML', function() {
+    it("should set the element's HTML", function () {
       var elem = $compile('<span error-display="bar">foo</span>')($rootScope);
       expect(elem.html()).toBe('bar');
     });
 
-
-    it('should interpolate the contents against `$location.search()`', function() {
-      spyOn($location, 'search').and.returnValue({p0: 'foo', p1: 'bar'});
+    it('should interpolate the contents against `$location.search()`', function () {
+      spyOn($location, 'search').and.returnValue({ p0: 'foo', p1: 'bar' });
 
       var elem = $compile('<span error-display="foo = {0}, bar = {1}"></span>')($rootScope);
       expect(elem.html()).toBe('foo = foo, bar = bar');
     });
 
-
-    it('should pass the interpolated text through `errorLinkFilter`', function() {
-      $location.search = jasmine.createSpy('search').and.returnValue({p0: 'foo'});
+    it('should pass the interpolated text through `errorLinkFilter`', function () {
+      $location.search = jasmine.createSpy('search').and.returnValue({ p0: 'foo' });
 
       $compile('<span error-display="foo = {0}"></span>')($rootScope);
       expect(errorLinkFilter).toHaveBeenCalledTimes(1);
       expect(errorLinkFilter).toHaveBeenCalledWith('foo = foo', '_blank');
     });
 
-
-    it('should encode `<` and `>`', function() {
+    it('should encode `<` and `>`', function () {
       var elem = $compile('<span error-display="&lt;xyz&gt;"></span>')($rootScope);
       expect(elem.text()).toBe('<xyz>');
     });

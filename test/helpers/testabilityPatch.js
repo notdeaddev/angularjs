@@ -3,8 +3,7 @@
 
 if (window.bindJQuery) bindJQuery();
 
-beforeEach(function() {
-
+beforeEach(function () {
   // all this stuff is not needed for module tests, where jqlite and publishExternalAPI and jqLite are not global vars
   if (window.publishExternalAPI) {
     publishExternalAPI(angular);
@@ -23,7 +22,7 @@ beforeEach(function() {
   angular.element(window.document.body).empty().removeData();
 });
 
-afterEach(function() {
+afterEach(function () {
   var count, cache;
 
   // These Nodes are persisted across tests.
@@ -59,8 +58,8 @@ afterEach(function() {
 
     cache = angular.element.cache;
 
-    forEachSorted(cache, function(expando, key) {
-      angular.forEach(expando.data, function(value, key) {
+    forEachSorted(cache, function (expando, key) {
+      angular.forEach(expando.data, function (value, key) {
         count++;
         if (value && value.$element) {
           dump('LEAK', key, value.$id, sortedHtml(value.$element));
@@ -85,7 +84,6 @@ afterEach(function() {
     return keys;
   }
 });
-
 
 function dealoc(obj) {
   var jqCache = angular.element.cache;
@@ -117,11 +115,9 @@ function dealoc(obj) {
   }
 }
 
-
 function jqLiteCacheSize() {
   return Object.keys(jqLite.cache).length;
 }
-
 
 /**
  * @param {DOMElement} element
@@ -130,12 +126,13 @@ function jqLiteCacheSize() {
 function sortedHtml(element, showNgClass) {
   var html = '';
   forEach(jqLite(element), function toString(node) {
-
     if (node.nodeName === '#text') {
-      html += node.nodeValue.
-        replace(/&(\w+[&;\W])?/g, function(match, entity) {return entity ? match : '&amp;';}).
-        replace(/</g, '&lt;').
-        replace(/>/g, '&gt;');
+      html += node.nodeValue
+        .replace(/&(\w+[&;\W])?/g, function (match, entity) {
+          return entity ? match : '&amp;';
+        })
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     } else if (node.nodeName === '#comment') {
       html += '<!--' + node.nodeValue + '-->';
     } else {
@@ -156,8 +153,9 @@ function sortedHtml(element, showNgClass) {
         }
 
         var attr = attributes[i];
-        if (attr.name.match(/^ng[:-]/) ||
-            !/^ng\d+/.test(attr.name) &&
+        if (
+          attr.name.match(/^ng[:-]/) ||
+          (!/^ng\d+/.test(attr.name) &&
             (attr.value || attr.value === '') &&
             attr.value !== 'null' &&
             attr.value !== 'auto' &&
@@ -172,7 +170,8 @@ function sortedHtml(element, showNgClass) {
             attr.name !== 'start' &&
             attr.name !== 'tabIndex' &&
             attr.name !== 'style' &&
-            attr.name.substr(0, 6) !== 'jQuery') {
+            attr.name.substr(0, 6) !== 'jQuery')
+        ) {
           attrs.push(' ' + attr.name + '="' + attr.value + '"');
         }
       }
@@ -181,7 +180,7 @@ function sortedHtml(element, showNgClass) {
       if (node.style) {
         var style = [];
         if (node.style.cssText) {
-          forEach(node.style.cssText.split(';'), function(value) {
+          forEach(node.style.cssText.split(';'), function (value) {
             value = trim(value);
             if (value) {
               style.push(lowercase(value));
@@ -200,7 +199,7 @@ function sortedHtml(element, showNgClass) {
         style.sort();
         var tmp = style;
         style = [];
-        forEach(tmp, function(value) {
+        forEach(tmp, function (value) {
           if (!value.match(/^max[^-]/)) {
             style.push(value);
           }
@@ -220,17 +219,15 @@ function sortedHtml(element, showNgClass) {
   return html;
 }
 
-
 function childrenTagsOf(element) {
   var tags = [];
 
-  forEach(jqLite(element).children(), function(child) {
+  forEach(jqLite(element).children(), function (child) {
     tags.push(child.nodeName.toLowerCase());
   });
 
   return tags;
 }
-
 
 // TODO(vojta): migrate these helpers into jasmine matchers
 /**a
@@ -255,42 +252,42 @@ function assertVisible(node) {
 }
 
 function provideLog($provide) {
-  $provide.factory('log', function() {
-      var messages = [];
+  $provide.factory('log', function () {
+    var messages = [];
 
-      function log(msg) {
-        messages.push(msg);
-        return msg;
-      }
+    function log(msg) {
+      messages.push(msg);
+      return msg;
+    }
 
-      log.toString = function() {
-        return messages.join('; ');
+    log.toString = function () {
+      return messages.join('; ');
+    };
+
+    log.toArray = function () {
+      return messages;
+    };
+
+    log.reset = function () {
+      messages = [];
+    };
+
+    log.empty = function () {
+      var currentMessages = messages;
+      messages = [];
+      return currentMessages;
+    };
+
+    log.fn = function (msg) {
+      return function () {
+        log(msg);
       };
+    };
 
-      log.toArray = function() {
-        return messages;
-      };
+    log.$$log = true;
 
-      log.reset = function() {
-        messages = [];
-      };
-
-      log.empty = function() {
-        var currentMessages = messages;
-        messages = [];
-        return currentMessages;
-      };
-
-      log.fn = function(msg) {
-        return function() {
-          log(msg);
-        };
-      };
-
-      log.$$log = true;
-
-      return log;
-    });
+    return log;
+  });
 }
 
 function pending() {
@@ -301,32 +298,37 @@ function trace(name) {
   window.dump(new Error(name).stack);
 }
 
-var karmaDump = window.dump || function() {
-  window.console.log.apply(window.console, arguments);
-};
+var karmaDump =
+  window.dump ||
+  function () {
+    window.console.log.apply(window.console, arguments);
+  };
 
-window.dump = function() {
-  karmaDump.apply(undefined, Array.prototype.map.call(arguments, function(arg) {
-    return angular.mock.dump(arg);
-  }));
+window.dump = function () {
+  karmaDump.apply(
+    undefined,
+    Array.prototype.map.call(arguments, function (arg) {
+      return angular.mock.dump(arg);
+    })
+  );
 };
 
 function generateInputCompilerHelper(helper) {
-  beforeEach(function() {
+  beforeEach(function () {
     helper.validationCounter = {};
 
-    module(function($compileProvider) {
-      $compileProvider.directive('validationSpy', function() {
+    module(function ($compileProvider) {
+      $compileProvider.directive('validationSpy', function () {
         return {
           priority: 1,
           require: 'ngModel',
-          link: function(scope, element, attrs, ctrl) {
+          link: function (scope, element, attrs, ctrl) {
             var validationName = attrs.validationSpy;
 
             var originalValidator = ctrl.$validators[validationName];
             helper.validationCounter[validationName] = 0;
 
-            ctrl.$validators[validationName] = function(modelValue, viewValue) {
+            ctrl.$validators[validationName] = function (modelValue, viewValue) {
               helper.validationCounter[validationName]++;
 
               return originalValidator(modelValue, viewValue);
@@ -335,16 +337,14 @@ function generateInputCompilerHelper(helper) {
         };
       });
 
-      $compileProvider.directive('attrCapture', function() {
-        return function(scope, element, $attrs) {
+      $compileProvider.directive('attrCapture', function () {
+        return function (scope, element, $attrs) {
           helper.attrs = $attrs;
         };
       });
     });
-    inject(function($compile, $rootScope, $sniffer, $document, $rootElement) {
-
-      helper.compileInput = function(inputHtml, mockValidity, scope) {
-
+    inject(function ($compile, $rootScope, $sniffer, $document, $rootElement) {
+      helper.compileInput = function (inputHtml, mockValidity, scope) {
         scope = helper.scope = scope || $rootScope;
 
         // Create the input element and dealoc when done
@@ -376,28 +376,27 @@ function generateInputCompilerHelper(helper) {
         return helper.inputElm;
       };
 
-      helper.changeInputValueTo = function(value) {
+      helper.changeInputValueTo = function (value) {
         helper.changeGivenInputTo(helper.inputElm, value);
       };
 
-      helper.changeGivenInputTo = function(inputElm, value) {
+      helper.changeGivenInputTo = function (inputElm, value) {
         inputElm.val(value);
         browserTrigger(inputElm, $sniffer.hasEvent('input') ? 'input' : 'change');
       };
 
-      helper.dealoc = function() {
+      helper.dealoc = function () {
         dealoc(helper.inputElm);
         dealoc(helper.formElm);
       };
     });
   });
 
-  afterEach(function() {
+  afterEach(function () {
     helper.dealoc();
   });
 
-  afterEach(function() {
+  afterEach(function () {
     VALIDITY_STATE_PROPERTY = 'validity';
   });
 }
-

@@ -13,7 +13,7 @@
     "no-invalid-this": "off",
     "no-throw-literal": "off",
     "no-unused-vars": "warn",
-    "no-redeclare": ["error", {"builtinGlobals": false}]
+    "no-redeclare": ["error", { "builtinGlobals": false }]
   },
 
   "globals": {

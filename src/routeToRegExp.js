@@ -19,16 +19,12 @@ function routeToRegExp(path, opts) {
 
   var pattern = path
     .replace(/([().])/g, '\\$1')
-    .replace(/(\/)?:(\w+)(\*\?|[?*])?/g, function(_, slash, key, option) {
+    .replace(/(\/)?:(\w+)(\*\?|[?*])?/g, function (_, slash, key, option) {
       var optional = option === '?' || option === '*?';
       var star = option === '*' || option === '*?';
-      keys.push({name: key, optional: optional});
+      keys.push({ name: key, optional: optional });
       slash = slash || '';
-      return (
-        (optional ? '(?:' + slash : slash + '(?:') +
-        (star ? '(.+?)' : '([^/]+)') +
-        (optional ? '?)?' : ')')
-      );
+      return (optional ? '(?:' + slash : slash + '(?:') + (star ? '(.+?)' : '([^/]+)') + (optional ? '?)?' : ')');
     })
     .replace(/([/$*])/g, '\\$1');
 
@@ -38,9 +34,6 @@ function routeToRegExp(path, opts) {
 
   return {
     keys: keys,
-    regexp: new RegExp(
-      '^' + pattern + '(?:[?#]|$)',
-      opts.caseInsensitiveMatch ? 'i' : ''
-    )
+    regexp: new RegExp('^' + pattern + '(?:[?#]|$)', opts.caseInsensitiveMatch ? 'i' : '')
   };
 }

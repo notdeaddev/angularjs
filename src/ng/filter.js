@@ -121,14 +121,14 @@ function $FilterProvider($provide) {
    *    your filters, then you can use capitalization (`myappSubsectionFilterx`) or underscores
    *    (`myapp_subsection_filterx`).
    *    </div>
-    * @param {Function} factory If the first argument was a string, a factory function for the filter to be registered.
+   * @param {Function} factory If the first argument was a string, a factory function for the filter to be registered.
    * @returns {Object} Registered filter instance, or if a map of filters was provided then a map
    *    of the registered filter instances.
    */
   function register(name, factory) {
     if (isObject(name)) {
       var filters = {};
-      forEach(name, function(filter, key) {
+      forEach(name, function (filter, key) {
         filters[key] = register(key, filter);
       });
       return filters;
@@ -138,11 +138,14 @@ function $FilterProvider($provide) {
   }
   this.register = register;
 
-  this.$get = ['$injector', function($injector) {
-    return function(name) {
-      return $injector.get(name + suffix);
-    };
-  }];
+  this.$get = [
+    '$injector',
+    function ($injector) {
+      return function (name) {
+        return $injector.get(name + suffix);
+      };
+    }
+  ];
 
   ////////////////////////////////////////
 

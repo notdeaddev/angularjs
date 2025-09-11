@@ -3,7 +3,7 @@
   "extends": "../.eslintrc-browser.json",
 
   "rules": {
-    "no-redeclare": ["error", {"builtinGlobals": false}]
+    "no-redeclare": ["error", { "builtinGlobals": false }]
   },
 
   "globals": {
@@ -29,7 +29,7 @@
     "uid": false,
     "toDebugString": false,
 
-    "REGEX_STRING_REGEXP" : false,
+    "REGEX_STRING_REGEXP": false,
     "lowercase": false,
     "uppercase": false,
     "isArrayLike": false,
@@ -193,6 +193,5 @@
 
     /* ng/directive/form.js */
     "nullFormCtrl": false
-
   }
 }

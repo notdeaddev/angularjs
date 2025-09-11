@@ -3,8 +3,7 @@
 var app = angular.module('ngClassBenchmark', []);
 
 app.controller('DataController', function DataController($scope) {
-
-  this.init = function() {
+  this.init = function () {
     this.numberOfTodos = 1000;
     this.implementation = 'tableOptimized';
     this.completedPeriodicity = 3;
@@ -15,11 +14,11 @@ app.controller('DataController', function DataController($scope) {
     this.setTodosValuesWithSeed(0);
   };
 
-  this.clearTodos = function() {
+  this.clearTodos = function () {
     this.todos = null;
   };
 
-  this.createTodos = function(count) {
+  this.createTodos = function (count) {
     var i;
     this.todos = [];
     for (i = 0; i < count; i++) {
@@ -32,7 +31,7 @@ app.controller('DataController', function DataController($scope) {
     }
   };
 
-  this.setTodosValuesWithSeed = function(offset) {
+  this.setTodosValuesWithSeed = function (offset) {
     var i, todo;
     for (i = 0; i < this.todos.length; i++) {
       todo = this.todos[i];
@@ -44,10 +43,9 @@ app.controller('DataController', function DataController($scope) {
 
   this.init();
 
-
   benchmarkSteps.push({
     name: 'setup',
-    fn: function() {
+    fn: function () {
       $scope.$apply();
       this.clearTodos();
       this.createTodos(this.numberOfTodos);
@@ -56,7 +54,7 @@ app.controller('DataController', function DataController($scope) {
 
   benchmarkSteps.push({
     name: 'create',
-    fn: function() {
+    fn: function () {
       // initialize data for first time that will construct the DOM
       this.setTodosValuesWithSeed(0);
       $scope.$apply();
@@ -65,14 +63,14 @@ app.controller('DataController', function DataController($scope) {
 
   benchmarkSteps.push({
     name: '$apply',
-    fn: function() {
+    fn: function () {
       $scope.$apply();
     }
   });
 
   benchmarkSteps.push({
     name: 'update',
-    fn: function() {
+    fn: function () {
       // move everything but completed
       this.setTodosValuesWithSeed(3);
       $scope.$apply();
@@ -81,7 +79,7 @@ app.controller('DataController', function DataController($scope) {
 
   benchmarkSteps.push({
     name: 'unclass',
-    fn: function() {
+    fn: function () {
       // remove all classes
       this.setTodosValuesWithSeed(NaN);
       $scope.$apply();
@@ -90,7 +88,7 @@ app.controller('DataController', function DataController($scope) {
 
   benchmarkSteps.push({
     name: 'class',
-    fn: function() {
+    fn: function () {
       // add all classes as the initial state
       this.setTodosValuesWithSeed(0);
       $scope.$apply();
@@ -99,10 +97,9 @@ app.controller('DataController', function DataController($scope) {
 
   benchmarkSteps.push({
     name: 'destroy',
-    fn: function() {
+    fn: function () {
       this.clearTodos();
       $scope.$apply();
     }.bind(this)
   });
-
 });

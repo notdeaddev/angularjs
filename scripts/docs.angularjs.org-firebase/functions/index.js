@@ -23,26 +23,19 @@ const buildSnapshot = data => `<!DOCTYPE html>
   </html>`;
 
 function sendFile(request, response) {
-
   const snapshotRequested = typeof request.query._escaped_fragment_ !== 'undefined';
   const filePath = `content/${snapshotRequested ? `partials${request.path}` : 'index'}.html`;
 
   if (snapshotRequested) {
-    fs.readFile(filePath, {encoding: 'utf8'}, (error, data) => {
+    fs.readFile(filePath, { encoding: 'utf8' }, (error, data) => {
       if (error) {
-        response
-          .status(404)
-          .end();
+        response.status(404).end();
       } else {
-        response
-          .set(headers)
-          .send(buildSnapshot(data));
+        response.set(headers).send(buildSnapshot(data));
       }
     });
   } else {
-    response
-      .set(headers)
-      .sendFile(filePath, {root: __dirname});
+    response.set(headers).sendFile(filePath, { root: __dirname });
   }
 }
 

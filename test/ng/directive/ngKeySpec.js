@@ -1,13 +1,13 @@
 'use strict';
 
-describe('ngKeyup and ngKeydown directives', function() {
+describe('ngKeyup and ngKeydown directives', function () {
   var element;
 
-  afterEach(function() {
+  afterEach(function () {
     dealoc(element);
   });
 
-  it('should get called on a keyup', inject(function($rootScope, $compile) {
+  it('should get called on a keyup', inject(function ($rootScope, $compile) {
     element = $compile('<input ng-keyup="touched = true">')($rootScope);
     $rootScope.$digest();
     expect($rootScope.touched).toBeFalsy();
@@ -16,7 +16,7 @@ describe('ngKeyup and ngKeydown directives', function() {
     expect($rootScope.touched).toEqual(true);
   }));
 
-  it('should get called on a keydown', inject(function($rootScope, $compile) {
+  it('should get called on a keydown', inject(function ($rootScope, $compile) {
     element = $compile('<input ng-keydown="touched = true">')($rootScope);
     $rootScope.$digest();
     expect($rootScope.touched).toBeFalsy();
@@ -25,7 +25,7 @@ describe('ngKeyup and ngKeydown directives', function() {
     expect($rootScope.touched).toEqual(true);
   }));
 
-  it('should get called on a keypress', inject(function($rootScope, $compile) {
+  it('should get called on a keypress', inject(function ($rootScope, $compile) {
     element = $compile('<input ng-keypress="touched = true">')($rootScope);
     $rootScope.$digest();
     expect($rootScope.touched).toBeFalsy();
@@ -33,6 +33,4 @@ describe('ngKeyup and ngKeydown directives', function() {
     browserTrigger(element, 'keypress');
     expect($rootScope.touched).toEqual(true);
   }));
-
 });
-

@@ -31,7 +31,7 @@ function generateFixture(test, query) {
   var firstScript = null;
   var jquery = null;
   var angular = null;
-  $$('script').each(function(i, script) {
+  $$('script').each(function (i, script) {
     var src = $(script).attr('src');
     if (src === 'jquery.js' && jquery === null) jquery = script;
     else if (src === 'angular.js' && angular === null) angular = script;
@@ -46,7 +46,7 @@ function generateFixture(test, query) {
     }
   });
 
-  if (!('jquery' in query) || (/^(0|no|false|off|n)$/i).test(query.jquery)) {
+  if (!('jquery' in query) || /^(0|no|false|off|n)$/i.test(query.jquery)) {
     if (jquery) {
       $(jquery).remove();
     }

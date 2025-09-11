@@ -1,8 +1,7 @@
 'use strict';
 
-describe('hidden thingy', function() {
-  it('should pass', function() {
-
+describe('hidden thingy', function () {
+  it('should pass', function () {
     loadFixture('input-hidden');
     expect(element(by.css('input')).getAttribute('value')).toEqual('');
 
@@ -15,8 +14,7 @@ describe('hidden thingy', function() {
     expect(element(by.css('input')).getAttribute('value')).toEqual(expectedValue);
   });
 
-  it('should prevent browser autofill on browser.refresh', function() {
-
+  it('should prevent browser autofill on browser.refresh', function () {
     loadFixture('back2dom');
     expect(element(by.css('#input1')).getAttribute('value')).toEqual('');
     expect(element(by.css('#input2')).getAttribute('value')).toEqual('');
@@ -31,8 +29,7 @@ describe('hidden thingy', function() {
     expect(element(by.css('body')).getAttribute('class')).toBe('');
   });
 
-  it('should prevent browser autofill on location.reload', function() {
-
+  it('should prevent browser autofill on location.reload', function () {
     loadFixture('back2dom');
     expect(element(by.css('#input1')).getAttribute('value')).toEqual('');
     expect(element(by.css('#input2')).getAttribute('value')).toEqual('');
@@ -47,8 +44,7 @@ describe('hidden thingy', function() {
     expect(element(by.css('body')).getAttribute('class')).toBe('');
   });
 
-  it('should prevent browser autofill on history.back', function() {
-
+  it('should prevent browser autofill on history.back', function () {
     loadFixture('back2dom');
     expect(element(by.css('#input1')).getAttribute('value')).toEqual('');
     expect(element(by.css('#input2')).getAttribute('value')).toEqual('');
@@ -65,8 +61,7 @@ describe('hidden thingy', function() {
     expect(element(by.css('body')).getAttribute('class')).toBe('');
   });
 
-  it('should prevent browser autofill on history.forward', function() {
-
+  it('should prevent browser autofill on history.forward', function () {
     loadFixture('sample');
     loadFixture('back2dom');
     expect(element(by.css('#input1')).getAttribute('value')).toEqual('');

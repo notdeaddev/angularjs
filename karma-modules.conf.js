@@ -3,8 +3,8 @@
 var angularFiles = require('./angularFiles');
 var sharedConfig = require('./karma-shared.conf');
 
-module.exports = function(config) {
-  sharedConfig(config, {testName: 'AngularJS: isolated module tests', logFile: 'karma-modules-isolated.log'});
+module.exports = function (config) {
+  sharedConfig(config, { testName: 'AngularJS: isolated module tests', logFile: 'karma-modules-isolated.log' });
 
   var moduleTests = angularFiles.mergeFilesFor(
     'karmaModules-ngAria',

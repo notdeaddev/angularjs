@@ -1,24 +1,24 @@
 'use strict';
 
-describe('api', function() {
-  describe('hashKey()', function() {
-    it('should use an existing `$$hashKey`', function() {
-      var obj = {$$hashKey: 'foo'};
+describe('api', function () {
+  describe('hashKey()', function () {
+    it('should use an existing `$$hashKey`', function () {
+      var obj = { $$hashKey: 'foo' };
       expect(hashKey(obj)).toBe('foo');
     });
 
-    it('should support a function as `$$hashKey` (and call it)', function() {
-      var obj = {$$hashKey: valueFn('foo')};
+    it('should support a function as `$$hashKey` (and call it)', function () {
+      var obj = { $$hashKey: valueFn('foo') };
       expect(hashKey(obj)).toBe('foo');
     });
 
-    it('should create a new `$$hashKey` if none exists (and return it)', function() {
+    it('should create a new `$$hashKey` if none exists (and return it)', function () {
       var obj = {};
       expect(hashKey(obj)).toBe(obj.$$hashKey);
       expect(obj.$$hashKey).toBeDefined();
     });
 
-    it('should create appropriate `$$hashKey`s for primitive values', function() {
+    it('should create appropriate `$$hashKey`s for primitive values', function () {
       expect(hashKey(undefined)).toBe(hashKey(undefined));
       expect(hashKey(null)).toBe(hashKey(null));
       expect(hashKey(null)).not.toBe(hashKey(undefined));
@@ -32,14 +32,14 @@ describe('api', function() {
       expect(hashKey('foo')).not.toBe(hashKey('bar'));
     });
 
-    it('should create appropriate `$$hashKey`s for non-primitive values', function() {
-      var fn = function() {};
+    it('should create appropriate `$$hashKey`s for non-primitive values', function () {
+      var fn = function () {};
       var arr = [];
       var obj = {};
       var date = new Date();
 
       expect(hashKey(fn)).toBe(hashKey(fn));
-      expect(hashKey(fn)).not.toBe(hashKey(function() {}));
+      expect(hashKey(fn)).not.toBe(hashKey(function () {}));
       expect(hashKey(arr)).toBe(hashKey(arr));
       expect(hashKey(arr)).not.toBe(hashKey([]));
       expect(hashKey(obj)).toBe(hashKey(obj));
@@ -48,10 +48,10 @@ describe('api', function() {
       expect(hashKey(date)).not.toBe(hashKey(new Date()));
     });
 
-    it('should support a custom `nextUidFn`', function() {
+    it('should support a custom `nextUidFn`', function () {
       var nextUidFn = jasmine.createSpy('nextUidFn').and.returnValues('foo', 'bar', 'baz', 'qux');
 
-      var fn = function() {};
+      var fn = function () {};
       var arr = [];
       var obj = {};
       var date = new Date();
@@ -68,8 +68,8 @@ describe('api', function() {
     });
   });
 
-  describe('NgMapShim', function() {
-    it('should do basic crud', function() {
+  describe('NgMapShim', function () {
+    it('should do basic crud', function () {
       var map = new NgMapShim();
       var keys = [{}, {}, {}];
       var values = [{}, {}, {}];
@@ -89,7 +89,7 @@ describe('api', function() {
       expect(map.get(keys[2])).toBe(values[2]);
     });
 
-    it('should return if a key exists or not', function() {
+    it('should return if a key exists or not', function () {
       var map = new NgMapShim();
       var keys = ['foo', {}];
 
@@ -117,7 +117,7 @@ describe('api', function() {
       expect(map.has(keys[1])).toBe(true);
     });
 
-    it('should be able to deal with `NaN` keys', function() {
+    it('should be able to deal with `NaN` keys', function () {
       var map = new NgMapShim();
 
       map.set('NaN', 'foo');
@@ -135,4 +135,3 @@ describe('api', function() {
     });
   });
 });
-

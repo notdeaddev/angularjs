@@ -36,8 +36,16 @@ function NestedParserState(parser) {
  * @constructor
  * @private
  */
-function MessageFormatParser(text, startIndex, $parse, pluralCat, stringifier,
-                             mustHaveExpression, trustedContext, allOrNothing) {
+function MessageFormatParser(
+  text,
+  startIndex,
+  $parse,
+  pluralCat,
+  stringifier,
+  mustHaveExpression,
+  trustedContext,
+  allOrNothing
+) {
   this.text = text;
   this.index = startIndex || 0;
   this.$parse = $parse;
@@ -68,9 +76,18 @@ function MessageFormatParser(text, startIndex, $parse, pluralCat, stringifier,
 }
 
 // preserve v8 optimization.
-var EMPTY_STATE = new NestedParserState(new MessageFormatParser(
-        /* text= */ '', /* startIndex= */ 0, /* $parse= */ null, /* pluralCat= */ null, /* stringifier= */ null,
-        /* mustHaveExpression= */ false, /* trustedContext= */ null, /* allOrNothing */ false));
+var EMPTY_STATE = new NestedParserState(
+  new MessageFormatParser(
+    /* text= */ '',
+    /* startIndex= */ 0,
+    /* $parse= */ null,
+    /* pluralCat= */ null,
+    /* stringifier= */ null,
+    /* mustHaveExpression= */ false,
+    /* trustedContext= */ null,
+    /* allOrNothing */ false
+  )
+);
 
 MessageFormatParser.prototype.pushState = function pushState() {
   this.nestedStateStack.push(new NestedParserState(this));
@@ -92,7 +109,7 @@ MessageFormatParser.prototype.popState = function popState() {
 MessageFormatParser.prototype.matchRe = function matchRe(re, search) {
   re.lastIndex = this.index;
   var match = re.exec(this.text);
-  if (match != null && (search === true || (match.index === this.index))) {
+  if (match != null && (search === true || match.index === this.index)) {
     this.index = re.lastIndex;
     return match;
   }
@@ -102,7 +119,6 @@ MessageFormatParser.prototype.matchRe = function matchRe(re, search) {
 MessageFormatParser.prototype.searchRe = function searchRe(re) {
   return this.matchRe(re, true);
 };
-
 
 MessageFormatParser.prototype.consumeRe = function consumeRe(re) {
   // Without the sticky flag, we can't use the .test() method to consume a
@@ -124,9 +140,11 @@ MessageFormatParser.prototype.run = function run(initialRule) {
 };
 
 MessageFormatParser.prototype.errorInParseLogic = function errorInParseLogic() {
-    throw $interpolateMinErr('logicbug',
-        'The messageformat parser has encountered an internal error.  Please file a github issue against the AngularJS project and provide this message text that triggers the bug.  Text: “{0}”',
-        this.text);
+  throw $interpolateMinErr(
+    'logicbug',
+    'The messageformat parser has encountered an internal error.  Please file a github issue against the AngularJS project and provide this message text that triggers the bug.  Text: “{0}”',
+    this.text
+  );
 };
 
 MessageFormatParser.prototype.assertRuleOrNull = function assertRuleOrNull(rule) {
@@ -138,24 +156,39 @@ MessageFormatParser.prototype.assertRuleOrNull = function assertRuleOrNull(rule)
 var NEXT_WORD_RE = /\s*(\w+)\s*/g;
 MessageFormatParser.prototype.errorExpecting = function errorExpecting() {
   // What was wrong with the syntax? Unsupported type, missing comma, or something else?
-  var match = this.matchRe(NEXT_WORD_RE), position;
+  var match = this.matchRe(NEXT_WORD_RE),
+    position;
   if (match == null) {
     position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('reqarg',
-        'Expected one of “plural” or “select” at line {0}, column {1} of text “{2}”',
-        position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'reqarg',
+      'Expected one of “plural” or “select” at line {0}, column {1} of text “{2}”',
+      position.line,
+      position.column,
+      this.text
+    );
   }
   var word = match[1];
   if (word === 'select' || word === 'plural') {
     position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('reqcomma',
-        'Expected a comma after the keyword “{0}” at line {1}, column {2} of text “{3}”',
-        word, position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'reqcomma',
+      'Expected a comma after the keyword “{0}” at line {1}, column {2} of text “{3}”',
+      word,
+      position.line,
+      position.column,
+      this.text
+    );
   } else {
     position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('unknarg',
-        'Unsupported keyword “{0}” at line {0}, column {1}. Only “plural” and “select” are currently supported.  Text: “{3}”',
-        word, position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'unknarg',
+      'Unsupported keyword “{0}” at line {0}, column {1}. Only “plural” and “select” are currently supported.  Text: “{3}”',
+      word,
+      position.line,
+      position.column,
+      this.text
+    );
   }
 };
 
@@ -164,9 +197,13 @@ MessageFormatParser.prototype.ruleString = function ruleString() {
   var match = this.matchRe(STRING_START_RE);
   if (match == null) {
     var position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('wantstring',
-        'Expected the beginning of a string at line {0}, column {1} in text “{2}”',
-        position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'wantstring',
+      'Expected the beginning of a string at line {0}, column {1} in text “{2}”',
+      position.line,
+      position.column,
+      this.text
+    );
   }
   this.startStringAtMatch(match);
 };
@@ -174,7 +211,7 @@ MessageFormatParser.prototype.ruleString = function ruleString() {
 MessageFormatParser.prototype.startStringAtMatch = function startStringAtMatch(match) {
   this.stringStartIndex = match.index;
   this.stringQuote = match[0];
-  this.stringInterestsRe = this.stringQuote === '\'' ? SQUOTED_STRING_INTEREST_RE : DQUOTED_STRING_INTEREST_RE;
+  this.stringInterestsRe = this.stringQuote === "'" ? SQUOTED_STRING_INTEREST_RE : DQUOTED_STRING_INTEREST_RE;
   this.rule = this.ruleInsideString;
 };
 
@@ -184,9 +221,13 @@ MessageFormatParser.prototype.ruleInsideString = function ruleInsideString() {
   var match = this.searchRe(this.stringInterestsRe);
   if (match == null) {
     var position = indexToLineAndColumn(this.text, this.stringStartIndex);
-    throw $interpolateMinErr('untermstr',
-        'The string beginning at line {0}, column {1} is unterminated in text “{2}”',
-        position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'untermstr',
+      'The string beginning at line {0}, column {1} is unterminated in text “{2}”',
+      position.line,
+      position.column,
+      this.text
+    );
   }
   if (match[0] === this.stringQuote) {
     this.rule = null;
@@ -201,9 +242,14 @@ MessageFormatParser.prototype.rulePluralOrSelect = function rulePluralOrSelect()
   }
   var argType = match[1];
   switch (argType) {
-    case 'plural': this.rule = this.rulePluralStyle; break;
-    case 'select': this.rule = this.ruleSelectStyle; break;
-    default: this.errorInParseLogic();
+    case 'plural':
+      this.rule = this.rulePluralStyle;
+      break;
+    case 'select':
+      this.rule = this.ruleSelectStyle;
+      break;
+    default:
+      this.errorInParseLogic();
   }
 };
 
@@ -224,7 +270,7 @@ var PLURAL_OFFSET_RE = new RegExp('\\s*offset\\s*:\\s*(' + NUMBER_RE.source + ')
 
 MessageFormatParser.prototype.rulePluralOffset = function rulePluralOffset() {
   var match = this.matchRe(PLURAL_OFFSET_RE);
-  this.pluralOffset = (match == null) ? 0 : parseInt(match[1], 10);
+  this.pluralOffset = match == null ? 0 : parseInt(match[1], 10);
   this.expressionMinusOffsetFn = subtractOffset(this.expressionFn, this.pluralOffset);
   this.rule = this.rulePluralValueOrKeyword;
 };
@@ -232,9 +278,14 @@ MessageFormatParser.prototype.rulePluralOffset = function rulePluralOffset() {
 MessageFormatParser.prototype.assertChoiceKeyIsNew = function assertChoiceKeyIsNew(choiceKey, index) {
   if (this.choices[choiceKey] !== undefined) {
     var position = indexToLineAndColumn(this.text, index);
-    throw $interpolateMinErr('dupvalue',
-        'The choice “{0}” is specified more than once. Duplicate key is at line {1}, column {2} in text “{3}”',
-        choiceKey, position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'dupvalue',
+      'The choice “{0}” is specified more than once. Duplicate key is at line {1}, column {2} in text “{3}”',
+      choiceKey,
+      position.line,
+      position.column,
+      this.text
+    );
   }
 };
 
@@ -273,9 +324,14 @@ var BRACE_CLOSE_RE = /}/g;
 MessageFormatParser.prototype.ruleMessageText = function ruleMessageText() {
   if (!this.consumeRe(BRACE_OPEN_RE)) {
     var position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('reqopenbrace',
-        'The plural choice “{0}” must be followed by a message in braces at line {1}, column {2} in text “{3}”',
-        this.choiceKey, position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'reqopenbrace',
+      'The plural choice “{0}” must be followed by a message in braces at line {1}, column {2} in text “{3}”',
+      this.choiceKey,
+      position.line,
+      position.column,
+      this.text
+    );
   }
   this.msgStartIndex = this.index;
   this.interpolationParts = new InterpolationParts(this.trustedContext, this.allOrNothing);
@@ -288,22 +344,33 @@ var INTERP_OR_END_MESSAGE_RE = /\\.|{{|}/g;
 var INTERP_OR_PLURALVALUE_OR_END_MESSAGE_RE = /\\.|{{|#|}/g;
 var ESCAPE_OR_MUSTACHE_BEGIN_RE = /\\.|{{/g;
 MessageFormatParser.prototype.advanceInInterpolationOrMessageText = function advanceInInterpolationOrMessageText() {
-  var currentIndex = this.index, match;
-  if (this.ruleChoiceKeyword == null) { // interpolation
+  var currentIndex = this.index,
+    match;
+  if (this.ruleChoiceKeyword == null) {
+    // interpolation
     match = this.searchRe(ESCAPE_OR_MUSTACHE_BEGIN_RE);
-    if (match == null) { // End of interpolation text.  Nothing more to process.
+    if (match == null) {
+      // End of interpolation text.  Nothing more to process.
       this.textPart = this.text.substring(currentIndex);
       this.index = this.text.length;
       return null;
     }
   } else {
-    match = this.searchRe(this.ruleChoiceKeyword === this.rulePluralValueOrKeyword ?
-                          INTERP_OR_PLURALVALUE_OR_END_MESSAGE_RE : INTERP_OR_END_MESSAGE_RE);
+    match = this.searchRe(
+      this.ruleChoiceKeyword === this.rulePluralValueOrKeyword
+        ? INTERP_OR_PLURALVALUE_OR_END_MESSAGE_RE
+        : INTERP_OR_END_MESSAGE_RE
+    );
     if (match == null) {
       var position = indexToLineAndColumn(this.text, this.msgStartIndex);
-      throw $interpolateMinErr('reqendbrace',
-          'The plural/select choice “{0}” message starting at line {1}, column {2} does not have an ending closing brace. Text “{3}”',
-          this.choiceKey, position.line, position.column, this.text);
+      throw $interpolateMinErr(
+        'reqendbrace',
+        'The plural/select choice “{0}” message starting at line {1}, column {2} does not have an ending closing brace. Text “{3}”',
+        this.choiceKey,
+        position.line,
+        position.column,
+        this.text
+      );
     }
   }
   // match is non-null.
@@ -333,7 +400,7 @@ MessageFormatParser.prototype.ruleInInterpolationOrMessageText = function ruleIn
     this.ruleStack.push(this.ruleEndMustacheInInterpolationOrMessage);
     this.rule = this.ruleEnteredMustache;
   } else if (token === '}') {
-    this.choices[this.choiceKey] = this.interpolationParts.toParsedFn(/*mustHaveExpression=*/false, this.text);
+    this.choices[this.choiceKey] = this.interpolationParts.toParsedFn(/*mustHaveExpression=*/ false, this.text);
     this.rule = this.ruleChoiceKeyword;
   } else if (token === '#') {
     this.interpolationParts.addExpressionFn(this.expressionMinusOffsetFn);
@@ -383,23 +450,27 @@ MessageFormatParser.prototype.ruleEnteredMustache = function ruleEnteredMustache
   this.rule = this.ruleAngularExpression;
 };
 
-MessageFormatParser.prototype.ruleEndMustacheInInterpolationOrMessage = function ruleEndMustacheInInterpolationOrMessage() {
-  var expressionFn = this.parsedFn;
-  this.popState();
-  this.interpolationParts.addExpressionFn(expressionFn);
-  this.rule = this.ruleInInterpolationOrMessageText;
-};
-
-
+MessageFormatParser.prototype.ruleEndMustacheInInterpolationOrMessage =
+  function ruleEndMustacheInInterpolationOrMessage() {
+    var expressionFn = this.parsedFn;
+    this.popState();
+    this.interpolationParts.addExpressionFn(expressionFn);
+    this.rule = this.ruleInInterpolationOrMessageText;
+  };
 
 var INTERP_END_RE = /\s*}}/g;
 MessageFormatParser.prototype.ruleEndMustache = function ruleEndMustache() {
   var match = this.matchRe(INTERP_END_RE);
   if (match == null) {
     var position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('reqendinterp',
-        'Expecting end of interpolation symbol, “{0}”, at line {1}, column {2} in text “{3}”',
-        '}}', position.line, position.column, this.text);
+    throw $interpolateMinErr(
+      'reqendinterp',
+      'Expecting end of interpolation symbol, “{0}”, at line {1}, column {2} in text “{3}”',
+      '}}',
+      position.line,
+      position.column,
+      this.text
+    );
   }
   if (this.parsedFn == null) {
     // If we parsed a MessageFormat extension, (e.g. select/plural today, maybe more some other
@@ -425,19 +496,27 @@ MessageFormatParser.prototype.ruleAngularExpression = function ruleAngularExpres
 
 function getEndOperator(opBegin) {
   switch (opBegin) {
-    case '{': return '}';
-    case '[': return ']';
-    case '(': return ')';
-    default: return null;
+    case '{':
+      return '}';
+    case '[':
+      return ']';
+    case '(':
+      return ')';
+    default:
+      return null;
   }
 }
 
 function getBeginOperator(opEnd) {
   switch (opEnd) {
-    case '}': return '{';
-    case ']': return '[';
-    case ')': return '(';
-    default: return null;
+    case '}':
+      return '{';
+    case ']':
+      return '[';
+    case ')':
+      return '(';
+    default:
+      return null;
   }
 }
 
@@ -464,12 +543,15 @@ MessageFormatParser.prototype.ruleInAngularExpression = function ruleInAngularEx
       return;
     }
     var innermostOperator = this.angularOperatorStack[0];
-    throw $interpolateMinErr('badexpr',
-        'Unexpected end of AngularJS expression.  Expecting operator “{0}” at the end of the text “{1}”',
-        this.getEndOperator(innermostOperator), this.text);
+    throw $interpolateMinErr(
+      'badexpr',
+      'Unexpected end of AngularJS expression.  Expecting operator “{0}” at the end of the text “{1}”',
+      this.getEndOperator(innermostOperator),
+      this.text
+    );
   }
   var operator = match[0];
-  if (operator === '\'' || operator === '"') {
+  if (operator === "'" || operator === '"') {
     this.ruleStack.push(this.ruleInAngularExpression);
     this.startStringAtMatch(match);
     return;
@@ -477,9 +559,14 @@ MessageFormatParser.prototype.ruleInAngularExpression = function ruleInAngularEx
   if (operator === ',') {
     if (this.trustedContext) {
       position = indexToLineAndColumn(this.text, this.index);
-      throw $interpolateMinErr('unsafe',
-          'Use of select/plural MessageFormat syntax is currently disallowed in a secure context ({0}).  At line {1}, column {2} of text “{3}”',
-          this.trustedContext, position.line, position.column, this.text);
+      throw $interpolateMinErr(
+        'unsafe',
+        'Use of select/plural MessageFormat syntax is currently disallowed in a secure context ({0}).  At line {1}, column {2} of text “{3}”',
+        this.trustedContext,
+        position.line,
+        position.column,
+        this.text
+      );
     }
     // only the top level comma has relevance.
     if (this.angularOperatorStack.length === 0) {
@@ -506,9 +593,15 @@ MessageFormatParser.prototype.ruleInAngularExpression = function ruleInAngularEx
       return;
     }
     position = indexToLineAndColumn(this.text, this.index);
-    throw $interpolateMinErr('badexpr',
-        'Unexpected operator “{0}” at line {1}, column {2} in text. Was expecting “{3}”. Text: “{4}”',
-        operator, position.line, position.column, getEndOperator(this.angularOperatorStack[0]), this.text);
+    throw $interpolateMinErr(
+      'badexpr',
+      'Unexpected operator “{0}” at line {1}, column {2} in text. Was expecting “{3}”. Text: “{4}”',
+      operator,
+      position.line,
+      position.column,
+      getEndOperator(this.angularOperatorStack[0]),
+      this.text
+    );
   }
   // We are trying to pop off the operator stack but there really isn't anything to pop off.
   this.index = match.index;

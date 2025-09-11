@@ -4,7 +4,7 @@
 const fs = require('fs');
 const path = require('path');
 const esbuild = require('esbuild');
-const {mergeFilesFor} = require(path.join(__dirname, '..', 'angularFiles.js'));
+const { mergeFilesFor } = require(path.join(__dirname, '..', 'angularFiles.js'));
 const pkg = require(path.join(__dirname, '..', 'package.json'));
 
 function replaceVersionPlaceholders(src) {
@@ -30,26 +30,63 @@ function replaceVersionPlaceholders(src) {
 async function buildAngular(outputFolder) {
   const rootDir = path.resolve(__dirname, '..');
   const outDir = outputFolder || path.join(rootDir, 'build');
-  fs.mkdirSync(outDir, {recursive: true});
+  fs.mkdirSync(outDir, { recursive: true });
 
   const modules = [
-    {name: 'angular', group: 'angularSrc', prefix: 'src/angular.prefix', suffix: 'src/angular.suffix'},
-    {name: 'angular-loader', group: 'angularLoader', prefix: 'src/loader.prefix', suffix: 'src/loader.suffix'},
-    {name: 'angular-resource', group: 'angularSrcModuleNgResource', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-route', group: 'angularSrcModuleNgRoute', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-cookies', group: 'angularSrcModuleNgCookies', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-sanitize', group: 'angularSrcModuleNgSanitize', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-touch', group: 'angularSrcModuleNgTouch', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-aria', group: 'angularSrcModuleNgAria', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-message-format', group: 'angularSrcModuleNgMessageFormat', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-messages', group: 'angularSrcModuleNgMessages', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
-    {name: 'angular-animate', group: 'angularSrcModuleNgAnimate', prefix: 'src/module.prefix', suffix: 'src/module.suffix'},
+    { name: 'angular', group: 'angularSrc', prefix: 'src/angular.prefix', suffix: 'src/angular.suffix' },
+    { name: 'angular-loader', group: 'angularLoader', prefix: 'src/loader.prefix', suffix: 'src/loader.suffix' },
+    {
+      name: 'angular-resource',
+      group: 'angularSrcModuleNgResource',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    {
+      name: 'angular-route',
+      group: 'angularSrcModuleNgRoute',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    {
+      name: 'angular-cookies',
+      group: 'angularSrcModuleNgCookies',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    {
+      name: 'angular-sanitize',
+      group: 'angularSrcModuleNgSanitize',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    {
+      name: 'angular-touch',
+      group: 'angularSrcModuleNgTouch',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    { name: 'angular-aria', group: 'angularSrcModuleNgAria', prefix: 'src/module.prefix', suffix: 'src/module.suffix' },
+    {
+      name: 'angular-message-format',
+      group: 'angularSrcModuleNgMessageFormat',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    {
+      name: 'angular-messages',
+      group: 'angularSrcModuleNgMessages',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
+    {
+      name: 'angular-animate',
+      group: 'angularSrcModuleNgAnimate',
+      prefix: 'src/module.prefix',
+      suffix: 'src/module.suffix'
+    },
     {
       name: 'angular-mocks',
-      files: [
-        'src/ngMock/angular-mocks.js',
-        'src/ngMock/browserTrigger.js'
-      ],
+      files: ['src/ngMock/angular-mocks.js', 'src/ngMock/browserTrigger.js'],
       prefix: 'src/module.prefix',
       suffix: 'src/module.suffix'
     }
@@ -85,12 +122,9 @@ async function buildAngular(outputFolder) {
     'angular-touch'
   ];
   const testBundlesDir = path.join(outDir, 'test-bundles');
-  fs.mkdirSync(testBundlesDir, {recursive: true});
+  fs.mkdirSync(testBundlesDir, { recursive: true });
   for (const bundle of testBundles) {
-    fs.copyFileSync(
-      path.join(outDir, `${bundle}.js`),
-      path.join(testBundlesDir, `${bundle}.js`)
-    );
+    fs.copyFileSync(path.join(outDir, `${bundle}.js`), path.join(testBundlesDir, `${bundle}.js`));
   }
 }
 

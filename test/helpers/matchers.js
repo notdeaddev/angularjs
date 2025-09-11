@@ -1,27 +1,31 @@
 'use strict';
 
-beforeEach(function() {
-
+beforeEach(function () {
   function cssMatcher(presentClasses, absentClasses) {
-    return function() {
+    return function () {
       return {
-        compare: function(actual) {
+        compare: function (actual) {
           var element = angular.element(actual);
           var present = true;
           var absent = false;
 
-          angular.forEach(presentClasses.split(' '), function(className) {
+          angular.forEach(presentClasses.split(' '), function (className) {
             present = present && element.hasClass(className);
           });
 
-          angular.forEach(absentClasses.split(' '), function(className) {
+          angular.forEach(absentClasses.split(' '), function (className) {
             absent = absent || element.hasClass(className);
           });
 
-          var message = function() {
-            return 'Expected to have ' + presentClasses +
-              (absentClasses ? (' and not have ' + absentClasses + '') : '') +
-              ' but had ' + element[0].className + '.';
+          var message = function () {
+            return (
+              'Expected to have ' +
+              presentClasses +
+              (absentClasses ? ' and not have ' + absentClasses + '' : '') +
+              ' but had ' +
+              element[0].className +
+              '.'
+            );
           };
           return {
             pass: present && !absent,
@@ -41,8 +45,8 @@ beforeEach(function() {
   function isNgElementHidden(element) {
     // we need to check element.getAttribute for SVG nodes
     var hidden = true;
-    forEach(angular.element(element), function(element) {
-      if ((' '  + (element.getAttribute('class') || '') + ' ').indexOf(' ng-hide ') === -1) {
+    forEach(angular.element(element), function (element) {
+      if ((' ' + (element.getAttribute('class') || '') + ' ').indexOf(' ng-hide ') === -1) {
         hidden = false;
       }
     });
@@ -51,8 +55,8 @@ beforeEach(function() {
 
   function MinErrMatcher(isNot, namespace, code, content, wording) {
     var codeRegex = new RegExp('^' + escapeRegexp('[' + namespace + ':' + code + ']'));
-    var contentRegex = angular.isUndefined(content) || jasmine.isA_('RegExp', content) ?
-        content : new RegExp(escapeRegexp(content));
+    var contentRegex =
+      angular.isUndefined(content) || jasmine.isA_('RegExp', content) ? content : new RegExp(escapeRegexp(content));
 
     this.test = test;
 
@@ -76,10 +80,20 @@ beforeEach(function() {
       };
 
       function message() {
-        return 'Expected ' + wording.inputType + (isNot ? ' not' : '') + ' to ' +
-            wording.expectedAction + ' ' + namespace + 'MinErr(\'' + code + '\')' +
-            (contentRegex ? ' matching ' + contentRegex.toString() : '') +
-            (!exception ? '.' : ', but it ' + wording.actualAction + ': ' + exceptionMessage);
+        return (
+          'Expected ' +
+          wording.inputType +
+          (isNot ? ' not' : '') +
+          ' to ' +
+          wording.expectedAction +
+          ' ' +
+          namespace +
+          "MinErr('" +
+          code +
+          "')" +
+          (contentRegex ? ' matching ' + contentRegex.toString() : '') +
+          (!exception ? '.' : ', but it ' + wording.actualAction + ': ' + exceptionMessage)
+        );
       }
     }
   }
@@ -94,28 +108,27 @@ beforeEach(function() {
     toBeUntouched: cssMatcher('ng-untouched', 'ng-touched'),
     toBeTouched: cssMatcher('ng-touched', 'ng-untouched'),
 
-    toBeAPromise: function() {
+    toBeAPromise: function () {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
       function generateCompare(isNot) {
-        return function(actual) {
-          var message = valueFn(
-            'Expected object ' + (isNot ? 'not ' : '') + 'to be a promise');
+        return function (actual) {
+          var message = valueFn('Expected object ' + (isNot ? 'not ' : '') + 'to be a promise');
           return { pass: isPromiseLike(actual), message: message };
         };
       }
     },
 
-    toBeShown: function() {
+    toBeShown: function () {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
       function generateCompare(isNot) {
-        return function(actual) {
-          var message = valueFn('Expected element ' + (isNot ? '' : 'not ') + 'to have \'ng-hide\' class');
+        return function (actual) {
+          var message = valueFn('Expected element ' + (isNot ? '' : 'not ') + "to have 'ng-hide' class");
           var pass = !isNgElementHidden(actual);
           if (isNot) {
             pass = !pass;
@@ -125,14 +138,14 @@ beforeEach(function() {
       }
     },
 
-    toBeHidden: function() {
+    toBeHidden: function () {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
       function generateCompare(isNot) {
-        return function(actual) {
-          var message = valueFn('Expected element ' + (isNot ? 'not ' : '') + 'to have \'ng-hide\' class');
+        return function (actual) {
+          var message = valueFn('Expected element ' + (isNot ? 'not ' : '') + "to have 'ng-hide' class");
           var pass = isNgElementHidden(actual);
           if (isNot) {
             pass = !pass;
@@ -142,13 +155,11 @@ beforeEach(function() {
       }
     },
 
-    toEqual: function(util) {
+    toEqual: function (util) {
       return {
-        compare: function(actual, expected) {
+        compare: function (actual, expected) {
           if (actual && actual.$$log) {
-            actual = (typeof expected === 'string')
-                ? actual.toString()
-                : actual.toArray();
+            actual = typeof expected === 'string' ? actual.toString() : actual.toArray();
           }
           return {
             pass: util.equals(actual, expected, [DOMTester])
@@ -157,12 +168,12 @@ beforeEach(function() {
       };
     },
 
-    toEqualOneOf: function(util) {
+    toEqualOneOf: function (util) {
       return {
-        compare: function(actual) {
+        compare: function (actual) {
           var expectedArgs = Array.prototype.slice.call(arguments, 1);
           return {
-            pass: expectedArgs.some(function(expected) {
+            pass: expectedArgs.some(function (expected) {
               return util.equals(actual, expected, [DOMTester]);
             })
           };
@@ -170,20 +181,19 @@ beforeEach(function() {
       };
     },
 
-    toEqualData: function() {
+    toEqualData: function () {
       return {
-        compare: function(actual, expected) {
+        compare: function (actual, expected) {
           return { pass: angular.equals(actual, expected) };
         }
       };
     },
 
-    toHaveBeenCalledOnce: function() {
+    toHaveBeenCalledOnce: function () {
       return {
-        compare: function(actual) {
+        compare: function (actual) {
           if (arguments.length > 1) {
-            throw new Error('`toHaveBeenCalledOnce` does not take arguments, ' +
-                            'use `toHaveBeenCalledOnceWith`');
+            throw new Error('`toHaveBeenCalledOnce` does not take arguments, ' + 'use `toHaveBeenCalledOnceWith`');
           }
 
           if (!jasmine.isSpy(actual)) {
@@ -193,9 +203,9 @@ beforeEach(function() {
           var count = actual.calls.count();
           var pass = count === 1;
 
-          var message = function() {
-            var msg = 'Expected spy ' + actual.and.identity() + (pass ? ' not ' : ' ') +
-                      'to have been called once, but ';
+          var message = function () {
+            var msg =
+              'Expected spy ' + actual.and.identity() + (pass ? ' not ' : ' ') + 'to have been called once, but ';
 
             switch (count) {
               case 0:
@@ -220,14 +230,14 @@ beforeEach(function() {
       };
     },
 
-    toHaveBeenCalledOnceWith: function(util, customEqualityTesters) {
+    toHaveBeenCalledOnceWith: function (util, customEqualityTesters) {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
 
       function generateCompare(isNot) {
-        return function(actual) {
+        return function (actual) {
           if (!jasmine.isSpy(actual)) {
             throw new Error('Expected a spy, but got ' + jasmine.pp(actual) + '.');
           }
@@ -236,12 +246,17 @@ beforeEach(function() {
           var actualCount = actual.calls.count();
           var actualArgs = actualCount && actual.calls.argsFor(0);
 
-          var pass = (actualCount === 1) && util.equals(actualArgs, expectedArgs);
+          var pass = actualCount === 1 && util.equals(actualArgs, expectedArgs);
           if (isNot) pass = !pass;
 
-          var message = function() {
-            var msg = 'Expected spy ' + actual.and.identity() + (isNot ? ' not ' : ' ') +
-                      'to have been called once with ' + jasmine.pp(expectedArgs) + ', but ';
+          var message = function () {
+            var msg =
+              'Expected spy ' +
+              actual.and.identity() +
+              (isNot ? ' not ' : ' ') +
+              'to have been called once with ' +
+              jasmine.pp(expectedArgs) +
+              ', but ';
 
             if (isNot) {
               msg += 'it was.';
@@ -270,29 +285,38 @@ beforeEach(function() {
       }
     },
 
-    toBeOneOf: function() {
+    toBeOneOf: function () {
       return {
-        compare: function(actual) {
+        compare: function (actual) {
           var expectedArgs = Array.prototype.slice.call(arguments, 1);
           return { pass: expectedArgs.indexOf(actual) !== -1 };
         }
       };
     },
 
-    toHaveClass: function() {
+    toHaveClass: function () {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
       function hasClass(element, selector) {
         if (!element.getAttribute) return false;
-        return ((' ' + (element.getAttribute('class') || '') + ' ').replace(/[\n\t]/g, ' ').
-            indexOf(' ' + selector + ' ') > -1);
+        return (
+          (' ' + (element.getAttribute('class') || '') + ' ').replace(/[\n\t]/g, ' ').indexOf(' ' + selector + ' ') > -1
+        );
       }
       function generateCompare(isNot) {
-        return function(actual, clazz) {
-          var message = function() {
-            return 'Expected \'' + angular.mock.dump(actual) + '\'' + (isNot ? ' not ' : '') + ' to have class \'' + clazz + '\'.';
+        return function (actual, clazz) {
+          var message = function () {
+            return (
+              "Expected '" +
+              angular.mock.dump(actual) +
+              "'" +
+              (isNot ? ' not ' : '') +
+              " to have class '" +
+              clazz +
+              "'."
+            );
           };
           var classes = clazz.trim().split(/\s+/);
           for (var i = 0; i < classes.length; ++i) {
@@ -305,15 +329,14 @@ beforeEach(function() {
       }
     },
 
-    toEqualMinErr: function() {
+    toEqualMinErr: function () {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
 
       function generateCompare(isNot) {
-        return function(actual, namespace, code, content) {
-
+        return function (actual, namespace, code, content) {
           var matcher = new MinErrMatcher(isNot, namespace, code, content, {
             inputType: 'error',
             expectedAction: 'equal',
@@ -325,14 +348,14 @@ beforeEach(function() {
       }
     },
 
-    toThrowMinErr: function() {
+    toThrowMinErr: function () {
       return {
         compare: generateCompare(false),
         negativeCompare: generateCompare(true)
       };
 
       function generateCompare(isNot) {
-        return function(actual, namespace, code, content) {
+        return function (actual, namespace, code, content) {
           var exception;
 
           if (!angular.isFunction(actual)) {
@@ -356,7 +379,7 @@ beforeEach(function() {
       }
     },
 
-    toBeMarkedAsSelected: function() {
+    toBeMarkedAsSelected: function () {
       // Selected is special because the element property and attribute reflect each other's state.
 
       // Support: IE 9 only
@@ -364,7 +387,7 @@ beforeEach(function() {
       // undefined or null, and the dev tools show that no attribute is set
 
       return {
-        compare: function(actual) {
+        compare: function (actual) {
           var errors = [];
           var optionVal = toJson(actual.value);
 
@@ -384,7 +407,7 @@ beforeEach(function() {
 
           return result;
         },
-        negativeCompare: function(actual) {
+        negativeCompare: function (actual) {
           var errors = [];
           var optionVal = toJson(actual.value);
 
@@ -406,17 +429,17 @@ beforeEach(function() {
         }
       };
     },
-    toEqualSelect: function() {
+    toEqualSelect: function () {
       return {
-        compare: function(actual, expected) {
+        compare: function (actual, expected) {
           var actualValues = [],
-              expectedValues = [].slice.call(arguments, 1);
+            expectedValues = [].slice.call(arguments, 1);
 
-          forEach(actual.find('option'), function(option) {
+          forEach(actual.find('option'), function (option) {
             actualValues.push(option.selected ? [option.value] : option.value);
           });
 
-          var message = function() {
+          var message = function () {
             return 'Expected ' + toJson(actualValues) + ' to equal ' + toJson(expectedValues) + '.';
           };
 
@@ -437,7 +460,7 @@ beforeEach(function() {
 function spyOnlyCallsWithArgs(obj, method) {
   var originalFn = obj[method];
   var spy = spyOn(obj, method);
-  obj[method] = function() {
+  obj[method] = function () {
     if (arguments.length) return spy.apply(this, arguments);
     return originalFn.apply(this);
   };
@@ -449,23 +472,23 @@ function createAsync(doneFn) {
   function Job() {
     this.next = [];
   }
-  Job.prototype.done = function() {
+  Job.prototype.done = function () {
     return this.runs(doneFn);
   };
-  Job.prototype.runs = function(fn) {
+  Job.prototype.runs = function (fn) {
     var newJob = new Job();
-    this.next.push(function() {
+    this.next.push(function () {
       fn();
       newJob.start();
     });
     return newJob;
   };
-  Job.prototype.waitsFor = function(fn, error, timeout) {
+  Job.prototype.waitsFor = function (fn, error, timeout) {
     var newJob = new Job();
     timeout = timeout || 5000;
-    this.next.push(function() {
+    this.next.push(function () {
       var counter = 0,
-        intervalId = window.setInterval(function() {
+        intervalId = window.setInterval(function () {
           if (fn()) {
             window.clearInterval(intervalId);
             newJob.start();
@@ -479,10 +502,16 @@ function createAsync(doneFn) {
     });
     return newJob;
   };
-  Job.prototype.waits = function(timeout) {
-    return this.waitsFor(function() { return true; }, undefined, timeout);
+  Job.prototype.waits = function (timeout) {
+    return this.waitsFor(
+      function () {
+        return true;
+      },
+      undefined,
+      timeout
+    );
   };
-  Job.prototype.start = function() {
+  Job.prototype.start = function () {
     var i;
     for (i = 0; i < this.next.length; i += 1) {
       this.next[i]();
@@ -490,4 +519,3 @@ function createAsync(doneFn) {
   };
   return new Job();
 }
-

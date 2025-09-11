@@ -13,10 +13,9 @@ function serializeObject(obj, maxDepth) {
     // the closure. Therefore, it is lazily retrieved as `angular.copy()` when needed.
     obj = angular.copy(obj, null, maxDepth);
   }
-  return JSON.stringify(obj, function(key, val) {
+  return JSON.stringify(obj, function (key, val) {
     val = toJsonReplacer(key, val);
     if (isObject(val)) {
-
       if (seen.indexOf(val) >= 0) return '...';
 
       seen.push(val);

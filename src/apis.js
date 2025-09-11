@@ -44,29 +44,29 @@ function NgMapShim() {
   this._lastIndex = -1;
 }
 NgMapShim.prototype = {
-  _idx: function(key) {
+  _idx: function (key) {
     if (key !== this._lastKey) {
       this._lastKey = key;
       this._lastIndex = this._keys.indexOf(key);
     }
     return this._lastIndex;
   },
-  _transformKey: function(key) {
+  _transformKey: function (key) {
     return isNumberNaN(key) ? nanKey : key;
   },
-  get: function(key) {
+  get: function (key) {
     key = this._transformKey(key);
     var idx = this._idx(key);
     if (idx !== -1) {
       return this._values[idx];
     }
   },
-  has: function(key) {
+  has: function (key) {
     key = this._transformKey(key);
     var idx = this._idx(key);
     return idx !== -1;
   },
-  set: function(key, value) {
+  set: function (key, value) {
     key = this._transformKey(key);
     var idx = this._idx(key);
     if (idx === -1) {
@@ -78,7 +78,7 @@ NgMapShim.prototype = {
     // Support: IE11
     // Do not `return this` to simulate the partial IE11 implementation
   },
-  delete: function(key) {
+  delete: function (key) {
     key = this._transformKey(key);
     var idx = this._idx(key);
     if (idx === -1) {
@@ -97,8 +97,12 @@ NgMapShim.prototype = {
 // implementations get more stable, we can reconsider switching to `window.Map` (when available).
 var NgMap = NgMapShim;
 
-var $$MapProvider = [/** @this */function() {
-  this.$get = [function() {
-    return NgMap;
-  }];
-}];
+var $$MapProvider = [
+  /** @this */ function () {
+    this.$get = [
+      function () {
+        return NgMap;
+      }
+    ];
+  }
+];

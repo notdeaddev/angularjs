@@ -5,7 +5,7 @@
     // Possible errors
     "comma-dangle": ["error", "never"],
     "no-cond-assign": ["error", "except-parens"],
-    "no-constant-condition": ["error", {"checkLoops": false}],
+    "no-constant-condition": ["error", { "checkLoops": false }],
     "no-control-regex": "error",
     "no-debugger": "error",
     "no-dupe-args": "error",

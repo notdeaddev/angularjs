@@ -12,7 +12,7 @@ function middlewareFactory(base) {
   var fixture_regexp = new RegExp('^' + base + '/fixtures/([a-zA-Z0-9_-]+)(/(index.html)?)?$');
   var static_regexp = new RegExp('^' + base + '/fixtures/([a-zA-Z0-9_-]+)(/.*)$');
 
-  return function(req, res, next) {
+  return function (req, res, next) {
     var match;
     var basicUrl = req.url;
     var idx = basicUrl.indexOf('?');

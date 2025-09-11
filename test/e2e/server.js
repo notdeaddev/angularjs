@@ -12,19 +12,19 @@ module.exports = function createServer() {
   const indexServer = serveIndex(root);
   const middleware = middlewareFactory('/e2e');
 
-  return http.createServer(function(req, res) {
-    middleware(req, res, function(err) {
+  return http.createServer(function (req, res) {
+    middleware(req, res, function (err) {
       if (err) {
         res.statusCode = 500;
         res.end(err.toString());
         return;
       }
 
-      staticServer(req, res, function(staticErr) {
+      staticServer(req, res, function (staticErr) {
         if (staticErr) {
           if (staticErr.status === 404 && /^\/build\/docs\//.test(req.url) && !path.extname(req.url)) {
             req.url = '/build/docs/index-test.html';
-            staticServer(req, res, function(err) {
+            staticServer(req, res, function (err) {
               if (err) {
                 res.statusCode = err.status || 500;
                 res.end(err.message);
@@ -38,7 +38,7 @@ module.exports = function createServer() {
           return;
         }
 
-        indexServer(req, res, function() {
+        indexServer(req, res, function () {
           res.statusCode = 404;
           res.end('Not Found');
         });

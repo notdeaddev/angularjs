@@ -11,37 +11,40 @@ exports.config = {
 
   capabilities: {
     // Fix element scrolling behavior in Firefox for fixed header elements (like angularjs.org has)
-    'elementScrollBehavior': 1
+    elementScrollBehavior: 1
   },
 
-  beforeLaunch: function() {
+  beforeLaunch: function () {
     var createServer = require('./test/e2e/server');
     e2eServer = createServer();
-    return new Promise(function(resolve) {
+    return new Promise(function (resolve) {
       e2eServer.listen(8000, resolve);
     });
   },
 
-  afterLaunch: function() {
+  afterLaunch: function () {
     if (e2eServer) {
       e2eServer.close();
     }
   },
 
-  onPrepare: function() {
+  onPrepare: function () {
     /* global angular: false, browser: false, jasmine: false */
 
     // Disable animations so e2e tests run more quickly
-    var disableNgAnimate = function() {
-      angular.module('disableNgAnimate', []).run(['$animate', function($animate) {
-        $animate.enabled(false);
-      }]);
+    var disableNgAnimate = function () {
+      angular.module('disableNgAnimate', []).run([
+        '$animate',
+        function ($animate) {
+          $animate.enabled(false);
+        }
+      ]);
     };
 
     browser.addMockModule('disableNgAnimate', disableNgAnimate);
 
     // Store the name of the browser that's currently being used.
-    browser.getCapabilities().then(function(caps) {
+    browser.getCapabilities().then(function (caps) {
       browser.params.browser = caps.get('browserName');
     });
   },
