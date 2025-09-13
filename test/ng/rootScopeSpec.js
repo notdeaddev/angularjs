@@ -1,3 +1,7 @@
+/* eslint strict: "off" */
+
+'use strict';
+
 describe('Scope', function () {
   beforeEach(module(provideLog));
 

@@ -1,6 +1,10 @@
+/* eslint strict: "off" */
+/* eslint-disable no-constant-condition */
+
+'use strict';
+
 // This file has many tests which read nicely if constant conditions
 // are used.
-/* eslint-disable no-constant-condition */
 
 describe('parser', function () {
   describe('lexer', function () {
