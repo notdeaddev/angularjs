@@ -1,5 +1,3 @@
-'use strict';
-
 describe('toDebugString', function () {
   it('should convert its argument to a string', function () {
     expect(toDebugString('string')).toEqual('string');

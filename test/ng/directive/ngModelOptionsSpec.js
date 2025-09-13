@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals
     generateInputCompilerHelper: false,
     defaultModelOptions: false
@@ -215,7 +213,7 @@ describe('ngModelOptions', function () {
         it('should make a copy of the options object', function () {
           $rootScope.options = { updateOn: 'default' };
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="options"' + '/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="options"/>'
           );
           expect($rootScope.options).toEqual({ updateOn: 'default' });
           expect($rootScope.form.alias.$options).not.toBe($rootScope.options);
@@ -263,7 +261,7 @@ describe('ngModelOptions', function () {
       describe('updateOn', function () {
         it('should allow overriding the model update trigger event on text inputs', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'blur\' }"' + '/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ updateOn: \'blur\' }"/>'
           );
 
           helper.changeInputValueTo('a');
@@ -274,7 +272,7 @@ describe('ngModelOptions', function () {
 
         it('should not dirty the input if nothing was changed before updateOn trigger', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'blur\' }"' + '/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ updateOn: \'blur\' }"/>'
           );
 
           browserTrigger(inputElm, 'blur');
@@ -283,7 +281,7 @@ describe('ngModelOptions', function () {
 
         it('should allow overriding the model update trigger event on text areas', function () {
           var inputElm = helper.compileInput(
-            '<textarea ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'blur\' }"' + '/>'
+            '<textarea ng-model="name" name="alias" ng-model-options="{ updateOn: \'blur\' }"/>'
           );
 
           helper.changeInputValueTo('a');
@@ -312,7 +310,7 @@ describe('ngModelOptions', function () {
 
         it('should allow keeping the default update behavior on text inputs', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'default\' }"' + '/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ updateOn: \'default\' }"/>'
           );
 
           helper.changeInputValueTo('a');
@@ -321,7 +319,7 @@ describe('ngModelOptions', function () {
 
         it('should allow overriding the model update trigger event on checkboxes', function () {
           var inputElm = helper.compileInput(
-            '<input type="checkbox" ng-model="checkbox" ' + 'ng-model-options="{ updateOn: \'blur\' }"' + '/>'
+            '<input type="checkbox" ng-model="checkbox" ng-model-options="{ updateOn: \'blur\' }"/>'
           );
 
           browserTrigger(inputElm, 'click');
@@ -336,7 +334,7 @@ describe('ngModelOptions', function () {
 
         it('should allow keeping the default update behavior on checkboxes', function () {
           var inputElm = helper.compileInput(
-            '<input type="checkbox" ng-model="checkbox" ' + 'ng-model-options="{ updateOn: \'blur default\' }"' + '/>'
+            '<input type="checkbox" ng-model="checkbox" ng-model-options="{ updateOn: \'blur default\' }"/>'
           );
 
           browserTrigger(inputElm, 'click');
@@ -426,7 +424,7 @@ describe('ngModelOptions', function () {
       describe('debounce', function () {
         it('should trigger only after timeout in text inputs', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ debounce: 10000 }"' + '/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ debounce: 10000 }"/>'
           );
 
           helper.changeInputValueTo('a');
@@ -441,7 +439,7 @@ describe('ngModelOptions', function () {
 
         it('should trigger only after timeout in checkboxes', function () {
           var inputElm = helper.compileInput(
-            '<input type="checkbox" ng-model="checkbox" ' + 'ng-model-options="{ debounce: 10000 }"' + '/>'
+            '<input type="checkbox" ng-model="checkbox" ng-model-options="{ debounce: 10000 }"/>'
           );
 
           browserTrigger(inputElm, 'click');
@@ -475,7 +473,7 @@ describe('ngModelOptions', function () {
 
         it('should not trigger digest while debouncing', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ debounce: 10000 }"' + '/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ debounce: 10000 }"/>'
           );
 
           var watchSpy = jasmine.createSpy('watchSpy');
@@ -623,7 +621,7 @@ describe('ngModelOptions', function () {
 
         it('should flush debounced events when calling $commitViewValue directly', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ debounce: 1000 }" />'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ debounce: 1000 }" />'
           );
 
           helper.changeInputValueTo('a');
@@ -634,7 +632,7 @@ describe('ngModelOptions', function () {
 
         it('should cancel debounced events when calling $commitViewValue', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ debounce: 1000 }"/>'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ debounce: 1000 }"/>'
           );
 
           helper.changeInputValueTo('a');
@@ -648,7 +646,7 @@ describe('ngModelOptions', function () {
 
         it('should reset input val if rollbackViewValue called during pending update', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'blur\' }" />'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ updateOn: \'blur\' }" />'
           );
 
           helper.changeInputValueTo('a');
@@ -661,7 +659,7 @@ describe('ngModelOptions', function () {
 
         it('should allow canceling pending updates', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'blur\' }" />'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ updateOn: \'blur\' }" />'
           );
 
           helper.changeInputValueTo('a');
@@ -674,7 +672,7 @@ describe('ngModelOptions', function () {
 
         it('should allow canceling debounced updates', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ debounce: 10000 }" />'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ debounce: 10000 }" />'
           );
 
           helper.changeInputValueTo('a');
@@ -688,7 +686,7 @@ describe('ngModelOptions', function () {
 
         it('should handle model updates correctly even if rollbackViewValue is not invoked', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ updateOn: \'blur\' }" />'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ updateOn: \'blur\' }" />'
           );
 
           helper.changeInputValueTo('a');
@@ -699,7 +697,7 @@ describe('ngModelOptions', function () {
 
         it('should reset input val if rollbackViewValue called during debounce', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" name="alias" ' + 'ng-model-options="{ debounce: 2000 }" />'
+            '<input type="text" ng-model="name" name="alias" ng-model-options="{ debounce: 2000 }" />'
           );
 
           helper.changeInputValueTo('a');
@@ -714,7 +712,7 @@ describe('ngModelOptions', function () {
       describe('getterSetter', function () {
         it('should not try to invoke a model if getterSetter is false', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" ' + 'ng-model-options="{ getterSetter: false }" />'
+            '<input type="text" ng-model="name" ng-model-options="{ getterSetter: false }" />'
           );
 
           var spy = ($rootScope.name = jasmine.createSpy('setterSpy'));
@@ -734,7 +732,7 @@ describe('ngModelOptions', function () {
 
         it('should try to invoke a function model if getterSetter is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" ' + 'ng-model-options="{ getterSetter: true }" />'
+            '<input type="text" ng-model="name" ng-model-options="{ getterSetter: true }" />'
           );
 
           var spy = ($rootScope.name = jasmine.createSpy('setterSpy').and.callFake(function () {
@@ -751,7 +749,7 @@ describe('ngModelOptions', function () {
 
         it('should assign to non-function models if getterSetter is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="name" ' + 'ng-model-options="{ getterSetter: true }" />'
+            '<input type="text" ng-model="name" ng-model-options="{ getterSetter: true }" />'
           );
 
           $rootScope.name = 'c';
@@ -768,13 +766,13 @@ describe('ngModelOptions', function () {
 
         it('should not fail on non-assignable model binding if getterSetter is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="accessor(user, \'name\')" ' + 'ng-model-options="{ getterSetter: true }" />'
+            '<input type="text" ng-model="accessor(user, \'name\')" ng-model-options="{ getterSetter: true }" />'
           );
         });
 
         it('should invoke a model in the correct context if getterSetter is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" ng-model="someService.getterSetter" ' + 'ng-model-options="{ getterSetter: true }" />'
+            '<input type="text" ng-model="someService.getterSetter" ng-model-options="{ getterSetter: true }" />'
           );
 
           $rootScope.someService = {
@@ -816,7 +814,7 @@ describe('ngModelOptions', function () {
 
         it('should not assign not parsable values to the scope if allowInvalid is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="number" name="input" ng-model="value" ' + 'ng-model-options="{allowInvalid: true}" />',
+            '<input type="number" name="input" ng-model="value" ng-model-options="{allowInvalid: true}" />',
             {
               valid: false,
               badInput: true
@@ -830,7 +828,7 @@ describe('ngModelOptions', function () {
 
         it('should update the scope before async validators execute if allowInvalid is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" name="input" ng-model="value" ' + 'ng-model-options="{allowInvalid: true}" />'
+            '<input type="text" name="input" ng-model="value" ng-model-options="{allowInvalid: true}" />'
           );
           var defer;
           $rootScope.form.input.$asyncValidators.promiseValidator = function (value) {
@@ -849,7 +847,7 @@ describe('ngModelOptions', function () {
 
         it('should update the view before async validators execute if allowInvalid is true', function () {
           var inputElm = helper.compileInput(
-            '<input type="text" name="input" ng-model="value" ' + 'ng-model-options="{allowInvalid: true}" />'
+            '<input type="text" name="input" ng-model="value" ng-model-options="{allowInvalid: true}" />'
           );
           var defer;
           $rootScope.form.input.$asyncValidators.promiseValidator = function (value) {

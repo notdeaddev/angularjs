@@ -1,5 +1,4 @@
 /* global $: false */
-'use strict';
 
 if (window.jQuery) {
   describe('jQuery patch', function () {

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('scriptDirective', function () {
   var element;
 

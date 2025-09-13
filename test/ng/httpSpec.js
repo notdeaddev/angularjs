@@ -1,5 +1,3 @@
-'use strict';
-
 /* global MockXhr: false */
 
 // The http specs run against the mocked httpBackend
@@ -1216,7 +1214,6 @@ describe('$http', function () {
         it('should ignore Blob objects', function () {
           if (!window.Blob) return;
 
-          // eslint-disable-next-line no-undef
           var blob = new Blob(['blob!'], { type: 'text/plain' });
 
           $httpBackend.expect('POST', '/url', '[object Blob]').respond('');
@@ -1226,7 +1223,6 @@ describe('$http', function () {
         it('should ignore FormData objects', function () {
           if (!window.FormData) return;
 
-          // eslint-disable-next-line no-undef
           var formData = new FormData();
           formData.append('angular', 'is great');
 

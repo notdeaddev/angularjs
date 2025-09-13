@@ -1,5 +1,3 @@
-'use strict';
-
 describe('errors', function () {
   var originalObjectMaxDepthInErrorMessage = minErrConfig.objectMaxDepth;
   var originalUrlErrorParamsEnabled = minErrConfig.urlErrorParamsEnabled;
@@ -216,7 +214,7 @@ describe('errors', function () {
       errorHandlingConfig({ urlErrorParamsEnabled: false });
 
       expect(testError('acode', 'aproblem', 'a', 'b', 'c').message).toBe(
-        '[test:acode] aproblem\n' + 'https://errors.angularjs.org/"NG_VERSION_FULL"/test/acode'
+        '[test:acode] aproblem\nhttps://errors.angularjs.org/"NG_VERSION_FULL"/test/acode'
       );
     });
   });

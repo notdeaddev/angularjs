@@ -1,5 +1,3 @@
-'use strict';
-
 // Lots of typed array globals are used in this file and ESLint is
 // not smart enough to understand the `typeof !== 'undefined'` guards.
 /* globals Blob, Uint8ClampedArray, Uint16Array, Uint32Array, Int8Array, Int16Array, Int32Array,
@@ -834,9 +832,8 @@ describe('angular', function () {
       merge(dst, src);
 
       if (typeof dst.__proto__ !== 'undefined') {
-        // eslint-disable-line
         // Should not overwrite the __proto__ property or pollute the Object prototype
-        expect(dst.__proto__).toBe(Object.prototype); // eslint-disable-line
+        expect(dst.__proto__).toBe(Object.prototype);
       }
       expect({}.xxx).toBeUndefined();
     });
@@ -1413,7 +1410,7 @@ describe('angular', function () {
     });
 
     it('should handle HTMLCollection objects like arrays', function () {
-      document.body.innerHTML = '<p>' + "<a name='x'>a</a>" + "<a name='y'>b</a>" + "<a name='x'>c</a>" + '</p>';
+      document.body.innerHTML = "<p><a name='x'>a</a><a name='y'>b</a><a name='x'>c</a></p>";
 
       var htmlCollection = document.getElementsByName('x'),
         log = [];
@@ -2014,16 +2011,14 @@ describe('angular', function () {
   describe('nodeName_', function () {
     it('should correctly detect node name with "namespace" when xmlns is defined', function () {
       var div = jqLite(
-        '<div xmlns:ngtest="http://angularjs.org/">' + '<ngtest:foo ngtest:attr="bar"></ngtest:foo>' + '</div>'
+        '<div xmlns:ngtest="http://angularjs.org/"><ngtest:foo ngtest:attr="bar"></ngtest:foo></div>'
       )[0];
       expect(nodeName_(div.childNodes[0])).toBe('ngtest:foo');
       expect(div.childNodes[0].getAttribute('ngtest:attr')).toBe('bar');
     });
 
     it('should correctly detect node name with "namespace" when xmlns is NOT defined', function () {
-      var div = jqLite(
-        '<div xmlns:ngtest="http://angularjs.org/">' + '<ngtest:foo ngtest:attr="bar"></ng-test>' + '</div>'
-      )[0];
+      var div = jqLite('<div xmlns:ngtest="http://angularjs.org/"><ngtest:foo ngtest:attr="bar"></ng-test></div>')[0];
       expect(nodeName_(div.childNodes[0])).toBe('ngtest:foo');
       expect(div.childNodes[0].getAttribute('ngtest:attr')).toBe('bar');
     });

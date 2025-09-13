@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngAnimate $$animateJs', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));

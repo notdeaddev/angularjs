@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngRef', function () {
   beforeEach(function () {
     jasmine.addMatchers({
@@ -97,7 +95,7 @@ describe('ngRef', function () {
     });
 
     it('should not leak to parent scopes', function () {
-      var template = '<div ng-if="true">' + '<my-component ng-ref="myComponent"></my-component>' + '</div>';
+      var template = '<div ng-if="true"><my-component ng-ref="myComponent"></my-component></div>';
       $compile(template)($rootScope);
       expect($rootScope.myComponent).toBe(undefined);
     });
@@ -265,9 +263,7 @@ describe('ngRef', function () {
 
       inject(function ($compile, $rootScope) {
         expect(function () {
-          $compile('<element-directive ' + 'ng-ref="myController"' + 'ng-ref-read="attribute"></element-directive>')(
-            $rootScope
-          );
+          $compile('<element-directive ng-ref="myController"ng-ref-read="attribute"></element-directive>')($rootScope);
         }).toThrowMinErr(
           'ngRef',
           'noctrl',
@@ -362,8 +358,7 @@ describe('ngRef', function () {
       });
 
       inject(function ($compile, $rootScope) {
-        var template =
-          '<div>' + '<my-component ng-ref="myComponent">' + '{{myComponent.text}}' + '</my-component>' + '</div>';
+        var template = '<div><my-component ng-ref="myComponent">{{myComponent.text}}</my-component></div>';
         var element = $compile(template)($rootScope);
         $rootScope.$apply();
         expect(element.text()).toBe('SUCCESS');
@@ -467,8 +462,7 @@ describe('ngRef', function () {
       });
 
       inject(function ($compile, $rootScope) {
-        var template =
-          '<div>' + '<my-directive ng-ref="myDirective">' + '{{myDirective.text}}' + '</my-directive>' + '</div>';
+        var template = '<div><my-directive ng-ref="myDirective">{{myDirective.text}}</my-directive></div>';
         var element = $compile(template)($rootScope);
         $rootScope.$apply();
         expect(element.text()).toBe('SUCCESS');

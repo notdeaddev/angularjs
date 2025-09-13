@@ -1,5 +1,3 @@
-'use strict';
-
 // This file has many tests which read nicely if constant conditions
 // are used.
 /* eslint-disable no-constant-condition */

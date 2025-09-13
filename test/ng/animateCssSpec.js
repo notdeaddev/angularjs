@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$animateCss', function () {
   var triggerRAF, element;
   beforeEach(inject(function ($$rAF, $rootElement, $document) {

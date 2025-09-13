@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngCloak', function () {
   var element;
 

@@ -892,7 +892,7 @@ function $RootScopeProvider() {
               clearPhase();
               throw $rootScopeMinErr(
                 'infdig',
-                '{0} $digest() iterations reached. Aborting!\n' + 'Watchers fired in the last 5 iterations: {1}',
+                '{0} $digest() iterations reached. Aborting!\nWatchers fired in the last 5 iterations: {1}',
                 TTL,
                 watchLog
               );

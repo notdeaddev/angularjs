@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngShow / ngHide', function () {
   var $scope, $compile, element;
 

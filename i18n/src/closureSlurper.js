@@ -13,12 +13,12 @@ var NG_LOCALE_DIR = __dirname + '/../../src/ngLocale/';
 function readSymbols() {
   console.log('Processing currency and number symbols ...');
   var numericStagePromise = qfs.read(__dirname + '/../closure/currencySymbols.js', 'b')
-    .then(function(content) {
+    .then(function (content) {
       var currencySymbols = closureI18nExtractor.extractCurrencySymbols(content);
-      return qfs.read(__dirname + '/../closure/numberSymbols.js', 'b').then(function(content) {
+      return qfs.read(__dirname + '/../closure/numberSymbols.js', 'b').then(function (content) {
           var numberSymbols = content;
           return qfs.read(__dirname + '/../closure/numberSymbolsExt.js', 'b')
-            .then(function(content) {
+            .then(function (content) {
               numberSymbols += content;
               return closureI18nExtractor.extractNumberSymbols(numberSymbols, localeInfo, currencySymbols);
             });
@@ -27,9 +27,9 @@ function readSymbols() {
 
   console.log('Processing datetime symbols ...');
   var datetimeStagePromise = qfs.read(__dirname + '/../closure/datetimeSymbols.js', 'b')
-      .then(function(content) {
+      .then(function (content) {
         closureI18nExtractor.extractDateTimeSymbols(content, localeInfo);
-        return qfs.read(__dirname + '/../closure/datetimeSymbolsExt.js', 'b').then(function(content) {
+        return qfs.read(__dirname + '/../closure/datetimeSymbolsExt.js', 'b').then(function (content) {
             closureI18nExtractor.extractDateTimeSymbols(content, localeInfo);
         });
     });
@@ -39,7 +39,7 @@ function readSymbols() {
 
 function extractPlurals() {
   console.log('Extracting Plurals ...');
-  return qfs.read(__dirname + '/../closure/pluralRules.js').then(function(content) {
+  return qfs.read(__dirname + '/../closure/pluralRules.js').then(function (content) {
     closureI18nExtractor.pluralExtractor(content, localeInfo);
   });
 }
@@ -74,7 +74,7 @@ function writeLocaleFiles() {
     var filename = NG_LOCALE_DIR + 'angular-locale_' + correctedLocaleId + '.js';
     console.log('Writing ' + filename);
     return qfs.write(filename, content)
-        .then(function() {
+        .then(function () {
           console.log('Wrote ' + filename);
           ++num_files;
         });
@@ -87,8 +87,8 @@ function writeLocaleFiles() {
 * @param folder {string} name of the folder to be made
 */
 function createFolder(folder) {
-  return qfs.isDirectory(folder).then(function(isDir) {
-    if (!isDir) return qfs.makeDirectory(folder).then(function() {
+  return qfs.isDirectory(folder).then(function (isDir) {
+    if (!isDir) return qfs.makeDirectory(folder).then(function () {
       console.log('Created directory %j', folder);
     });
   });
@@ -98,4 +98,4 @@ createFolder(NG_LOCALE_DIR)
   .then(readSymbols)
   .then(extractPlurals)
   .then(writeLocaleFiles)
-  .done(function(num_files) { console.log('Wrote %j files.\nAll Done!', num_files); });
+  .done(function (num_files) { console.log('Wrote %j files.\nAll Done!', num_files); });

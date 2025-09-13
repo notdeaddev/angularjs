@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$$animateAsyncRun', function () {
   it('should fire the callback only when one or more RAFs have passed', inject(function ($$animateAsyncRun, $$rAF) {
     var trigger = $$animateAsyncRun();

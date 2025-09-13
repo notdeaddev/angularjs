@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$locale', function () {
   /* global $LocaleProvider: false */
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('support test results', function () {
   var expected, version, testName;
   var userAgent = window.navigator.userAgent;

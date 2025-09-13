@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('test', []).controller('TestController', function ($anchorScroll, $location, $scope) {
   $anchorScroll.yOffset = 50;
 

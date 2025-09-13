@@ -1,5 +1,3 @@
-'use strict';
-
 describe('urlUtils', function () {
   describe('urlResolve', function () {
     it('should returned already parsed URLs unchanged', function () {

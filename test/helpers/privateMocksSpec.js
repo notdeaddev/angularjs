@@ -1,5 +1,3 @@
-'use strict';
-
 describe('private mocks', function () {
   describe('Jasmine extensions', function () {
     describe('they', function () {

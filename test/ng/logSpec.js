@@ -1,5 +1,4 @@
 /* global $LogProvider: false */
-'use strict';
 
 describe('$log', function () {
   var $window, logger, log, warn, info, error, debug;

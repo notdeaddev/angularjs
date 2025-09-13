@@ -1,5 +1,3 @@
-'use strict';
-
 /* eslint-disable no-script-url */
 
 describe('SCE', function () {
@@ -116,7 +114,7 @@ describe('SCE', function () {
       }).toThrowMinErr(
         '$sce',
         'itype',
-        'Attempted to trust a non-string value in a content requiring a string: ' + 'Context: css'
+        'Attempted to trust a non-string value in a content requiring a string: Context: css'
       );
     }));
 
@@ -683,7 +681,7 @@ describe('SCE', function () {
             }).toThrowMinErr(
               '$sce',
               'insecurl',
-              'Blocked loading resource from url not allowed by $sceDelegate policy.  ' + 'URL: //bad.example.com'
+              'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: //bad.example.com'
             );
           })
         );

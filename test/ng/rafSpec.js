@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$$rAF', function () {
   it('should queue and block animation frames', inject(function ($$rAF) {
     if (!$$rAF.supported) return;

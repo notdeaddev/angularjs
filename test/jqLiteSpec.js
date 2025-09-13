@@ -1,5 +1,3 @@
-'use strict';
-
 describe('jqLite', function () {
   var scope, a, b, c, document;
 
@@ -1401,20 +1399,19 @@ describe('jqLite', function () {
 
     it('should get an array of selected elements from a multi select', function () {
       expect(
-        jqLite(
-          '<select multiple>' + '<option selected>test 1</option>' + '<option selected>test 2</option>' + '</select>'
-        ).val()
+        jqLite('<select multiple><option selected>test 1</option><option selected>test 2</option></select>').val()
       ).toEqual(['test 1', 'test 2']);
 
-      expect(
-        jqLite('<select multiple>' + '<option selected>test 1</option>' + '<option>test 2</option>' + '</select>').val()
-      ).toEqual(['test 1']);
+      expect(jqLite('<select multiple><option selected>test 1</option><option>test 2</option></select>').val()).toEqual(
+        ['test 1']
+      );
 
       // In jQuery < 3.0 .val() on select[multiple] with no selected options returns an
       // null instead of an empty array.
-      expect(
-        jqLite('<select multiple>' + '<option>test 1</option>' + '<option>test 2</option>' + '</select>').val()
-      ).toEqualOneOf(null, []);
+      expect(jqLite('<select multiple><option>test 1</option><option>test 2</option></select>').val()).toEqualOneOf(
+        null,
+        []
+      );
     });
 
     it('should get an empty array from a multi select if no elements are chosen', function () {
@@ -2063,42 +2060,39 @@ describe('jqLite', function () {
         }
       );
 
-      it(
-        'should deregister the native listener when all jqLite listeners for given type are gone ' + 'after off() call',
-        function () {
-          var aElem = jqLite(a);
-          var addEventListenerSpy = spyOn(aElem[0], 'addEventListener').and.callThrough();
-          var removeEventListenerSpy = spyOn(aElem[0], 'removeEventListener').and.callThrough();
-          var nativeListenerFn;
+      it('should deregister the native listener when all jqLite listeners for given type are gone after off() call', function () {
+        var aElem = jqLite(a);
+        var addEventListenerSpy = spyOn(aElem[0], 'addEventListener').and.callThrough();
+        var removeEventListenerSpy = spyOn(aElem[0], 'removeEventListener').and.callThrough();
+        var nativeListenerFn;
 
-          aElem.on('click', function () {});
-          if (isJQuery21()) {
-            expect(addEventListenerSpy).toHaveBeenCalledOnceWith('click', jasmine.any(Function), false);
-          } else {
-            expect(addEventListenerSpy).toHaveBeenCalledOnceWith('click', jasmine.any(Function));
-          }
-          nativeListenerFn = addEventListenerSpy.calls.mostRecent().args[1];
-          addEventListenerSpy.calls.reset();
-
-          aElem.on('dblclick', function () {});
-          if (isJQuery21()) {
-            expect(addEventListenerSpy).toHaveBeenCalledOnceWith('dblclick', nativeListenerFn, false);
-          } else {
-            expect(addEventListenerSpy).toHaveBeenCalledOnceWith('dblclick', nativeListenerFn);
-          }
-
-          aElem.off();
-
-          if (isJQuery21()) {
-            expect(removeEventListenerSpy).toHaveBeenCalledWith('click', nativeListenerFn, false);
-            expect(removeEventListenerSpy).toHaveBeenCalledWith('dblclick', nativeListenerFn, false);
-          } else {
-            expect(removeEventListenerSpy).toHaveBeenCalledWith('click', nativeListenerFn);
-            expect(removeEventListenerSpy).toHaveBeenCalledWith('dblclick', nativeListenerFn);
-          }
-          expect(removeEventListenerSpy).toHaveBeenCalledTimes(2);
+        aElem.on('click', function () {});
+        if (isJQuery21()) {
+          expect(addEventListenerSpy).toHaveBeenCalledOnceWith('click', jasmine.any(Function), false);
+        } else {
+          expect(addEventListenerSpy).toHaveBeenCalledOnceWith('click', jasmine.any(Function));
         }
-      );
+        nativeListenerFn = addEventListenerSpy.calls.mostRecent().args[1];
+        addEventListenerSpy.calls.reset();
+
+        aElem.on('dblclick', function () {});
+        if (isJQuery21()) {
+          expect(addEventListenerSpy).toHaveBeenCalledOnceWith('dblclick', nativeListenerFn, false);
+        } else {
+          expect(addEventListenerSpy).toHaveBeenCalledOnceWith('dblclick', nativeListenerFn);
+        }
+
+        aElem.off();
+
+        if (isJQuery21()) {
+          expect(removeEventListenerSpy).toHaveBeenCalledWith('click', nativeListenerFn, false);
+          expect(removeEventListenerSpy).toHaveBeenCalledWith('dblclick', nativeListenerFn, false);
+        } else {
+          expect(removeEventListenerSpy).toHaveBeenCalledWith('click', nativeListenerFn);
+          expect(removeEventListenerSpy).toHaveBeenCalledWith('dblclick', nativeListenerFn);
+        }
+        expect(removeEventListenerSpy).toHaveBeenCalledTimes(2);
+      });
     });
 
     it('should throw an error if a selector is passed', function () {

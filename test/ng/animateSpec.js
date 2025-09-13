@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$animate', function () {
   describe('without animation', function () {
     var element, $rootElement;

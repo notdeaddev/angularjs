@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$sniffer', function () {
   function sniffer($window, $document) {
     /* global $SnifferProvider: false */

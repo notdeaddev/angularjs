@@ -1,5 +1,3 @@
-'use strict';
-
 describe('boolean attr directives', function () {
   var element;
 
@@ -115,7 +113,7 @@ describe('boolean attr directives', function () {
       }).toThrowMinErr(
         '$compile',
         'selmulti',
-        "Binding to the 'multiple' attribute is not supported. " + 'Element: <select multiple="{{isMultiple}}">'
+        'Binding to the \'multiple\' attribute is not supported. Element: <select multiple="{{isMultiple}}">'
       );
     }));
   });

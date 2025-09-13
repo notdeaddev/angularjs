@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngBind*', function () {
   var element;
 

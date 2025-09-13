@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$$rAFScheduler', function () {
   beforeEach(module('ngAnimate'));
 

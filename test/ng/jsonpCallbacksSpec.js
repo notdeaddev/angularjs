@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$jsonpCallbacks', function () {
   describe('createCallback(url)', function () {
     it('should return a new unique path to a callback function on each call', inject(function ($jsonpCallbacks) {

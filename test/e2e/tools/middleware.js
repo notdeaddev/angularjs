@@ -1,5 +1,3 @@
-'use strict';
-
 var url = require('url');
 var util = require('./util');
 var fixture = require('./fixture');

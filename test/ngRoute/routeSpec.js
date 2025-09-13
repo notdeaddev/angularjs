@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$routeProvider', function () {
   var $routeProvider;
 
@@ -807,7 +805,7 @@ describe('$route', function () {
         expect(onError.calls.mostRecent().args[3]).toEqualMinErr(
           '$sce',
           'insecurl',
-          'Blocked loading resource from url not allowed by $sceDelegate policy.  ' + 'URL: http://example.com/foo.html'
+          'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: http://example.com/foo.html'
         );
       });
     });
@@ -1164,29 +1162,26 @@ describe('$route', function () {
         });
       });
 
-      it(
-        'should properly interpolate optional and eager route vars ' + 'when redirecting from path with trailing slash',
-        function () {
-          module(function ($routeProvider) {
-            $routeProvider.when('/foo/:id?/:subid?', { templateUrl: 'foo.html' });
-            $routeProvider.when('/bar/:id*/:subid', { templateUrl: 'bar.html' });
-          });
+      it('should properly interpolate optional and eager route vars when redirecting from path with trailing slash', function () {
+        module(function ($routeProvider) {
+          $routeProvider.when('/foo/:id?/:subid?', { templateUrl: 'foo.html' });
+          $routeProvider.when('/bar/:id*/:subid', { templateUrl: 'bar.html' });
+        });
 
-          inject(function ($location, $rootScope, $route) {
-            $location.path('/foo/id1/subid2/');
-            $rootScope.$digest();
+        inject(function ($location, $rootScope, $route) {
+          $location.path('/foo/id1/subid2/');
+          $rootScope.$digest();
 
-            expect($location.path()).toEqual('/foo/id1/subid2');
-            expect($route.current.templateUrl).toEqual('foo.html');
+          expect($location.path()).toEqual('/foo/id1/subid2');
+          expect($route.current.templateUrl).toEqual('foo.html');
 
-            $location.path('/bar/id1/extra/subid2/');
-            $rootScope.$digest();
+          $location.path('/bar/id1/extra/subid2/');
+          $rootScope.$digest();
 
-            expect($location.path()).toEqual('/bar/id1/extra/subid2');
-            expect($route.current.templateUrl).toEqual('bar.html');
-          });
-        }
-      );
+          expect($location.path()).toEqual('/bar/id1/extra/subid2');
+          expect($route.current.templateUrl).toEqual('bar.html');
+        });
+      });
 
       it('should allow custom redirectTo function to be used', function () {
         function customRedirectFn(routePathParams, path, search) {

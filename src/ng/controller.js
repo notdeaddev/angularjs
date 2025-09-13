@@ -99,7 +99,7 @@ function $ControllerProvider() {
           if (!match) {
             throw $controllerMinErr(
               'ctrlfmt',
-              "Badly formed controller string '{0}'. " + 'Must match `__name__ as __id__` or `__name__`.',
+              "Badly formed controller string '{0}'. Must match `__name__ as __id__` or `__name__`.",
               expression
             );
           }

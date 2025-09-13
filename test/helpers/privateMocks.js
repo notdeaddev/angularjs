@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals xit */
 function assertCompareNodes(a, b, not) {
   a = a[0] ? a[0] : a;

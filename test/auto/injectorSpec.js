@@ -1,5 +1,3 @@
-'use strict';
-
 describe('injector.modules', function () {
   it('should expose the loaded module info on the instance injector', function () {
     var test1 = angular.module('test1', ['test2']).info({ version: '1.1' });
@@ -472,15 +470,13 @@ describe('injector', function () {
       expect(annotate(fn)).toBe(fn.$inject);
       expect(annotate(function () {})).toEqual([]);
       expect(annotate(function () {})).toEqual([]);
-      /* eslint-disable space-before-function-paren, no-multi-spaces */
+
       expect(annotate(function () {})).toEqual([]);
       expect(annotate(function () /* */ {})).toEqual([]);
-      /* eslint-enable */
     });
 
     it('should create $inject', function () {
       var extraParams = angular.noop;
-      /* eslint-disable space-before-function-paren */
       // keep the multi-line to make sure we can handle it
       function $f_n0 /*
        */(
@@ -494,7 +490,7 @@ describe('injector', function () {
       ) {
         extraParams();
       }
-      /* eslint-enable */
+
       expect(annotate($f_n0)).toEqual(['$a', 'b_', '_c', 'd']);
       expect($f_n0.$inject).toEqual(['$a', 'b_', '_c', 'd']);
     });

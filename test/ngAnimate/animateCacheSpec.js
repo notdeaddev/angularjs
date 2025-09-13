@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngAnimate $$animateCache', function () {
   beforeEach(module('ngAnimate'));
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('animation option helper functions', function () {
   beforeEach(module('ngAnimate'));
 

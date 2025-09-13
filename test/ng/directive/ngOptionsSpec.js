@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngOptions', function () {
   var scope, formElement, element, $compile, linkLog, childListMutationObserver, ngModelCtrl;
 
@@ -386,7 +384,7 @@ describe('ngOptions', function () {
   });
 
   it('should not be set when an option is selected and options are set asynchronously', inject(function ($timeout) {
-    compile('<select ng-model="model" ng-options="opt.id as opt.label for opt in options">' + '</select>');
+    compile('<select ng-model="model" ng-options="opt.id as opt.label for opt in options"></select>');
 
     scope.$apply(function () {
       scope.model = 0;
@@ -601,7 +599,7 @@ describe('ngOptions', function () {
     };
 
     createSelect({
-      'ng-options': 'key.id\n' + 'for key in values\n' + '| filter:isNotFoo',
+      'ng-options': 'key.id\nfor key in values\n| filter:isNotFoo',
       'ng-model': 'selected'
     });
 
@@ -2496,7 +2494,7 @@ describe('ngOptions', function () {
     it('should be rendered with the attributes preserved', function () {
       var option;
       createSingleSelect(
-        '<option value="" class="coyote" id="road-runner" ' + 'custom-attr="custom-attr">{{blankVal}}</option>'
+        '<option value="" class="coyote" id="road-runner" custom-attr="custom-attr">{{blankVal}}</option>'
       );
 
       scope.$apply(function () {

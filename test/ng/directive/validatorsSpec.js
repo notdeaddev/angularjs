@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals generateInputCompilerHelper: false */
 
 describe('validators', function () {
@@ -463,7 +461,7 @@ describe('validators', function () {
 
     it('should not notify if observed maxlength changed, but is still invalid', function () {
       var inputElm = helper.compileInput(
-        '<input type="text" name="input" ng-model="value" ng-change="ngChangeSpy()" ' + 'maxlength="{{ max }}" />'
+        '<input type="text" name="input" ng-model="value" ng-change="ngChangeSpy()" maxlength="{{ max }}" />'
       );
 
       $rootScope.$apply('max = 1');

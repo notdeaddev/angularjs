@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngOn* event binding', function () {
   it('should add event listener of specified name', inject(function ($compile, $rootScope) {
     $rootScope.name = 'Misko';

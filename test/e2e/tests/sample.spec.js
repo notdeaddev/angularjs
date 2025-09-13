@@ -1,5 +1,3 @@
-'use strict';
-
 // Sample E2E test:
 describe('Sample', function () {
   beforeEach(function () {

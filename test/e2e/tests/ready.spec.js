@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Firing a callback on ready', function () {
   it('should not have the div available immediately', function () {
     loadFixture('ready');

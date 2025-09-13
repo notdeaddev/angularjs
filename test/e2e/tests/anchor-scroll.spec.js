@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$anchorScroll', function () {
   beforeEach(function () {
     jasmine.addMatchers({
@@ -155,7 +153,6 @@ describe('$anchorScroll', function () {
   // Helpers
   // Those are scripts executed in the browser, stop complaining about
   // `document` not being defined.
-  /* eslint-disable no-undef */
   function _script_getTop(id) {
     var elem = document.getElementById(id);
     var rect = elem.getBoundingClientRect();
@@ -170,7 +167,6 @@ describe('$anchorScroll', function () {
 
     return rect.top < docElem.clientHeight && rect.bottom > 0 && rect.left < docElem.clientWidth && rect.right > 0;
   }
-  /* eslint-enable */
 
   function execWithTempViewportHeight(tempHeight, fn) {
     return setViewportHeight(tempHeight).then(function (oldHeight) {

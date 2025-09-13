@@ -1,5 +1,3 @@
-'use strict';
-
 /* global getHash:true, stripHash:true */
 
 var historyEntriesLength;
@@ -976,86 +974,83 @@ describe('browser', function () {
       });
     }
 
-    describe(
-      'update $location when it was changed outside of AngularJS in sync ' + 'before $digest was called',
-      function () {
-        it('should work with no history support, no html5Mode', function () {
-          setup({
-            history: false,
-            html5Mode: false
-          });
-          inject(function ($rootScope, $location) {
-            $rootScope.$apply(function () {
-              $location.path('/initialPath');
-            });
-            expect(fakeWindow.location.href).toBe('http://server/#!/initialPath');
-
-            fakeWindow.location.href = 'http://server/#!/someTestHash';
-
-            $rootScope.$digest();
-
-            expect($location.path()).toBe('/someTestHash');
-          });
+    describe('update $location when it was changed outside of AngularJS in sync before $digest was called', function () {
+      it('should work with no history support, no html5Mode', function () {
+        setup({
+          history: false,
+          html5Mode: false
         });
-
-        it('should work with history support, no html5Mode', function () {
-          setup({
-            history: true,
-            html5Mode: false
+        inject(function ($rootScope, $location) {
+          $rootScope.$apply(function () {
+            $location.path('/initialPath');
           });
-          inject(function ($rootScope, $location) {
-            $rootScope.$apply(function () {
-              $location.path('/initialPath');
-            });
-            expect(fakeWindow.location.href).toBe('http://server/#!/initialPath');
+          expect(fakeWindow.location.href).toBe('http://server/#!/initialPath');
 
-            fakeWindow.location.href = 'http://server/#!/someTestHash';
+          fakeWindow.location.href = 'http://server/#!/someTestHash';
 
-            $rootScope.$digest();
+          $rootScope.$digest();
 
-            expect($location.path()).toBe('/someTestHash');
-          });
+          expect($location.path()).toBe('/someTestHash');
         });
+      });
 
-        it('should work with no history support, with html5Mode', function () {
-          setup({
-            history: false,
-            html5Mode: true
-          });
-          inject(function ($rootScope, $location) {
-            $rootScope.$apply(function () {
-              $location.path('/initialPath');
-            });
-            expect(fakeWindow.location.href).toBe('http://server/#!/initialPath');
-
-            fakeWindow.location.href = 'http://server/#!/someTestHash';
-
-            $rootScope.$digest();
-
-            expect($location.path()).toBe('/someTestHash');
-          });
+      it('should work with history support, no html5Mode', function () {
+        setup({
+          history: true,
+          html5Mode: false
         });
-
-        it('should work with history support, with html5Mode', function () {
-          setup({
-            history: true,
-            html5Mode: true
+        inject(function ($rootScope, $location) {
+          $rootScope.$apply(function () {
+            $location.path('/initialPath');
           });
-          inject(function ($rootScope, $location) {
-            $rootScope.$apply(function () {
-              $location.path('/initialPath');
-            });
-            expect(fakeWindow.location.href).toBe('http://server/initialPath');
+          expect(fakeWindow.location.href).toBe('http://server/#!/initialPath');
 
-            fakeWindow.location.href = 'http://server/someTestHash';
+          fakeWindow.location.href = 'http://server/#!/someTestHash';
 
-            $rootScope.$digest();
+          $rootScope.$digest();
 
-            expect($location.path()).toBe('/someTestHash');
-          });
+          expect($location.path()).toBe('/someTestHash');
         });
-      }
-    );
+      });
+
+      it('should work with no history support, with html5Mode', function () {
+        setup({
+          history: false,
+          html5Mode: true
+        });
+        inject(function ($rootScope, $location) {
+          $rootScope.$apply(function () {
+            $location.path('/initialPath');
+          });
+          expect(fakeWindow.location.href).toBe('http://server/#!/initialPath');
+
+          fakeWindow.location.href = 'http://server/#!/someTestHash';
+
+          $rootScope.$digest();
+
+          expect($location.path()).toBe('/someTestHash');
+        });
+      });
+
+      it('should work with history support, with html5Mode', function () {
+        setup({
+          history: true,
+          html5Mode: true
+        });
+        inject(function ($rootScope, $location) {
+          $rootScope.$apply(function () {
+            $location.path('/initialPath');
+          });
+          expect(fakeWindow.location.href).toBe('http://server/initialPath');
+
+          fakeWindow.location.href = 'http://server/someTestHash';
+
+          $rootScope.$digest();
+
+          expect($location.path()).toBe('/someTestHash');
+        });
+      });
+    });
 
     it('should not reload the page on every $digest when the page will be reloaded due to url rewrite on load', function () {
       setup({

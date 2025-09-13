@@ -1,5 +1,3 @@
-'use strict';
-
 describe('api', function () {
   describe('hashKey()', function () {
     it('should use an existing `$$hashKey`', function () {

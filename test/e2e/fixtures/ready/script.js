@@ -1,5 +1,3 @@
-'use strict';
-
 var beforeReady;
 (function () {
   var divAfterScripts = window.document.getElementById('div-after-scripts');

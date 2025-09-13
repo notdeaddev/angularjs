@@ -1,5 +1,3 @@
-'use strict';
-
 /* eslint-disable no-script-url */
 
 describe('ngProp*', function () {
@@ -669,7 +667,7 @@ describe('ngProp*', function () {
       }).toThrowMinErr(
         '$sce',
         'insecurl',
-        'Blocked loading resource from url not allowed by $sceDelegate policy.' + '  URL: javascript:alert(1);'
+        'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: javascript:alert(1);'
       );
     }));
 
@@ -681,7 +679,7 @@ describe('ngProp*', function () {
       }).toThrowMinErr(
         '$sce',
         'insecurl',
-        'Blocked loading resource from url not allowed by $sceDelegate policy.' + '  URL: javascript:doTrustedStuff()'
+        'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: javascript:doTrustedStuff()'
       );
     }));
 
@@ -708,7 +706,7 @@ describe('ngProp*', function () {
       }).toThrowMinErr(
         '$sce',
         'insecurl',
-        'Blocked loading resource from url not allowed by $sceDelegate policy.' + '  URL: https://not.example.com/'
+        'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: https://not.example.com/'
       );
     }));
   });
@@ -742,7 +740,7 @@ describe('ngProp*', function () {
       }).toThrowMinErr(
         '$sce',
         'insecurl',
-        'Blocked loading resource from url not allowed by $sceDelegate policy.' + '  URL: javascript:alert(1);'
+        'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: javascript:alert(1);'
       );
     }));
 
@@ -754,7 +752,7 @@ describe('ngProp*', function () {
       }).toThrowMinErr(
         '$sce',
         'insecurl',
-        'Blocked loading resource from url not allowed by $sceDelegate policy.' + '  URL: javascript:doTrustedStuff()'
+        'Blocked loading resource from url not allowed by $sceDelegate policy.  URL: javascript:doTrustedStuff()'
       );
     }));
 

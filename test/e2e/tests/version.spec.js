@@ -1,5 +1,3 @@
-'use strict';
-
 describe('angular.version', function () {
   var version;
 

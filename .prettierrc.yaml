@@ -1,4 +1,3 @@
-# .prettierrc.yaml — inferred from existing AngularJS codebase to minimize diffs
 printWidth: 120
 singleQuote: true # repo uses single quotes (ESLint enforced)
 trailingComma: none # no dangling commas in arrays/objects

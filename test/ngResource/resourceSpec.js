@@ -1,5 +1,3 @@
-'use strict';
-
 describe('resource', function () {
   var noop = angular.noop;
   var extend = angular.extend;

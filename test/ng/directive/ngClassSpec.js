@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngClass', function () {
   var element;
 
@@ -68,31 +66,31 @@ describe('ngClass', function () {
     expect(element.hasClass('B')).toBeTruthy();
   }));
 
-  it(
-    'should support adding multiple classes conditionally via a map of class names to boolean ' + 'expressions',
-    inject(function ($rootScope, $compile) {
-      element = $compile(
-        '<div class="existing" ' +
-          'ng-class="{A: conditionA, B: conditionB(), AnotB: conditionA&&!conditionB()}">' +
-          '</div>'
-      )($rootScope);
-      $rootScope.conditionA = true;
-      $rootScope.$digest();
-      expect(element.hasClass('existing')).toBeTruthy();
-      expect(element.hasClass('A')).toBeTruthy();
-      expect(element.hasClass('B')).toBeFalsy();
-      expect(element.hasClass('AnotB')).toBeTruthy();
+  it('should support adding multiple classes conditionally via a map of class names to boolean expressions', inject(function (
+    $rootScope,
+    $compile
+  ) {
+    element = $compile(
+      '<div class="existing" ' +
+        'ng-class="{A: conditionA, B: conditionB(), AnotB: conditionA&&!conditionB()}">' +
+        '</div>'
+    )($rootScope);
+    $rootScope.conditionA = true;
+    $rootScope.$digest();
+    expect(element.hasClass('existing')).toBeTruthy();
+    expect(element.hasClass('A')).toBeTruthy();
+    expect(element.hasClass('B')).toBeFalsy();
+    expect(element.hasClass('AnotB')).toBeTruthy();
 
-      $rootScope.conditionB = function () {
-        return true;
-      };
-      $rootScope.$digest();
-      expect(element.hasClass('existing')).toBeTruthy();
-      expect(element.hasClass('A')).toBeTruthy();
-      expect(element.hasClass('B')).toBeTruthy();
-      expect(element.hasClass('AnotB')).toBeFalsy();
-    })
-  );
+    $rootScope.conditionB = function () {
+      return true;
+    };
+    $rootScope.$digest();
+    expect(element.hasClass('existing')).toBeTruthy();
+    expect(element.hasClass('A')).toBeTruthy();
+    expect(element.hasClass('B')).toBeTruthy();
+    expect(element.hasClass('AnotB')).toBeFalsy();
+  }));
 
   it('should not break when passed non-string/array/object, truthy values', inject(function ($rootScope, $compile) {
     element = $compile('<div ng-class="42"></div>')($rootScope);
@@ -414,9 +412,9 @@ describe('ngClass', function () {
   }));
 
   it('should update ngClassOdd/Even when an item is added to the model', inject(function ($rootScope, $compile) {
-    element = $compile(
-      '<ul>' + '<li ng-repeat="i in items" ' + 'ng-class-odd="\'odd\'" ng-class-even="\'even\'">i</li>' + '<ul>'
-    )($rootScope);
+    element = $compile('<ul><li ng-repeat="i in items" ng-class-odd="\'odd\'" ng-class-even="\'even\'">i</li><ul>')(
+      $rootScope
+    );
     $rootScope.items = ['b', 'c', 'd'];
     $rootScope.$digest();
 
@@ -457,9 +455,9 @@ describe('ngClass', function () {
   }));
 
   it('should update ngClassOdd/Even when model is changed by sorting', inject(function ($rootScope, $compile) {
-    element = $compile(
-      '<ul>' + '<li ng-repeat="i in items" ' + 'ng-class-odd="\'odd\'" ng-class-even="\'even\'">i</li>' + '<ul>'
-    )($rootScope);
+    element = $compile('<ul><li ng-repeat="i in items" ng-class-odd="\'odd\'" ng-class-even="\'even\'">i</li><ul>')(
+      $rootScope
+    );
     $rootScope.items = ['a', 'b'];
     $rootScope.$digest();
 
@@ -480,9 +478,7 @@ describe('ngClass', function () {
     $compile,
     $rootScope
   ) {
-    element = $compile('<div>' + '<div ng-class-odd="foo"></div>' + '<div ng-class-even="foo"></div>' + '</div>')(
-      $rootScope
-    );
+    element = $compile('<div><div ng-class-odd="foo"></div><div ng-class-even="foo"></div></div>')($rootScope);
     var odd = element.children().eq(0);
     var even = element.children().eq(1);
 

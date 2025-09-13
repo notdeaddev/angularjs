@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$$forceReflow', function () {
   it('should issue a reflow by touching the `document.body.client` when no param is provided', function () {
     module(function ($provide) {

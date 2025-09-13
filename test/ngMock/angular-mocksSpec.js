@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngMock', function () {
   var noop = angular.noop;
   var extend = angular.extend;
@@ -1560,7 +1558,6 @@ describe('ngMock', function () {
 
     it('should be able to handle Blobs as mock data', function () {
       if (typeof Blob !== 'undefined') {
-        // eslint-disable-next-line no-undef
         var mockBlob = new Blob(['{"foo":"bar"}'], { type: 'application/json' });
 
         hb.when('GET', '/url1').respond(200, mockBlob, {});
@@ -1990,7 +1987,7 @@ describe('ngMock', function () {
         expect(function () {
           hb('GET', '/match', null, noop, {});
         }).toThrowError(
-          'Expected GET /match with different headers\n' + 'EXPECTED: {"Content-Type":"application/json"}\nGOT:      {}'
+          'Expected GET /match with different headers\nEXPECTED: {"Content-Type":"application/json"}\nGOT:      {}'
         );
       });
 
@@ -2000,7 +1997,7 @@ describe('ngMock', function () {
 
         expect(function () {
           hb('GET', '/match', 'different', noop, {});
-        }).toThrowError('Expected GET /match with different data\n' + 'EXPECTED: some-data\nGOT:      different');
+        }).toThrowError('Expected GET /match with different data\nEXPECTED: some-data\nGOT:      different');
       });
 
       it('should not throw an exception when parsed body is equal to expected body object', function () {
@@ -2023,9 +2020,7 @@ describe('ngMock', function () {
 
         expect(function () {
           hb('GET', '/match', '{"a":1,"b":3}', noop, {});
-        }).toThrowError(
-          'Expected GET /match with different data\n' + 'EXPECTED: {"a":1,"b":2}\nGOT:      {"a":1,"b":3}'
-        );
+        }).toThrowError('Expected GET /match with different data\nEXPECTED: {"a":1,"b":2}\nGOT:      {"a":1,"b":3}');
       });
 
       it("should use when's respond() when no expect() respond is defined", function () {
@@ -2231,7 +2226,7 @@ describe('ngMock', function () {
 
         expect(function () {
           hb.verifyNoOutstandingRequest();
-        }).toThrowError('Unflushed requests: 1\n' + '  GET /some');
+        }).toThrowError('Unflushed requests: 1\n  GET /some');
       });
 
       it('should verify requests fired asynchronously', inject(function ($q) {
@@ -2242,7 +2237,7 @@ describe('ngMock', function () {
 
         expect(function () {
           hb.verifyNoOutstandingRequest();
-        }).toThrowError('Unflushed requests: 1\n' + '  GET /some');
+        }).toThrowError('Unflushed requests: 1\n  GET /some');
       }));
 
       it('should describe multiple unflushed requests', function () {
@@ -2253,7 +2248,7 @@ describe('ngMock', function () {
 
         expect(function () {
           hb.verifyNoOutstandingRequest();
-        }).toThrowError('Unflushed requests: 2\n' + '  GET /some\n' + '  PUT /elsewhere');
+        }).toThrowError('Unflushed requests: 2\n  GET /some\n  PUT /elsewhere');
       });
     });
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngAnimateSwap', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));

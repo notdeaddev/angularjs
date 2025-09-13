@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('lettersApp', ['ngRoute']).config(function ($routeProvider) {
   $routeProvider
     .otherwise(resolveRedirectTo('/foo1'))

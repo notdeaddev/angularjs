@@ -1,5 +1,4 @@
 /* global createHttpBackend: false, createMockXhr: false, MockXhr: false */
-'use strict';
 
 describe('$httpBackend', function () {
   var $backend, $browser, $jsonpCallbacks, xhr, fakeDocument, callback;

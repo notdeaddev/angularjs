@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngAnimate $$animateCssDriver', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));
@@ -545,9 +543,7 @@ describe('ngAnimate $$animateCssDriver', function () {
       ) {
         ss.addRule('.starting-element', 'width:200px; height:100px; display:block;');
 
-        var fromAnchor = jqLite(
-          '<div class="starting-element"' + ' style="margin-top:500px; margin-left:150px;"></div>'
-        );
+        var fromAnchor = jqLite('<div class="starting-element" style="margin-top:500px; margin-left:150px;"></div>');
         from.append(fromAnchor);
         var toAnchor = jqLite('<div></div>');
         to.append(toAnchor);
@@ -581,7 +577,7 @@ describe('ngAnimate $$animateCssDriver', function () {
       it('should append a `px` value for all seeded animation styles', inject(function ($rootElement) {
         ss.addRule('.starting-element', 'width:10px; height:20px; display:inline-block;');
 
-        var fromAnchor = jqLite('<div class="starting-element"' + ' style="margin-top:30px; margin-left:40px;"></div>');
+        var fromAnchor = jqLite('<div class="starting-element" style="margin-top:30px; margin-left:40px;"></div>');
         from.append(fromAnchor);
         var toAnchor = jqLite('<div></div>');
         to.append(toAnchor);
@@ -890,7 +886,7 @@ describe('ngAnimate $$animateCssDriver', function () {
         var fromAnchor = jqLite('<div></div>');
         from.append(fromAnchor);
 
-        var toAnchor = jqLite('<div class="ending-element"' + ' style="margin-top:300px; margin-left:20px;"></div>');
+        var toAnchor = jqLite('<div class="ending-element" style="margin-top:300px; margin-left:20px;"></div>');
         to.append(toAnchor);
 
         $rootElement.append(fromAnchor);

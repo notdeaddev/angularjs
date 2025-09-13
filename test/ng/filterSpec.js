@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$filter', function () {
   var $filterProvider, $filter;
 

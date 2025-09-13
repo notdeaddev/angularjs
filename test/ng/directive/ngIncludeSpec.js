@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngInclude', function () {
   describe('basic', function () {
     var element;
@@ -274,29 +272,30 @@ describe('ngInclude', function () {
       }
     ));
 
-    it(
-      'should discard pending xhr callbacks if a new template is requested before the current ' + 'finished loading',
-      inject(function ($rootScope, $compile, $httpBackend) {
-        element = jqLite("<div><ng:include src='templateUrl'></ng:include></div>");
-        var log = {};
+    it('should discard pending xhr callbacks if a new template is requested before the current finished loading', inject(function (
+      $rootScope,
+      $compile,
+      $httpBackend
+    ) {
+      element = jqLite("<div><ng:include src='templateUrl'></ng:include></div>");
+      var log = {};
 
-        $rootScope.templateUrl = 'myUrl1';
-        $rootScope.logger = function (msg) {
-          log[msg] = true;
-        };
-        $compile(element)($rootScope);
-        expect(log).toEqual({});
+      $rootScope.templateUrl = 'myUrl1';
+      $rootScope.logger = function (msg) {
+        log[msg] = true;
+      };
+      $compile(element)($rootScope);
+      expect(log).toEqual({});
 
-        $httpBackend.expect('GET', 'myUrl1').respond('<div>{{logger("url1")}}</div>');
-        $rootScope.$digest();
-        expect(log).toEqual({});
-        $rootScope.templateUrl = 'myUrl2';
-        $httpBackend.expect('GET', 'myUrl2').respond('<div>{{logger("url2")}}</div>');
-        $httpBackend.flush(); // now that we have two requests pending, flush!
+      $httpBackend.expect('GET', 'myUrl1').respond('<div>{{logger("url1")}}</div>');
+      $rootScope.$digest();
+      expect(log).toEqual({});
+      $rootScope.templateUrl = 'myUrl2';
+      $httpBackend.expect('GET', 'myUrl2').respond('<div>{{logger("url2")}}</div>');
+      $httpBackend.flush(); // now that we have two requests pending, flush!
 
-        expect(log).toEqual({ url2: true });
-      })
-    );
+      expect(log).toEqual({ url2: true });
+    }));
 
     it('should compile only the content', inject(function ($compile, $rootScope, $templateCache) {
       // regression
@@ -305,9 +304,7 @@ describe('ngInclude', function () {
       $rootScope.$on('$includeContentLoaded', onload);
       $templateCache.put('tpl.html', [200, 'partial {{tpl}}', {}]);
 
-      element = $compile('<div><div ng-repeat="i in [1]">' + '<ng:include src="tpl"></ng:include></div></div>')(
-        $rootScope
-      );
+      element = $compile('<div><div ng-repeat="i in [1]"><ng:include src="tpl"></ng:include></div></div>')($rootScope);
       expect(onload).not.toHaveBeenCalled();
 
       $rootScope.$apply(function () {
@@ -384,7 +381,6 @@ describe('ngInclude', function () {
         $httpBackend.flush();
         var child = element.find('rect');
         expect(child.length).toBe(2);
-        // eslint-disable-next-line no-undef
         expect(child[0] instanceof SVGRectElement).toBe(true);
       });
     });
@@ -733,7 +729,7 @@ describe('ngInclude', function () {
 
       $templateCache.put('enter', [200, '<div>data</div>', {}]);
       $rootScope.tpl = 'enter';
-      element = $compile(html('<div><div ' + 'ng-include="tpl">' + '</div></div>'))($rootScope);
+      element = $compile(html('<div><div ng-include="tpl"></div></div>'))($rootScope);
       $rootScope.$digest();
 
       var animation = $animate.queue.pop();
@@ -745,7 +741,7 @@ describe('ngInclude', function () {
       var item;
       $templateCache.put('enter', [200, '<div>data</div>', {}]);
       $rootScope.tpl = 'enter';
-      element = $compile(html('<div><div ' + 'ng-include="tpl">' + '</div></div>'))($rootScope);
+      element = $compile(html('<div><div ng-include="tpl"></div></div>'))($rootScope);
       $rootScope.$digest();
 
       var animation = $animate.queue.shift();
@@ -770,7 +766,7 @@ describe('ngInclude', function () {
       $templateCache.put('one', [200, 'one', {}]);
       $templateCache.put('two', [200, 'two', {}]);
       $rootScope.tpl = 'one';
-      element = $compile(html('<div><div ' + 'ng-include="tpl">' + '</div></div>'))($rootScope);
+      element = $compile(html('<div><div ng-include="tpl"></div></div>'))($rootScope);
       $rootScope.$digest();
 
       var item1 = $animate.queue.shift().element;
@@ -801,7 +797,7 @@ describe('ngInclude', function () {
       inject(function ($compile, $rootScope, $animate, $templateCache) {
         var item;
         var $scope = $rootScope.$new();
-        element = $compile(html('<div>' + '<div ng-include="inc">Yo</div>' + '</div>'))($scope);
+        element = $compile(html('<div><div ng-include="inc">Yo</div></div>'))($scope);
 
         $templateCache.put('one', [200, '<div>one</div>', {}]);
         $templateCache.put('two', [200, '<div>two</div>', {}]);

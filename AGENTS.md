@@ -26,8 +26,8 @@
 
 ```bash
 # with npm
-npm ci            # preferred in CI
-npm run test      # or: npm run test:ci
+npm run test
+npm run prettier
 npm run lint
 npm run build
 npm run docs
@@ -127,6 +127,8 @@ browsers: ['ChromeHeadlessNoSandbox'],
 - **Prettier**: Formatting is automated. Run `npm run prettier` before committing; do not tweak its config.
 - **No style churn**: Do not reformat unrelated files; limit formatting to the changed lines/files.
 
+**IMPORTANT: Don't bother formatting code yourself while editing the code, simply run `npm run prettier`.**
+
 ---
 
 ## 7) CI & Local Verification
@@ -137,12 +139,14 @@ Before committing, an agent must run:
 # Install dependencies
 npm ci
 
-# Type checks (if configured)
-npm run typecheck || true
+# Prettier
+npm run prettier
 
 # Lint & tests
 npm run lint
-npm run test:ci
+npm run test
+npm run docs
+npm run test:e2e
 ```
 
 CI must pass on all required jobs (lint, tests, build). If CI scripts live in `.github/workflows/`, **do not** modify them unless the task is specifically about CI.
@@ -165,10 +169,10 @@ CI must pass on all required jobs (lint, tests, build). If CI scripts live in `.
 - [ ] Only one logical topic in this PR
 - [ ] `package.json` and lockfile updated together (if applicable)
 - [ ] `npm run prettier` executed
-- [ ] Lint passes locally
+- [ ] Lint passes locally (`npm run lint`)
 - [ ] Docs build passes locally (`npm run docs`)
-- [ ] Tests added/updated and passing locally
-- [ ] CI green (tests, lint, build)
+- [ ] Tests added/updated and passing locally (`npm run test`)
+- [ ] CI green (tests, lint, build) (`npm run test:e2e`)
 - [ ] Docs/notes updated (if behavior changed)
 
 ---

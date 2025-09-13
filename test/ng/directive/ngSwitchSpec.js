@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngSwitch', function () {
   var element;
 
@@ -219,7 +217,7 @@ describe('ngSwitch', function () {
   );
 
   it('should properly create and destroy child scopes', inject(function ($rootScope, $compile) {
-    element = $compile('<ng:switch on="url">' + '<div ng-switch-when="a">{{name}}</div>' + '</ng:switch>')($rootScope);
+    element = $compile('<ng:switch on="url"><div ng-switch-when="a">{{name}}</div></ng:switch>')($rootScope);
     $rootScope.$apply();
 
     var getChildScope = function () {
@@ -626,9 +624,9 @@ describe('ngSwitch animation', function () {
         });
       });
       inject(function ($compile, $rootScope) {
-        element = $compile(
-          '<svg-container ng-switch="inc"><circle ng-switch-when="one"></circle>' + '</svg-container>'
-        )($rootScope);
+        element = $compile('<svg-container ng-switch="inc"><circle ng-switch-when="one"></circle></svg-container>')(
+          $rootScope
+        );
         $rootScope.inc = 'one';
         $rootScope.$apply();
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$timeout', function () {
   beforeEach(module(provideLog));
 

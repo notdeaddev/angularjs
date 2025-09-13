@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngView', function () {
   describe('basics', function () {
     var element;
@@ -250,9 +248,7 @@ describe('ngView', function () {
         $httpBackend.whenGET('viewPartial.html').respond('content');
         $location.path('/foo');
 
-        var elm = $compile('<div>' + 'include: <ng:include src="\'includePartial.html\'"> </ng:include>' + '</div>')(
-          $rootScope
-        );
+        var elm = $compile('<div>include: <ng:include src="\'includePartial.html\'"> </ng:include></div>')($rootScope);
         $rootScope.$digest();
         $httpBackend.flush();
 
@@ -262,72 +258,66 @@ describe('ngView', function () {
       });
     });
 
-    it(
-      'should initialize view template after the view controller was initialized even when ' + 'templates were cached',
-      function () {
-        //this is a test for a regression that was introduced by making the ng-view cache sync
-        function ParentCtrl($scope) {
-          $scope.log.push('parent');
-        }
-
-        module(function ($routeProvider) {
-          $routeProvider.when('/foo', { controller: ParentCtrl, templateUrl: 'viewPartial.html' });
-        });
-
-        inject(function ($rootScope, $compile, $location, $httpBackend, $route) {
-          $rootScope.log = [];
-
-          $rootScope.ChildCtrl = function ($scope) {
-            $scope.log.push('child');
-          };
-
-          $location.path('/foo');
-          $httpBackend
-            .expect('GET', 'viewPartial.html')
-            .respond('<div ng-init="log.push(\'init\')">' + '<div ng-controller="ChildCtrl"></div>' + '</div>');
-          $rootScope.$apply();
-          $httpBackend.flush();
-
-          expect($rootScope.log).toEqual(['parent', 'init', 'child']);
-
-          $location.path('/');
-          $rootScope.$apply();
-          expect($rootScope.log).toEqual(['parent', 'init', 'child']);
-
-          $rootScope.log = [];
-          $location.path('/foo');
-          $rootScope.$apply();
-
-          expect($rootScope.log).toEqual(['parent', 'init', 'child']);
-        });
+    it('should initialize view template after the view controller was initialized even when templates were cached', function () {
+      //this is a test for a regression that was introduced by making the ng-view cache sync
+      function ParentCtrl($scope) {
+        $scope.log.push('parent');
       }
-    );
 
-    it(
-      'should discard pending xhr callbacks if a new route is requested before the current ' + 'finished loading',
-      function () {
-        // this is a test for a bad race condition that affected feedback
+      module(function ($routeProvider) {
+        $routeProvider.when('/foo', { controller: ParentCtrl, templateUrl: 'viewPartial.html' });
+      });
 
-        module(function ($routeProvider) {
-          $routeProvider.when('/foo', { templateUrl: 'myUrl1' });
-          $routeProvider.when('/bar', { templateUrl: 'myUrl2' });
-        });
+      inject(function ($rootScope, $compile, $location, $httpBackend, $route) {
+        $rootScope.log = [];
 
-        inject(function ($route, $rootScope, $location, $httpBackend) {
-          expect(element.text()).toEqual('');
+        $rootScope.ChildCtrl = function ($scope) {
+          $scope.log.push('child');
+        };
 
-          $location.path('/foo');
-          $httpBackend.expect('GET', 'myUrl1').respond('<div>{{1+3}}</div>');
-          $rootScope.$digest();
-          $location.path('/bar');
-          $httpBackend.expect('GET', 'myUrl2').respond('<div>{{1+1}}</div>');
-          $rootScope.$digest();
-          $httpBackend.flush(); // now that we have two requests pending, flush!
+        $location.path('/foo');
+        $httpBackend
+          .expect('GET', 'viewPartial.html')
+          .respond('<div ng-init="log.push(\'init\')"><div ng-controller="ChildCtrl"></div></div>');
+        $rootScope.$apply();
+        $httpBackend.flush();
 
-          expect(element.text()).toEqual('2');
-        });
-      }
-    );
+        expect($rootScope.log).toEqual(['parent', 'init', 'child']);
+
+        $location.path('/');
+        $rootScope.$apply();
+        expect($rootScope.log).toEqual(['parent', 'init', 'child']);
+
+        $rootScope.log = [];
+        $location.path('/foo');
+        $rootScope.$apply();
+
+        expect($rootScope.log).toEqual(['parent', 'init', 'child']);
+      });
+    });
+
+    it('should discard pending xhr callbacks if a new route is requested before the current finished loading', function () {
+      // this is a test for a bad race condition that affected feedback
+
+      module(function ($routeProvider) {
+        $routeProvider.when('/foo', { templateUrl: 'myUrl1' });
+        $routeProvider.when('/bar', { templateUrl: 'myUrl2' });
+      });
+
+      inject(function ($route, $rootScope, $location, $httpBackend) {
+        expect(element.text()).toEqual('');
+
+        $location.path('/foo');
+        $httpBackend.expect('GET', 'myUrl1').respond('<div>{{1+3}}</div>');
+        $rootScope.$digest();
+        $location.path('/bar');
+        $httpBackend.expect('GET', 'myUrl2').respond('<div>{{1+1}}</div>');
+        $rootScope.$digest();
+        $httpBackend.flush(); // now that we have two requests pending, flush!
+
+        expect(element.text()).toEqual('2');
+      });
+    });
 
     it('should be async even if served from cache', function () {
       module(function ($routeProvider) {
@@ -915,7 +905,7 @@ describe('ngView', function () {
         $timeout
       ) {
         var $scope = $rootScope.$new();
-        element = $compile(html('<div>' + '<div ng-view></div>' + '</div>'))($scope);
+        element = $compile(html('<div><div ng-view></div></div>'))($scope);
 
         $scope.$apply('value = true');
 

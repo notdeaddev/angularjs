@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$$cookieWriter', function () {
   var $$cookieWriter, document;
 
@@ -92,7 +90,7 @@ describe('$$cookieWriter', function () {
 
       $$cookieWriter('x', longVal + 'xxxx'); //total size 4097-4099, a warning should be logged
       expect($log.warn.logs).toEqual([
-        ["Cookie 'x' possibly not set or overflowed because it was too large (4097 > 4096 " + 'bytes)!']
+        ["Cookie 'x' possibly not set or overflowed because it was too large (4097 > 4096 bytes)!"]
       ]);
 
       //force browser to dropped a cookie and make sure that the cache is not out of sync
@@ -103,7 +101,7 @@ describe('$$cookieWriter', function () {
 
       if (document.cookie !== cookieStr) {
         this.fail(
-          new Error("browser didn't drop long cookie when it was expected. make the " + 'cookie in this test longer')
+          new Error("browser didn't drop long cookie when it was expected. make the cookie in this test longer")
         );
       }
 

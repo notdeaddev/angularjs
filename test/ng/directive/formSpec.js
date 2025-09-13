@@ -1,5 +1,4 @@
 /* global FormController: false */
-'use strict';
 
 describe('form', function () {
   var doc, control, scope, $compile, changeInputValue;
@@ -61,7 +60,7 @@ describe('form', function () {
 
   it('should ignore changes in manually removed controls', function () {
     doc = $compile(
-      '<form name="myForm">' + '<input name="control" ng-maxlength="1" ng-model="value" store-model-ctrl/>' + '</form>'
+      '<form name="myForm"><input name="control" ng-maxlength="1" ng-model="value" store-model-ctrl/></form>'
     )(scope);
 
     var form = scope.myForm;
@@ -95,7 +94,7 @@ describe('form', function () {
 
   it('should react to validation changes in manually added controls', function () {
     doc = $compile(
-      '<form name="myForm">' + '<input name="control" ng-maxlength="1" ng-model="value" store-model-ctrl/>' + '</form>'
+      '<form name="myForm"><input name="control" ng-maxlength="1" ng-model="value" store-model-ctrl/></form>'
     )(scope);
 
     scope.$digest();
@@ -171,7 +170,7 @@ describe('form', function () {
     var formController;
     scope.ctrl = {};
     doc = $compile(
-      '<div><form name="ctrl.myForm" ng-if="formPresent">' + '<input name="alias" ng-model="value" />' + '</form></div>'
+      '<div><form name="ctrl.myForm" ng-if="formPresent"><input name="alias" ng-model="value" /></form></div>'
     )(scope);
 
     scope.$digest();
@@ -188,7 +187,7 @@ describe('form', function () {
   });
 
   it('should use ngForm value as form name', function () {
-    doc = $compile('<div ng-form="myForm">' + '<input type="text" name="alias" ng-model="value"/>' + '</div>')(scope);
+    doc = $compile('<div ng-form="myForm"><input type="text" name="alias" ng-model="value"/></div>')(scope);
 
     expect(scope.myForm).toBeDefined();
     expect(scope.myForm.alias).toBeDefined();
@@ -376,7 +375,7 @@ describe('form', function () {
         submitted = false,
         reloadPrevented;
 
-      doc = jqLite('<form ng-submit="submitMe()">' + '<input type="submit" value="submit">' + '</form>');
+      doc = jqLite('<form ng-submit="submitMe()"><input type="submit" value="submit"></form>');
       // Support: Chrome 60+ (on Windows)
       // We need to add the form to the DOM in order for `submit` events to be properly fired.
       window.document.body.appendChild(doc[0]);
@@ -968,7 +967,7 @@ describe('form', function () {
 
   describe('validation', function () {
     beforeEach(function () {
-      doc = $compile('<form name="form">' + '<input ng-model="name" name="name" store-model-ctrl/>' + '</form>')(scope);
+      doc = $compile('<form name="form"><input ng-model="name" name="name" store-model-ctrl/></form>')(scope);
 
       scope.$digest();
     });
@@ -1097,7 +1096,7 @@ describe('form', function () {
     });
 
     it('should reset pristine state of anonymous form controls', function () {
-      doc = $compile('<form name="testForm">' + '<input ng-model="anonymous">' + '</form>')(scope);
+      doc = $compile('<form name="testForm"><input ng-model="anonymous"></form>')(scope);
 
       scope.$digest();
 
@@ -1122,9 +1121,7 @@ describe('form', function () {
     });
 
     it('should reset pristine state of nested forms', function () {
-      doc = $compile(
-        '<form name="testForm">' + '<div ng-form>' + '<input ng-model="named" name="foo">' + '</div>' + '</form>'
-      )(scope);
+      doc = $compile('<form name="testForm"><div ng-form><input ng-model="named" name="foo"></div></form>')(scope);
 
       scope.$digest();
 
@@ -1159,9 +1156,7 @@ describe('form', function () {
 
   describe('$setUntouched', function () {
     it('should trigger setUntouched on form controls', function () {
-      var form = $compile('<form name="myForm">' + '<input name="alias" type="text" ng-model="name" />' + '</form>')(
-        scope
-      );
+      var form = $compile('<form name="myForm"><input name="alias" type="text" ng-model="name" /></form>')(scope);
       scope.$digest();
 
       scope.myForm.alias.$setTouched();

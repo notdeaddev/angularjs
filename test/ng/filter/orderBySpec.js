@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Filter: orderBy', function () {
   var orderBy, orderByFilter;
   beforeEach(inject(function ($filter) {
@@ -151,7 +149,6 @@ describe('Filter: orderBy', function () {
     });
 
     it('should support string predicates with names containing non-identifier characters', function () {
-      /* eslint-disable no-floating-decimal */
       expect(orderBy([{ 'Tip %': 0.25 }, { 'Tip %': 0.15 }, { 'Tip %': 0.4 }], '"Tip %"')).toEqualData([
         { 'Tip %': 0.15 },
         { 'Tip %': 0.25 },
@@ -162,15 +159,12 @@ describe('Filter: orderBy', function () {
         { 원: 76000 },
         { 원: 156000 }
       ]);
-      /* eslint-enable */
     });
 
     it('should throw if quoted string predicate is quoted incorrectly', function () {
-      /* eslint-disable no-floating-decimal */
       expect(function () {
         return orderBy([{ 'Tip %': 0.15 }, { 'Tip %': 0.25 }, { 'Tip %': 0.4 }], '"Tip %\'');
       }).toThrow();
-      /* eslint-enable */
     });
 
     it('should not reverse array of objects with no predicate and reverse is not `true`', function () {
@@ -799,7 +793,6 @@ describe('Filter: orderBy', function () {
     });
 
     it('should support string predicates with names containing non-identifier characters', function () {
-      /* eslint-disable no-floating-decimal */
       expect(orderBy([{ 'Tip %': 0.25 }, { 'Tip %': 0.15 }, { 'Tip %': 0.4 }], '"Tip %"')).toEqualData([
         { 'Tip %': 0.15 },
         { 'Tip %': 0.25 },
@@ -810,15 +803,12 @@ describe('Filter: orderBy', function () {
         { 원: 76000 },
         { 원: 156000 }
       ]);
-      /* eslint-enable */
     });
 
     it('should throw if quoted string predicate is quoted incorrectly', function () {
-      /* eslint-disable no-floating-decimal */
       expect(function () {
         return orderBy([{ 'Tip %': 0.15 }, { 'Tip %': 0.25 }, { 'Tip %': 0.4 }], '"Tip %\'');
       }).toThrow();
-      /* eslint-enable */
     });
 
     it('should not reverse array of objects with no predicate', function () {

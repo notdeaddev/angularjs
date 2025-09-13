@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngController', function () {
   var element;
 

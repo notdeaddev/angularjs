@@ -148,7 +148,7 @@ function defaultHttpResponseTransform(data, headers) {
           }
           throw $httpMinErr(
             'baddata',
-            'Data must be a valid JSON object. Received: "{0}". ' + 'Parse error: "{1}"',
+            'Data must be a valid JSON object. Received: "{0}". Parse error: "{1}"',
             data,
             e
           );

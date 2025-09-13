@@ -979,10 +979,10 @@ function copy(source, destination, maxDepth) {
         // Support: IE10
         if (!source.slice) {
           // If we're in this case we know the environment supports ArrayBuffer
-          /* eslint-disable no-undef */
+
           var copied = new ArrayBuffer(source.byteLength);
           new Uint8Array(copied).set(new Uint8Array(source));
-          /* eslint-enable */
+
           return copied;
         }
         return source.slice(0);
@@ -1008,9 +1008,14 @@ function copy(source, destination, maxDepth) {
   }
 }
 
-// eslint-disable-next-line no-self-compare
-function simpleCompare(a, b) {
-  return a === b || (a !== a && b !== b);
+function simpleCompare(x, y) {
+  if (x === y) {
+    // Handle +0 vs -0
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    // Handle NaN
+    return x !== x && y !== y; // eslint-disable-line no-self-compare
+  }
 }
 
 /**

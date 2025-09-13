@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$anchorScroll', function () {
   var elmSpy;
 

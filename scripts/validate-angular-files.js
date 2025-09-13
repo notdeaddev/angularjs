@@ -33,7 +33,8 @@ directories.forEach(directory => {
     if (!fs.lstatSync(filePath).isDirectory()) {
       const fileName = path.basename(filePath);
       const isHiddenFile = fileName[0] === '.';
-      if (!isHiddenFile && !detectedFiles[filePath]) {
+      const isEslintFile = fileName.startsWith('eslint');
+      if (!isHiddenFile && !detectedFiles[filePath] && !isEslintFile) {
         console.error(filePath + " exists in the local file structure but isn't used by any module.");
         errorsDetected = true;
       }

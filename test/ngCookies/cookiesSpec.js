@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$cookies', function () {
   var mockedCookies;
 

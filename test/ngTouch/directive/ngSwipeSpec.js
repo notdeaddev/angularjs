@@ -1,5 +1,3 @@
-'use strict';
-
 // Wrapper to abstract over using touch events or mouse events.
 var swipeTests = function (description, restrictBrowsers, startEvent, moveEvent, endEvent) {
   describe('ngSwipe with ' + description + ' events', function () {

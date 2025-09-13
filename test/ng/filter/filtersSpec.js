@@ -1,5 +1,3 @@
-'use strict';
-
 describe('filters', function () {
   var filter;
 
@@ -208,7 +206,6 @@ describe('filters', function () {
     });
 
     it('should do basic filter', function () {
-      /* eslint-disable no-floating-decimal */
       expect(number(0, 0)).toEqual('0');
       expect(number(-999)).toEqual('-999');
       expect(number(123)).toEqual('123');
@@ -244,7 +241,6 @@ describe('filters', function () {
       expect(number(1.255, 2)).toEqual('1.26');
       expect(number(1.255, 3)).toEqual('1.255');
       expect(number(0, 8)).toEqual('0.00000000');
-      /* eslint-enable */
     });
 
     it('should pass through null and undefined to be compatible with one-time binding', function () {

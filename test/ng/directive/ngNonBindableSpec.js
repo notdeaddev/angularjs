@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngNonBindable', function () {
   var element;
 

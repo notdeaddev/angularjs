@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Binder', function () {
   var element;
 
@@ -82,7 +80,7 @@ describe('Binder', function () {
   }));
 
   it('RepeaterUpdateBindings', inject(function ($rootScope, $compile) {
-    var form = $compile('<ul>' + '<LI ng-repeat="item in model.items" ng-bind="item.a"></LI>' + '</ul>')($rootScope);
+    var form = $compile('<ul><LI ng-repeat="item in model.items" ng-bind="item.a"></LI></ul>')($rootScope);
     var items = [{ a: 'A' }, { a: 'B' }];
     $rootScope.model = { items: items };
 
@@ -129,9 +127,7 @@ describe('Binder', function () {
   }));
 
   it('RepeaterContentDoesNotBind', inject(function ($rootScope, $compile) {
-    element = $compile('<ul>' + '<LI ng-repeat="item in model.items"><span ng-bind="item.a"></span></li>' + '</ul>')(
-      $rootScope
-    );
+    element = $compile('<ul><LI ng-repeat="item in model.items"><span ng-bind="item.a"></span></li></ul>')($rootScope);
     $rootScope.model = { items: [{ a: 'A' }] };
     $rootScope.$apply();
     expect(sortedHtml(element)).toBe(
@@ -317,9 +313,9 @@ describe('Binder', function () {
   }));
 
   it('BindClassEvenOdd', inject(function ($rootScope, $compile) {
-    element = $compile(
-      '<div>' + '<div ng-repeat="i in [0,1]" ng-class-even="\'e\'" ng-class-odd="\'o\'"></div>' + '</div>'
-    )($rootScope);
+    element = $compile('<div><div ng-repeat="i in [0,1]" ng-class-even="\'e\'" ng-class-odd="\'o\'"></div></div>')(
+      $rootScope
+    );
     $rootScope.$apply();
 
     var d1 = jqLite(element[0].childNodes[1]);
@@ -438,7 +434,7 @@ describe('Binder', function () {
   }));
 
   it('ItShouldRepeatOnHashes', inject(function ($rootScope, $compile) {
-    element = $compile('<ul>' + '<li ng-repeat="(k,v) in {a:0,b:1}" ng-bind="k + v"></li>' + '</ul>')($rootScope);
+    element = $compile('<ul><li ng-repeat="(k,v) in {a:0,b:1}" ng-bind="k + v"></li></ul>')($rootScope);
     $rootScope.$apply();
     expect(sortedHtml(element)).toBe(
       '<ul>' +

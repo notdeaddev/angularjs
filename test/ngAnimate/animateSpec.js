@@ -1,5 +1,3 @@
-'use strict';
-
 describe('animations', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));
@@ -297,10 +295,9 @@ describe('animations', function () {
         $animateProvider.classNameFilter(validRegex);
         expect($animateProvider.classNameFilter()).toEqual(validRegex);
 
-        // eslint-disable-next-line no-empty
         try {
           $animateProvider.classNameFilter(invalidRegex);
-        } catch (err) {}
+        } catch (err) {} // eslint-disable-line no-empty
         expect($animateProvider.classNameFilter()).toBeNull();
       })
     );

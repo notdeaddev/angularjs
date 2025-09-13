@@ -1407,7 +1407,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
       if (!match) {
         throw $compileMinErr(
           'iscp',
-          "Invalid {3} for directive '{0}'." + " Definition: {... {1}: '{2}' ...}",
+          "Invalid {3} for directive '{0}'. Definition: {... {1}: '{2}' ...}",
           directiveName,
           scopeName,
           definition,
@@ -3566,7 +3566,7 @@ function $CompileProvider($provide, $$sanitizeUriProvider) {
               } else if (isUndefined(slotTranscludeFn)) {
                 throw $compileMinErr(
                   'noslot',
-                  'No parent directive that requires a transclusion with slot name "{0}". ' + 'Element: {1}',
+                  'No parent directive that requires a transclusion with slot name "{0}". Element: {1}',
                   slotName,
                   startingTag($element)
                 );

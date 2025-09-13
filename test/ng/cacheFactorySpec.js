@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$cacheFactory', function () {
   it('should be injected', inject(function ($cacheFactory) {
     expect($cacheFactory).toBeDefined();

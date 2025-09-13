@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals generateInputCompilerHelper: false */
 
 describe('ngModel', function () {
@@ -343,9 +341,7 @@ describe('ngModel', function () {
         $compile,
         $rootScope
       ) {
-        var element = $compile('<form name="myForm">' + '<input name="myControl" ng-model="value" >' + '</form>')(
-          $rootScope
-        );
+        var element = $compile('<form name="myForm"><input name="myControl" ng-model="value" ></form>')($rootScope);
         var inputElm = element.find('input');
         var ctrl = $rootScope.myForm.myControl;
 
@@ -1602,9 +1598,7 @@ describe('ngModel', function () {
 
   describe('$touched', function () {
     it('should set the control touched state on "blur" event', inject(function ($compile, $rootScope) {
-      var element = $compile('<form name="myForm">' + '<input name="myControl" ng-model="value" >' + '</form>')(
-        $rootScope
-      );
+      var element = $compile('<form name="myForm"><input name="myControl" ng-model="value" ></form>')($rootScope);
       var inputElm = element.find('input');
       var control = $rootScope.myForm.myControl;
 
@@ -1622,9 +1616,7 @@ describe('ngModel', function () {
       $compile,
       $rootScope
     ) {
-      var element = $compile('<form name="myForm">' + '<input name="myControl" ng-model="value" >' + '</form>')(
-        $rootScope
-      );
+      var element = $compile('<form name="myForm"><input name="myControl" ng-model="value" ></form>')($rootScope);
       var inputElm = element.find('input');
       var control = $rootScope.myForm.myControl;
 
@@ -1641,9 +1633,7 @@ describe('ngModel', function () {
       $compile,
       $rootScope
     ) {
-      var element = $compile('<form name="myForm">' + '<input name="myControl" ng-model="value" >' + '</form>')(
-        $rootScope
-      );
+      var element = $compile('<form name="myForm"><input name="myControl" ng-model="value" ></form>')($rootScope);
       var inputElm = element.find('input');
       var control = $rootScope.myForm.myControl;
 
@@ -1670,7 +1660,7 @@ describe('ngModel', function () {
       $rootScope
     ) {
       var element = $compile(
-        '<form name="myForm">' + '<input ng-if="inputPresent" name="myControl" ng-model="value" required >' + '</form>'
+        '<form name="myForm"><input ng-if="inputPresent" name="myControl" ng-model="value" required ></form>'
       )($rootScope);
       var isFormValid;
 
@@ -1755,9 +1745,9 @@ describe('ngModel', function () {
         isFormValid = value;
       });
 
-      var element = $compile(
-        '<form name="myForm">' + '<input  name="myControl" ng-model="value" required >' + '</form>'
-      )($rootScope);
+      var element = $compile('<form name="myForm"><input  name="myControl" ng-model="value" required ></form>')(
+        $rootScope
+      );
 
       $rootScope.$apply();
       expect(isFormValid).toBe(false);
@@ -1797,7 +1787,7 @@ describe('ngModel', function () {
 
     beforeEach(inject(function ($rootScope, $compile, $rootElement, $animate) {
       scope = $rootScope.$new();
-      doc = jqLite('<form name="myForm">' + '  <input type="text" ng-model="input" name="myInput" />' + '</form>');
+      doc = jqLite('<form name="myForm">  <input type="text" ng-model="input" name="myInput" /></form>');
       $rootElement.append(doc);
       $compile(doc)(scope);
       $animate.queue = [];

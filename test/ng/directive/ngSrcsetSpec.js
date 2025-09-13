@@ -1,7 +1,3 @@
-'use strict';
-
-/* eslint-disable no-script-url */
-
 describe('ngSrcset', function () {
   var element;
 

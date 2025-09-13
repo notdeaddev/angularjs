@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$templateRequest', function () {
   describe('provider', function () {
     describe('httpOptions', function () {

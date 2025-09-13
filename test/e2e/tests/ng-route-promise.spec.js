@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngRoute promises', function () {
   beforeEach(function () {
     loadFixture('ng-route-promise');

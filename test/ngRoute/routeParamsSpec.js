@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$routeParams', function () {
   beforeEach(module('ngRoute'));
 

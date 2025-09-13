@@ -1,5 +1,3 @@
-'use strict';
-
 /* eslint-disable no-script-url */
 
 describe('$interpolate', function () {
@@ -270,7 +268,7 @@ describe('$interpolate', function () {
       }).toThrowMinErr(
         '$interpolate',
         'interr',
-        "Can't interpolate: {{foo}}\nError: [$sce:unsafe] " + 'Attempting to use an unsafe value in a safe context.'
+        "Can't interpolate: {{foo}}\nError: [$sce:unsafe] Attempting to use an unsafe value in a safe context."
       );
     }));
 
@@ -283,7 +281,7 @@ describe('$interpolate', function () {
       }).toThrowMinErr(
         '$interpolate',
         'interr',
-        "Can't interpolate: {{foo}}\nError: [$sce:unsafe] " + 'Attempting to use an unsafe value in a safe context.'
+        "Can't interpolate: {{foo}}\nError: [$sce:unsafe] Attempting to use an unsafe value in a safe context."
       );
     }));
 

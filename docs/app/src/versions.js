@@ -1,5 +1,4 @@
 'use strict';
-/* global console */
 
 angular
   .module('versions', ['currentVersionData', 'allVersionsData'])

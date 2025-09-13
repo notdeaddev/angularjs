@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngPluralize', function () {
   var element, elementAlt;
 

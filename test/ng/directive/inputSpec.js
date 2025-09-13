@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals generateInputCompilerHelper: false */
 
 describe('input', function () {
@@ -416,12 +414,9 @@ describe('input', function () {
       assertBrowserSupportsChangeEvent(false);
     });
 
-    it(
-      'should update the model event if the browser supports the "input" ' + 'event so that form auto complete works',
-      function () {
-        assertBrowserSupportsChangeEvent(true);
-      }
-    );
+    it('should update the model event if the browser supports the "input" event so that form auto complete works', function () {
+      assertBrowserSupportsChangeEvent(true);
+    });
 
     if (!_jqLiteMode) {
       describe('double $digest when triggering an event using jQuery', function () {
@@ -3365,7 +3360,7 @@ describe('input', function () {
 
       it('should validate against the viewValue', function () {
         var inputElm = helper.compileInput(
-          '<input type="number"' + 'ng-model-options="{allowInvalid: true}" ng-model="value" name="alias" max="10" />'
+          '<input type="number"ng-model-options="{allowInvalid: true}" ng-model="value" name="alias" max="10" />'
         );
         var ngModelCtrl = inputElm.controller('ngModel');
         ngModelCtrl.$parsers.push(add);
@@ -3740,7 +3735,7 @@ describe('input', function () {
       it('should only validate once after compilation when inside ngRepeat', function () {
         $rootScope.value = 'text';
         var inputElm = helper.compileInput(
-          '<div ng-repeat="input in [0]">' + '<input ng-model="value" validation-spy="required" required />' + '</div>'
+          '<div ng-repeat="input in [0]"><input ng-model="value" validation-spy="required" required /></div>'
         );
         $rootScope.$digest();
 
@@ -4763,7 +4758,7 @@ describe('input', function () {
         /* domain length, label and total */
         expect(EMAIL_REGEXP.test('a@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')).toBe(true);
         expect(EMAIL_REGEXP.test('a@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx')).toBe(false);
-        /* eslint-disable max-len */
+
         expect(
           EMAIL_REGEXP.test(
             'a@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
@@ -4789,7 +4784,7 @@ describe('input', function () {
             'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa@xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.xxx'
           )
         ).toBe(false);
-        /* eslint-enable */
+
         /* local-part valid characters and dot-atom syntax */
         expect(EMAIL_REGEXP.test("'@x")).toBe(true);
         expect(EMAIL_REGEXP.test('-!#$%&*+/0123456789=?ABCDEFGHIJKLMNOPQRSTUVWXYZ@x')).toBe(true);
@@ -5111,7 +5106,7 @@ describe('input', function () {
 
     it('should allow custom enumeration', function () {
       var inputElm = helper.compileInput(
-        '<input type="checkbox" ng-model="name" ng-true-value="\'y\'" ' + 'ng-false-value="\'n\'">'
+        '<input type="checkbox" ng-model="name" ng-true-value="\'y\'" ng-false-value="\'n\'">'
       );
 
       $rootScope.$apply("name = 'y'");
@@ -5162,7 +5157,7 @@ describe('input', function () {
 
     it('should pass validation for "required" when trueValue is a string', function () {
       var inputElm = helper.compileInput(
-        '<input type="checkbox" required name="cb"' + 'ng-model="value" ng-true-value="\'yes\'" />'
+        '<input type="checkbox" required name="cb"ng-model="value" ng-true-value="\'yes\'" />'
       );
 
       expect(inputElm).toBeInvalid();

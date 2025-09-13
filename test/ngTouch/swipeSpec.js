@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$swipe', function () {
   var element;
   var events;

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Scope', function () {
   beforeEach(module(provideLog));
 
@@ -531,7 +529,7 @@ describe('Scope', function () {
         }).toThrowMinErr(
           '$rootScope',
           'infdig',
-          '10 $digest() iterations reached. Aborting!\n' + 'Watchers fired in the last 5 iterations: []'
+          '10 $digest() iterations reached. Aborting!\nWatchers fired in the last 5 iterations: []'
         );
 
         expect($rootScope.$$phase).toBeNull();
@@ -986,7 +984,7 @@ describe('Scope', function () {
           });
 
           it('should watch array-like objects like arrays', function () {
-            window.document.body.innerHTML = '<p>' + "<a name='x'>a</a>" + "<a name='y'>b</a>" + '</p>';
+            window.document.body.innerHTML = "<p><a name='x'>a</a><a name='y'>b</a></p>";
 
             $rootScope.obj = window.document.getElementsByTagName('a');
             $rootScope.$digest();

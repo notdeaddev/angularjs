@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngClick', function () {
   var element;
 

@@ -1,5 +1,4 @@
 /* global jQuery: true, uid: true, jqCache: true */
-'use strict';
 
 if (window.bindJQuery) bindJQuery();
 

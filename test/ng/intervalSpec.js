@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$interval', function () {
   /* global $IntervalProvider: false */
 

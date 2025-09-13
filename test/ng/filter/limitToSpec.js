@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Filter: limitTo', function () {
   var items;
   var str;

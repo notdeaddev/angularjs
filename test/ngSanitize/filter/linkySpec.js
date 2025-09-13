@@ -1,5 +1,3 @@
-'use strict';
-
 describe('linky', function () {
   var linky;
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$http', function () {
   beforeEach(function () {
     loadFixture('http');

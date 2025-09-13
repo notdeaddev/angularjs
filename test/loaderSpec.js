@@ -1,5 +1,3 @@
-'use strict';
-
 describe('module loader', function () {
   var window;
 

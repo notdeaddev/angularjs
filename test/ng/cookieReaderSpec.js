@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$$cookieReader', function () {
   var $$cookieReader, document;
 

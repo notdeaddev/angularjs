@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngAnimate $animateCss', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));
@@ -489,7 +487,7 @@ describe('ngAnimate $animateCss', function () {
         );
 
         it('should use the highest transition duration value detected in the CSS class', inject(function ($animateCss) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;' + 'transition-duration:10s, 15s, 20s;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;transition-duration:10s, 15s, 20s;');
 
           var animator = $animateCss(element, options);
           animator.start();
@@ -506,7 +504,7 @@ describe('ngAnimate $animateCss', function () {
         }));
 
         it('should use the highest transition delay value detected in the CSS class', inject(function ($animateCss) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;' + 'transition-delay:10s, 15s, 20s;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;transition-delay:10s, 15s, 20s;');
 
           var animator = $animateCss(element, options);
           animator.start();
@@ -766,11 +764,11 @@ describe('ngAnimate $animateCss', function () {
           angular.element($document[0].body).append($rootElement);
 
           ss.addPossiblyPrefixedRule(
-            '.red-add-stagger,' + '.blue-remove-stagger,' + '.green-add-stagger',
+            '.red-add-stagger,.blue-remove-stagger,.green-add-stagger',
             'transition-delay:0.2s'
           );
 
-          ss.addPossiblyPrefixedRule('.red-add,' + '.blue-remove,' + '.green-add', 'transition:2s linear all');
+          ss.addPossiblyPrefixedRule('.red-add,.blue-remove,.green-add', 'transition:2s linear all');
 
           var elements = [];
           var i;
@@ -997,9 +995,9 @@ describe('ngAnimate $animateCss', function () {
         ) {
           angular.element($document[0].body).append($rootElement);
 
-          ss.addPossiblyPrefixedRule('.ng-enter-stagger', 'transition-delay: 0.5s; ' + 'animation-delay: 1s');
+          ss.addPossiblyPrefixedRule('.ng-enter-stagger', 'transition-delay: 0.5s; animation-delay: 1s');
 
-          ss.addPossiblyPrefixedRule('.ng-enter', 'transition: 10s linear all; ' + 'animation: 20s my_animation');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'transition: 10s linear all; animation: 20s my_animation');
 
           var i,
             elm,
@@ -2420,7 +2418,7 @@ describe('ngAnimate $animateCss', function () {
           $animateCss,
           $rootElement
         ) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'animation:3s keyframe_animation;' + 'transition:5s linear all;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'animation:3s keyframe_animation;transition:5s linear all;');
 
           var options = {
             duration: 4,
@@ -2480,7 +2478,7 @@ describe('ngAnimate $animateCss', function () {
         }));
 
         it('should override the delay value present in the CSS class', inject(function ($animateCss, $rootElement) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;' + 'transition-delay:10s;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;transition-delay:10s;');
 
           var element = angular.element('<div></div>');
           $rootElement.append(element);
@@ -2499,7 +2497,7 @@ describe('ngAnimate $animateCss', function () {
         }));
 
         it('should allow the delay value to zero if provided', inject(function ($animateCss, $rootElement) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;' + 'transition-delay:10s;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'transition:1s linear all;transition-delay:10s;');
 
           var element = angular.element('<div></div>');
           $rootElement.append(element);
@@ -2540,7 +2538,7 @@ describe('ngAnimate $animateCss', function () {
           $animateCss,
           $rootElement
         ) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'animation:3s keyframe_animation;' + 'transition:5s linear all;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'animation:3s keyframe_animation;transition:5s linear all;');
 
           var options = {
             delay: 10,
@@ -2572,7 +2570,7 @@ describe('ngAnimate $animateCss', function () {
           });
           inject(function ($animateCss, $rootElement) {
             element.addClass('element');
-            ss.addPossiblyPrefixedRule('.element', 'animation:3s keyframe_animation;' + 'transition:5s linear all;');
+            ss.addPossiblyPrefixedRule('.element', 'animation:3s keyframe_animation;transition:5s linear all;');
 
             var options = {
               delay: 2,
@@ -2628,7 +2626,7 @@ describe('ngAnimate $animateCss', function () {
           $animateCss,
           $rootElement
         ) {
-          ss.addPossiblyPrefixedRule('.ng-enter', 'animation: 2s keyframe_animation; ' + 'animation-delay: -1s;');
+          ss.addPossiblyPrefixedRule('.ng-enter', 'animation: 2s keyframe_animation; animation-delay: -1s;');
 
           var options = {
             delay: true,
@@ -3353,9 +3351,9 @@ describe('ngAnimate $animateCss', function () {
         $document,
         $rootElement
       ) {
-        var element = $compile(
-          '<svg width="500" height="500">' + '<circle cx="15" cy="5" r="100" fill="orange" />' + '</svg>'
-        )($rootScope);
+        var element = $compile('<svg width="500" height="500"><circle cx="15" cy="5" r="100" fill="orange" /></svg>')(
+          $rootScope
+        );
 
         angular.element($document[0].body).append($rootElement);
         $rootElement.append(element);
@@ -3378,9 +3376,7 @@ describe('ngAnimate $animateCss', function () {
       }));
 
       it('should properly remove classes from SVG elements', inject(function ($animateCss) {
-        var element = angular.element(
-          '<svg width="500" height="500">' + '<rect class="class-of-doom"></rect>' + '</svg>'
-        );
+        var element = angular.element('<svg width="500" height="500"><rect class="class-of-doom"></rect></svg>');
         var child = element.find('rect');
 
         var animator = $animateCss(child, {

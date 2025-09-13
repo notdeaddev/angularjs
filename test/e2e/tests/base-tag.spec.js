@@ -1,5 +1,3 @@
-'use strict';
-
 describe('SCE URL policy when base tags are present', function () {
   beforeEach(function () {
     loadFixture('base-tag');

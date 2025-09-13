@@ -17,7 +17,7 @@ function main() {
     var code = generateCode(validRanges);
     try {
       fs.lstatSync(__dirname + '/../../../src/ngParseExt');
-    } catch (e) {
+    } catch (e) {  
       fs.mkdirSync(__dirname + '/../../../src/ngParseExt');
     }
     fs.writeFileSync(__dirname + '/../../../src/ngParseExt/ucd.js', code);

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngBindHtml', function () {
   beforeEach(module('ngSanitize'));
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$rootElement', function () {
   it('should publish the bootstrap element into $rootElement', function () {
     var element = jqLite('<div></div>');

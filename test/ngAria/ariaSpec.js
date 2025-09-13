@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals nativeAriaNodeNames false */
 
 describe('$aria', function () {
@@ -239,7 +237,7 @@ describe('$aria', function () {
 
     it('should not attach tabindex to `ngClick` or `ngDblclick`', function () {
       compileElement(
-        '<div ng-click="onClick()" ng-aria-disable></div>' + '<div ng-dblclick="onDblclick()" ng-aria-disable></div>'
+        '<div ng-click="onClick()" ng-aria-disable></div><div ng-dblclick="onDblclick()" ng-aria-disable></div>'
       );
 
       expect(element.eq(0)).not.toHaveAttribute('tabindex');
@@ -396,7 +394,7 @@ describe('$aria', function () {
 
     it('should not attach to native input type="radio"', function () {
       var element = $compile(
-        '<input type="radio" ng-model="val" value="one">' + '<input type="radio" ng-model="val" value="two">'
+        '<input type="radio" ng-model="val" value="one"><input type="radio" ng-model="val" value="two">'
       )(scope);
 
       scope.$apply("val='one'");
@@ -410,7 +408,7 @@ describe('$aria', function () {
 
     it('should attach to custom radio controls', function () {
       var element = $compile(
-        '<div role="radio" ng-model="val" value="one"></div>' + '<div role="radio" ng-model="val" value="two"></div>'
+        '<div role="radio" ng-model="val" value="one"></div><div role="radio" ng-model="val" value="two"></div>'
       )(scope);
 
       scope.$apply("val='one'");
@@ -424,7 +422,7 @@ describe('$aria', function () {
 
     it('should handle custom radios with integer model values', function () {
       var element = $compile(
-        '<div role="radio" ng-model="val" value="0"></div>' + '<div role="radio" ng-model="val" value="1"></div>'
+        '<div role="radio" ng-model="val" value="0"></div><div role="radio" ng-model="val" value="1"></div>'
       )(scope);
 
       scope.$apply('val=0');
@@ -1097,16 +1095,14 @@ describe('$aria', function () {
     }));
 
     they(
-      'should not prevent default keyboard action if an interactive $type element' + 'is nested inside ng-click',
+      'should not prevent default keyboard action if an interactive $type elementis nested inside ng-click',
       nativeAriaNodeNames,
       function (elementType) {
         function createHTML(type) {
           return '<' + type + '></' + type + '>';
         }
 
-        compileElement(
-          '<section>' + '<div ng-click="onClick($event)">' + createHTML(elementType) + '</div>' + '</section>'
-        );
+        compileElement('<section><div ng-click="onClick($event)">' + createHTML(elementType) + '</div></section>');
 
         var divElement = element.find('div');
         var interactiveElement = element.find(elementType);

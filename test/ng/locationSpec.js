@@ -1,5 +1,4 @@
 /* global LocationHashbangUrl: false, LocationHtml5Url: false */
-'use strict';
 
 describe('$location', function () {
   // Mock out the $log function - see testabilityPatch.js
@@ -2886,7 +2885,7 @@ describe('$location', function () {
     }).toThrowMinErr(
       '$location',
       'nostate',
-      'History API state support is available only ' + 'in HTML5 mode and only in browsers supporting HTML5 History API'
+      'History API state support is available only in HTML5 mode and only in browsers supporting HTML5 History API'
     );
   }
 

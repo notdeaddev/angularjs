@@ -1,5 +1,3 @@
-'use strict';
-
 /* TODO: Add tests for:
  • Whitespace preservation in messages.
  • Whitespace ignored around syntax except for offset:N.

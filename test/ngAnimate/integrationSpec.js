@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngAnimate integration tests', function () {
   beforeEach(module('ngAnimate'));
   beforeEach(module('ngAnimateMock'));
@@ -390,7 +388,7 @@ describe('ngAnimate integration tests', function () {
     it('should add the preparation class for an enter animation before a parent class-based animation is applied', function () {
       module('ngAnimateMock');
       inject(function ($animate, $compile, $rootScope, $rootElement, $document) {
-        element = jqLite('<div ng-class="{parent:exp}">' + '<div ng-if="exp">' + '</div>' + '</div>');
+        element = jqLite('<div ng-class="{parent:exp}"><div ng-if="exp"></div></div>');
 
         ss.addRule('.ng-enter', 'transition:2s linear all;');
         ss.addRule('.parent-add', 'transition:5s linear all;');
@@ -456,7 +454,7 @@ describe('ngAnimate integration tests', function () {
     it('should add the preparation class for an enter animation before a parent class-based animation is applied', function () {
       module('ngAnimateMock');
       inject(function ($animate, $compile, $rootScope, $rootElement, $document) {
-        element = jqLite('<div ng-class="{parent:exp}">' + '<div ng-if="exp">' + '</div>' + '</div>');
+        element = jqLite('<div ng-class="{parent:exp}"><div ng-if="exp"></div></div>');
 
         ss.addRule('.ng-enter', 'transition:2s linear all;');
         ss.addRule('.parent-add', 'transition:5s linear all;');
@@ -730,7 +728,7 @@ describe('ngAnimate integration tests', function () {
         var classAddSpy = spyOn($$jqLite, 'addClass').and.callThrough();
         var classRemoveSpy = spyOn($$jqLite, 'removeClass').and.callThrough();
 
-        element = jqLite('<div>' + '<div ng-repeat="item in items"></div>' + '</div> ');
+        element = jqLite('<div><div ng-repeat="item in items"></div></div> ');
 
         html(element);
         $compile(element)($rootScope);
@@ -1013,42 +1011,39 @@ describe('ngAnimate integration tests', function () {
       });
     });
 
-    it(
-      'should execute the enter animation on a <form> with ngIf that has an ' + '<input type="email" required>',
-      function () {
-        var animationSpy = jasmine.createSpy();
+    it('should execute the enter animation on a <form> with ngIf that has an <input type="email" required>', function () {
+      var animationSpy = jasmine.createSpy();
 
-        module(function ($animateProvider) {
-          $animateProvider.register('.animate-me', function () {
-            return {
-              enter: function (element, done) {
-                animationSpy();
-                done();
-              }
-            };
-          });
+      module(function ($animateProvider) {
+        $animateProvider.register('.animate-me', function () {
+          return {
+            enter: function (element, done) {
+              animationSpy();
+              done();
+            }
+          };
         });
+      });
 
-        inject(function ($animate, $rootScope, $compile) {
-          element = jqLite(
-            '<div>' +
-              '<form class="animate-me" ng-if="show">' +
-              '<input ng-model="myModel" type="email" required />' +
-              '</form>' +
-              '</div>'
-          );
+      inject(function ($animate, $rootScope, $compile) {
+        element = jqLite(
+          '<div>' +
+            '<form class="animate-me" ng-if="show">' +
+            '<input ng-model="myModel" type="email" required />' +
+            '</form>' +
+            '</div>'
+        );
 
-          html(element);
+        html(element);
 
-          $compile(element)($rootScope);
+        $compile(element)($rootScope);
 
-          $rootScope.show = true;
-          $rootScope.$digest();
+        $rootScope.show = true;
+        $rootScope.$digest();
 
-          $animate.flush();
-          expect(animationSpy).toHaveBeenCalled();
-        });
-      }
-    );
+        $animate.flush();
+        expect(animationSpy).toHaveBeenCalled();
+      });
+    });
   });
 });

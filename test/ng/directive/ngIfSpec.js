@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngIf', function () {
   describe('basic', function () {
     var $scope, $compile, element, $compileProvider;
@@ -303,7 +301,7 @@ describe('ngIf', function () {
     it('should fire off the enter animation', inject(function ($compile, $rootScope, $animate) {
       var item;
       var $scope = $rootScope.$new();
-      element = $compile(html('<div>' + '<div ng-if="value"><div>Hi</div></div>' + '</div>'))($scope);
+      element = $compile(html('<div><div ng-if="value"><div>Hi</div></div></div>'))($scope);
 
       $rootScope.$digest();
       $scope.$apply('value = true');
@@ -318,7 +316,7 @@ describe('ngIf', function () {
     it('should fire off the leave animation', inject(function ($compile, $rootScope, $animate) {
       var item;
       var $scope = $rootScope.$new();
-      element = $compile(html('<div>' + '<div ng-if="value"><div>Hi</div></div>' + '</div>'))($scope);
+      element = $compile(html('<div><div ng-if="value"><div>Hi</div></div></div>'))($scope);
       $scope.$apply('value = true');
 
       item = $animate.queue.shift();
@@ -350,7 +348,7 @@ describe('ngIf', function () {
       inject(function ($compile, $rootScope, $animate) {
         var item;
         var $scope = $rootScope.$new();
-        element = $compile(html('<div>' + '<div ng-if="value">Yo</div>' + '</div>'))($scope);
+        element = $compile(html('<div><div ng-if="value">Yo</div></div>'))($scope);
 
         $scope.$apply('value = true');
 

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$controller', function () {
   var $controllerProvider, $controller;
 
@@ -106,7 +104,7 @@ describe('$controller', function () {
       }).toThrowMinErr(
         '$controller',
         'ctrlfmt',
-        "Badly formed controller string 'ctrl doom'. " + 'Must match `__name__ as __id__` or `__name__`.'
+        "Badly formed controller string 'ctrl doom'. Must match `__name__ as __id__` or `__name__`."
       );
     });
   });
@@ -201,7 +199,7 @@ describe('$controller', function () {
       }).toThrowMinErr(
         '$controller',
         'ctrlfmt',
-        "Badly formed controller string 'ctrl as foo<bar'. " + 'Must match `__name__ as __id__` or `__name__`.'
+        "Badly formed controller string 'ctrl as foo<bar'. Must match `__name__ as __id__` or `__name__`."
       );
     });
 
@@ -211,7 +209,7 @@ describe('$controller', function () {
       }).toThrowMinErr(
         '$controller',
         'ctrlfmt',
-        "Badly formed controller string 'ctrl as foo bar'. " + 'Must match `__name__ as __id__` or `__name__`.'
+        "Badly formed controller string 'ctrl as foo bar'. Must match `__name__ as __id__` or `__name__`."
       );
     });
 
@@ -221,14 +219,14 @@ describe('$controller', function () {
       }).toThrowMinErr(
         '$controller',
         'ctrlfmt',
-        "Badly formed controller string 'ctrl as '. " + 'Must match `__name__ as __id__` or `__name__`.'
+        "Badly formed controller string 'ctrl as '. Must match `__name__ as __id__` or `__name__`."
       );
       expect(function () {
         $controller('ctrl as');
       }).toThrowMinErr(
         '$controller',
         'ctrlfmt',
-        "Badly formed controller string 'ctrl as'. " + 'Must match `__name__ as __id__` or `__name__`.'
+        "Badly formed controller string 'ctrl as'. Must match `__name__ as __id__` or `__name__`."
       );
     });
 

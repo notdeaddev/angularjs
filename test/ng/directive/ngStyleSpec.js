@@ -1,5 +1,3 @@
-'use strict';
-
 describe('ngStyle', function () {
   var element;
 

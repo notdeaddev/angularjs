@@ -1,5 +1,3 @@
-'use strict';
-
 /* globals generateInputCompilerHelper: false */
 
 describe('ngChange', function () {

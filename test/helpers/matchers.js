@@ -1,5 +1,3 @@
-'use strict';
-
 beforeEach(function () {
   function cssMatcher(presentClasses, absentClasses) {
     return function () {
@@ -193,7 +191,7 @@ beforeEach(function () {
       return {
         compare: function (actual) {
           if (arguments.length > 1) {
-            throw new Error('`toHaveBeenCalledOnce` does not take arguments, ' + 'use `toHaveBeenCalledOnceWith`');
+            throw new Error('`toHaveBeenCalledOnce` does not take arguments, use `toHaveBeenCalledOnceWith`');
           }
 
           if (!jasmine.isSpy(actual)) {

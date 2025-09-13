@@ -1,5 +1,3 @@
-'use strict';
-
 describe('$exceptionHandler', function () {
   /* global $ExceptionHandlerProvider:false */
   it('should log errors with single argument', function () {

@@ -1,5 +1,3 @@
-'use strict';
-
 describe('Filter: filter', function () {
   var filter;
 
