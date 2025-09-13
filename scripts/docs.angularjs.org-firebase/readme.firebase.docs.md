@@ -1,5 +1,4 @@
-Firebase for docs.angularjs.org
-===============================
+# Firebase for docs.angularjs.org
 
 This folder contains the Google Firebase scripts for the `docs.angularjs.org` setup.
 

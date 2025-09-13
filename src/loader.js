@@ -10,7 +10,6 @@
  */
 
 function setupModuleLoader(window) {
-
   var $injectorMinErr = minErr('$injector');
   var ngMinErr = minErr('ng');
 
@@ -23,7 +22,7 @@ function setupModuleLoader(window) {
   // We need to expose `angular.$$minErr` to modules such as `ngResource` that reference it during bootstrap
   angular.$$minErr = angular.$$minErr || minErr;
 
-  return ensure(angular, 'module', function() {
+  return ensure(angular, 'module', function () {
     /** @type {Object.<string, angular.Module>} */
     var modules = {};
 
@@ -79,10 +78,9 @@ function setupModuleLoader(window) {
      * @returns {angular.Module} new module with the {@link angular.Module} api.
      */
     return function module(name, requires, configFn) {
-
       var info = {};
 
-      var assertNotHasOwnProperty = function(name, context) {
+      var assertNotHasOwnProperty = function (name, context) {
         if (name === 'hasOwnProperty') {
           throw ngMinErr('badname', 'hasOwnProperty is not a valid {0} name', context);
         }
@@ -92,11 +90,15 @@ function setupModuleLoader(window) {
       if (requires && modules.hasOwnProperty(name)) {
         modules[name] = null;
       }
-      return ensure(modules, name, function() {
+      return ensure(modules, name, function () {
         if (!requires) {
-          throw $injectorMinErr('nomod', 'Module \'{0}\' is not available! You either misspelled ' +
-             'the module name or forgot to load it. If registering a module ensure that you ' +
-             'specify the dependencies as the second argument.', name);
+          throw $injectorMinErr(
+            'nomod',
+            "Module '{0}' is not available! You either misspelled " +
+              'the module name or forgot to load it. If registering a module ensure that you ' +
+              'specify the dependencies as the second argument.',
+            name
+          );
         }
 
         /** @type {!Array.<Array.<*>>} */
@@ -147,9 +149,9 @@ function setupModuleLoader(window) {
            * var version = $injector.modules['myModule'].info().version;
            * ```
            */
-          info: function(value) {
+          info: function (value) {
             if (isDefined(value)) {
-              if (!isObject(value)) throw ngMinErr('aobj', 'Argument \'{0}\' must be an object', 'value');
+              if (!isObject(value)) throw ngMinErr('aobj', "Argument '{0}' must be an object", 'value');
               info = value;
               return this;
             }
@@ -176,7 +178,6 @@ function setupModuleLoader(window) {
            * Name of the module.
            */
           name: name,
-
 
           /**
            * @ngdoc method
@@ -235,7 +236,7 @@ function setupModuleLoader(window) {
            */
           constant: invokeLater('$provide', 'constant', 'unshift'),
 
-           /**
+          /**
            * @ngdoc method
            * @name angular.Module#decorator
            * @module ng
@@ -367,7 +368,7 @@ function setupModuleLoader(window) {
            * Use this method to register work which should be performed when the injector is done
            * loading all modules.
            */
-          run: function(block) {
+          run: function (block) {
             runBlocks.push(block);
             return this;
           }
@@ -387,7 +388,7 @@ function setupModuleLoader(window) {
          */
         function invokeLater(provider, method, insertMethod, queue) {
           if (!queue) queue = invokeQueue;
-          return function() {
+          return function () {
             queue[insertMethod || 'push']([provider, method, arguments]);
             return moduleInstance;
           };
@@ -400,7 +401,7 @@ function setupModuleLoader(window) {
          */
         function invokeLaterAndSetModuleName(provider, method, queue) {
           if (!queue) queue = invokeQueue;
-          return function(recipeName, factoryFunction) {
+          return function (recipeName, factoryFunction) {
             if (factoryFunction && isFunction(factoryFunction)) factoryFunction.$$moduleName = name;
             queue.push([provider, method, arguments]);
             return moduleInstance;
@@ -409,5 +410,4 @@ function setupModuleLoader(window) {
       });
     };
   });
-
 }

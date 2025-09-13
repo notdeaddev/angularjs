@@ -1,10 +1,6 @@
-'use strict';
-
-describe('$jsonpCallbacks', function() {
-
-  describe('createCallback(url)', function() {
-
-    it('should return a new unique path to a callback function on each call', inject(function($jsonpCallbacks) {
+describe('$jsonpCallbacks', function () {
+  describe('createCallback(url)', function () {
+    it('should return a new unique path to a callback function on each call', inject(function ($jsonpCallbacks) {
       var path = $jsonpCallbacks.createCallback('http://some.dummy.com/jsonp/request');
       expect(path).toEqual('angular.callbacks._0');
 
@@ -18,7 +14,10 @@ describe('$jsonpCallbacks', function() {
       expect(path).toEqual('angular.callbacks._3');
     }));
 
-    it('should add a callback method to the $window.angular.callbacks collection on each call', inject(function($window, $jsonpCallbacks) {
+    it('should add a callback method to the $window.angular.callbacks collection on each call', inject(function (
+      $window,
+      $jsonpCallbacks
+    ) {
       $jsonpCallbacks.createCallback('http://some.dummy.com/jsonp/request');
       expect($window.angular.callbacks._0).toEqual(jasmine.any(Function));
 
@@ -32,7 +31,7 @@ describe('$jsonpCallbacks', function() {
       expect($window.angular.callbacks._3).toEqual(jasmine.any(Function));
     }));
 
-    it('should produce unique callback paths across multiple instances', function() {
+    it('should produce unique callback paths across multiple instances', function () {
       var $jsonpCallbacks1 = angular.injector(['ng', 'ngMock']).get('$jsonpCallbacks');
       var $jsonpCallbacks2 = angular.injector(['ng', 'ngMock']).get('$jsonpCallbacks');
 
@@ -46,10 +45,8 @@ describe('$jsonpCallbacks', function() {
     });
   });
 
-
-  describe('wasCalled(callbackPath)', function() {
-
-    it('should return true once the callback has been called', inject(function($window, $jsonpCallbacks) {
+  describe('wasCalled(callbackPath)', function () {
+    it('should return true once the callback has been called', inject(function ($window, $jsonpCallbacks) {
       var path = $jsonpCallbacks.createCallback('http://some.dummy.com/jsonp/request');
       expect($jsonpCallbacks.wasCalled(path)).toBeFalsy();
       var response = {};
@@ -58,10 +55,8 @@ describe('$jsonpCallbacks', function() {
     }));
   });
 
-
-  describe('getResponse(callbackPath)', function() {
-
-    it('should retrieve the data from when the callback was called', inject(function($window, $jsonpCallbacks) {
+  describe('getResponse(callbackPath)', function () {
+    it('should retrieve the data from when the callback was called', inject(function ($window, $jsonpCallbacks) {
       var path = $jsonpCallbacks.createCallback('http://some.dummy.com/jsonp/request');
       var response = {};
       $window.angular.callbacks._0(response);
@@ -70,24 +65,23 @@ describe('$jsonpCallbacks', function() {
     }));
   });
 
-
-  describe('removeCallback(callbackPath)', function() {
-
-    it('should remove the callback', inject(function($window, $jsonpCallbacks) {
+  describe('removeCallback(callbackPath)', function () {
+    it('should remove the callback', inject(function ($window, $jsonpCallbacks) {
       var path = $jsonpCallbacks.createCallback('http://some.dummy.com/jsonp/request');
       $jsonpCallbacks.removeCallback(path);
       expect($window.angular.callbacks._0).toBeUndefined();
     }));
   });
 
-  describe('mocked $window', function() {
+  describe('mocked $window', function () {
+    beforeEach(
+      module(function ($provide) {
+        $provide.value('$window', {});
+      })
+    );
 
-    beforeEach(module(function($provide) {
-      $provide.value('$window', {});
-    }));
-
-    it('should not throw when $window.angular does not exist', inject(function($injector) {
-      expect(function() {
+    it('should not throw when $window.angular does not exist', inject(function ($injector) {
+      expect(function () {
         $injector.get('$jsonpCallbacks');
       }).not.toThrow();
     }));

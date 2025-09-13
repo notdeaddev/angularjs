@@ -138,7 +138,7 @@
  */
 
 function filterFilter() {
-  return function(array, expression, comparator, anyPropertyKey) {
+  return function (array, expression, comparator, anyPropertyKey) {
     if (!isArrayLike(array)) {
       if (array == null) {
         return array;
@@ -161,7 +161,7 @@ function filterFilter() {
       case 'number':
       case 'string':
         matchAgainstAnyProp = true;
-        // falls through
+      // falls through
       case 'object':
         predicateFn = createPredicateFn(expression, comparator, anyPropertyKey, matchAgainstAnyProp);
         break;
@@ -175,18 +175,18 @@ function filterFilter() {
 
 // Helper functions for `filterFilter`
 function createPredicateFn(expression, comparator, anyPropertyKey, matchAgainstAnyProp) {
-  var shouldMatchPrimitives = isObject(expression) && (anyPropertyKey in expression);
+  var shouldMatchPrimitives = isObject(expression) && anyPropertyKey in expression;
   var predicateFn;
 
   if (comparator === true) {
     comparator = equals;
   } else if (!isFunction(comparator)) {
-    comparator = function(actual, expected) {
+    comparator = function (actual, expected) {
       if (isUndefined(actual)) {
         // No substring matching against `undefined`
         return false;
       }
-      if ((actual === null) || (expected === null)) {
+      if (actual === null || expected === null) {
         // No substring matching against `null`; only match against `null`
         return actual === expected;
       }
@@ -201,7 +201,7 @@ function createPredicateFn(expression, comparator, anyPropertyKey, matchAgainstA
     };
   }
 
-  predicateFn = function(item) {
+  predicateFn = function (item) {
     if (shouldMatchPrimitives && !isObject(item)) {
       return deepCompare(item, expression[anyPropertyKey], comparator, anyPropertyKey, false);
     }
@@ -215,12 +215,12 @@ function deepCompare(actual, expected, comparator, anyPropertyKey, matchAgainstA
   var actualType = getTypeForFilter(actual);
   var expectedType = getTypeForFilter(expected);
 
-  if ((expectedType === 'string') && (expected.charAt(0) === '!')) {
+  if (expectedType === 'string' && expected.charAt(0) === '!') {
     return !deepCompare(actual, expected.substring(1), comparator, anyPropertyKey, matchAgainstAnyProp);
   } else if (isArray(actual)) {
     // In case `actual` is an array, consider it a match
     // if ANY of it's items matches `expected`
-    return actual.some(function(item) {
+    return actual.some(function (item) {
       return deepCompare(item, expected, comparator, anyPropertyKey, matchAgainstAnyProp);
     });
   }
@@ -232,8 +232,11 @@ function deepCompare(actual, expected, comparator, anyPropertyKey, matchAgainstA
         for (key in actual) {
           // Under certain, rare, circumstances, key may not be a string and `charAt` will be undefined
           // See: https://github.com/angular/angular.js/issues/15644
-          if (key.charAt && (key.charAt(0) !== '$') &&
-              deepCompare(actual[key], expected, comparator, anyPropertyKey, true)) {
+          if (
+            key.charAt &&
+            key.charAt(0) !== '$' &&
+            deepCompare(actual[key], expected, comparator, anyPropertyKey, true)
+          ) {
             return true;
           }
         }
@@ -264,5 +267,5 @@ function deepCompare(actual, expected, comparator, anyPropertyKey, matchAgainstA
 
 // Used for easily differentiating between `null` and actual `object`
 function getTypeForFilter(val) {
-  return (val === null) ? 'null' : typeof val;
+  return val === null ? 'null' : typeof val;
 }

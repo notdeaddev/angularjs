@@ -11,7 +11,7 @@ var encoder = new require('node-html-encoder').Encoder();
 module.exports = function typeInlineTagDef(getTypeClass) {
   return {
     name: 'type',
-    handler: function(doc, tagName, tagDescription) {
+    handler: function (doc, tagName, tagDescription) {
       return '<a href="" class="' + getTypeClass(tagDescription) + '">' + encoder.htmlEncode(tagDescription) + '</a>';
     }
   };

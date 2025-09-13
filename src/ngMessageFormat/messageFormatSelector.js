@@ -20,7 +20,9 @@ function MessageSelectorBase(expressionFn, choices) {
   if (choices['other'] === undefined) {
     throw $interpolateMinErr('reqother', '“other” is a required option.');
   }
-  this.parsedFn = function(context) { return self.getResult(context); };
+  this.parsedFn = function (context) {
+    return self.getResult(context);
+  };
   this.parsedFn['$$watchDelegate'] = function $$watchDelegate(scope, listener, objectEquality) {
     return self.watchDelegate(scope, listener, objectEquality);
   };
@@ -38,7 +40,9 @@ MessageSelectorBase.prototype.getResult = function getResult(context) {
 
 MessageSelectorBase.prototype.watchDelegate = function watchDelegate(scope, listener, objectEquality) {
   var watchers = new MessageSelectorWatchers(this, scope, listener, objectEquality);
-  return function() { watchers.cancelWatch(); };
+  return function () {
+    watchers.cancelWatch();
+  };
 };
 
 /**
@@ -53,14 +57,18 @@ function MessageSelectorWatchers(msgSelector, scope, listener, objectEquality) {
   this.objectEquality = objectEquality;
   this.lastMessage = undefined;
   this.messageFnWatcher = noop;
-  var expressionFnListener = function(newValue, oldValue) { return self.expressionFnListener(newValue, oldValue); };
+  var expressionFnListener = function (newValue, oldValue) {
+    return self.expressionFnListener(newValue, oldValue);
+  };
   this.expressionFnWatcher = scope['$watch'](msgSelector.expressionFn, expressionFnListener, objectEquality);
 }
 
 MessageSelectorWatchers.prototype.expressionFnListener = function expressionFnListener(newValue, oldValue) {
   var self = this;
   this.messageFnWatcher();
-  var messageFnListener = function(newMessage, oldMessage) { return self.messageFnListener(newMessage, oldMessage); };
+  var messageFnListener = function (newMessage, oldMessage) {
+    return self.messageFnListener(newMessage, oldMessage);
+  };
   var messageFn = this.msgSelector.getMessageFn(newValue);
   this.messageFnWatcher = this.scope['$watch'](messageFn, messageFnListener, this.objectEquality);
 };
@@ -89,7 +97,7 @@ SelectMessageProto.prototype = MessageSelectorBase.prototype;
 
 SelectMessage.prototype = new SelectMessageProto();
 SelectMessage.prototype.categorizeValue = function categorizeSelectValue(value) {
-  return (this.choices[value] !== undefined) ? value : 'other';
+  return this.choices[value] !== undefined ? value : 'other';
 };
 
 /**
@@ -114,6 +122,6 @@ PluralMessage.prototype.categorizeValue = function categorizePluralValue(value) 
     return value;
   } else {
     var category = this.pluralCat(value - this.offset);
-    return (this.choices[category] !== undefined) ? category : 'other';
+    return this.choices[category] !== undefined ? category : 'other';
   }
 };

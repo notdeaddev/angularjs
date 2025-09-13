@@ -6,7 +6,6 @@
  * Private service to sanitize uris for links and images. Used by $compile and $sanitize.
  */
 function $$SanitizeUriProvider() {
-
   var aHrefSanitizationTrustedUrlList = /^\s*(https?|s?ftp|mailto|tel|file):/,
     imgSrcSanitizationTrustedUrlList = /^\s*((https?|ftp|file|blob):|data:image\/)/;
 
@@ -30,14 +29,13 @@ function $$SanitizeUriProvider() {
    * @returns {RegExp|ng.$compileProvider} Current RegExp if called without value or self for
    *    chaining otherwise.
    */
-  this.aHrefSanitizationTrustedUrlList = function(regexp) {
+  this.aHrefSanitizationTrustedUrlList = function (regexp) {
     if (isDefined(regexp)) {
       aHrefSanitizationTrustedUrlList = regexp;
       return this;
     }
     return aHrefSanitizationTrustedUrlList;
   };
-
 
   /**
    * @description
@@ -61,7 +59,7 @@ function $$SanitizeUriProvider() {
    * @returns {RegExp|ng.$compileProvider} Current RegExp if called without value or self for
    *    chaining otherwise.
    */
-  this.imgSrcSanitizationTrustedUrlList = function(regexp) {
+  this.imgSrcSanitizationTrustedUrlList = function (regexp) {
     if (isDefined(regexp)) {
       imgSrcSanitizationTrustedUrlList = regexp;
       return this;
@@ -69,7 +67,7 @@ function $$SanitizeUriProvider() {
     return imgSrcSanitizationTrustedUrlList;
   };
 
-  this.$get = function() {
+  this.$get = function () {
     return function sanitizeUri(uri, isMediaUrl) {
       // if (!uri) return uri;
       var regex = isMediaUrl ? imgSrcSanitizationTrustedUrlList : aHrefSanitizationTrustedUrlList;

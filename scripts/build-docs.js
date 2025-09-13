@@ -6,14 +6,14 @@ const path = require('path');
 const glob = require('glob');
 const esbuild = require('esbuild');
 const Dgeni = require('dgeni');
-const {spawnSync} = require('child_process');
+const { spawnSync } = require('child_process');
 
 const rootDir = path.resolve(__dirname, '..');
 const docsDir = path.join(rootDir, 'docs');
 const outputFolder = path.join(rootDir, 'build', 'docs');
 
 function ensureDir(dir) {
-  fs.mkdirSync(dir, {recursive: true});
+  fs.mkdirSync(dir, { recursive: true });
 }
 
 function normalizePattern(p) {
@@ -26,7 +26,7 @@ function copyFile(src, dest) {
 }
 
 function copyDir(src, dest) {
-  fs.cpSync(src, dest, {recursive: true});
+  fs.cpSync(src, dest, { recursive: true });
 }
 
 function copyAngular() {
@@ -52,9 +52,11 @@ function copyAngular() {
 }
 
 async function buildApp() {
-  const files = glob.sync(path.join(docsDir, 'app/src/**/*.js'), {
-    ignore: path.join(docsDir, 'app/src/angular.bind.js')
-  }).sort();
+  const files = glob
+    .sync(path.join(docsDir, 'app/src/**/*.js'), {
+      ignore: path.join(docsDir, 'app/src/angular.bind.js')
+    })
+    .sort();
   const code = files.map(f => fs.readFileSync(f, 'utf8')).join('\n');
   const jsOutDir = path.join(outputFolder, 'js');
   ensureDir(jsOutDir);
@@ -79,11 +81,17 @@ async function minifyAsset(source, target) {
   fs.writeFileSync(target + '.map', result.map);
 }
 
-function copyComponent(component, pattern = '/**/*', base = '', sourceFolder = 'node_modules', packageFile = 'package.json') {
+function copyComponent(
+  component,
+  pattern = '/**/*',
+  base = '',
+  sourceFolder = 'node_modules',
+  packageFile = 'package.json'
+) {
   const srcRoot = path.join(rootDir, sourceFolder, component);
   const version = JSON.parse(fs.readFileSync(path.join(srcRoot, packageFile), 'utf8')).version;
   const destRoot = path.join(outputFolder, 'components', `${component}-${version}`);
-  const files = glob.sync(path.join(srcRoot, normalizePattern(pattern)), {nodir: true});
+  const files = glob.sync(path.join(srcRoot, normalizePattern(pattern)), { nodir: true });
   for (const file of files) {
     const rel = path.relative(path.join(srcRoot, base), file);
     copyFile(file, path.join(destRoot, rel));
@@ -120,7 +128,7 @@ function runDocsTests() {
   const result = spawnSync(
     'npm',
     ['run', 'karma', '--', 'start', path.join(rootDir, 'karma-docs.conf.js'), '--single-run'],
-    {stdio: 'inherit'}
+    { stdio: 'inherit' }
   );
   if (result.status !== 0) {
     throw new Error('Docs tests failed');

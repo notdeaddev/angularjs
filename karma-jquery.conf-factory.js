@@ -3,10 +3,10 @@
 var angularFiles = require('./angularFiles');
 var sharedConfig = require('./karma-shared.conf');
 
-module.exports = function(version) {
+module.exports = function (version) {
   version = version || '';
 
-  return function(config) {
+  return function (config) {
     sharedConfig(config, {
       testName: 'AngularJS: jQuery' + (version ? ' ' + version : ''),
       logFile: 'karma-jquery' + version + '.log'

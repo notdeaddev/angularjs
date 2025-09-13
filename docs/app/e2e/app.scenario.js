@@ -2,35 +2,36 @@
 
 var webdriver = require('selenium-webdriver');
 
-describe('docs.angularjs.org', function() {
-
-  beforeEach(function() {
+describe('docs.angularjs.org', function () {
+  beforeEach(function () {
     // read and clear logs from previous tests
     browser.manage().logs().get('browser');
   });
 
-
-  afterEach(function() {
+  afterEach(function () {
     // verify that there were no console errors in the browser
-    browser.manage().logs().get('browser').then(function(browserLog) {
-      var filteredLog = browserLog.filter(function(logEntry) {
-        var msg = logEntry.message || '';
-        var isGa = msg.indexOf('google-analytics.com/ga.js') !== -1;
-        var isFavicon = msg.indexOf('favicon.ico') !== -1;
-        return !isGa && !isFavicon && logEntry.level.value > webdriver.logging.Level.WARNING.value;
+    browser
+      .manage()
+      .logs()
+      .get('browser')
+      .then(function (browserLog) {
+        var filteredLog = browserLog.filter(function (logEntry) {
+          var msg = logEntry.message || '';
+          var isGa = msg.indexOf('google-analytics.com/ga.js') !== -1;
+          var isFavicon = msg.indexOf('favicon.ico') !== -1;
+          return !isGa && !isFavicon && logEntry.level.value > webdriver.logging.Level.WARNING.value;
+        });
+        expect(filteredLog.length).toEqual(0);
+        if (filteredLog.length) {
+          console.log('browser console errors: ' + require('util').inspect(filteredLog));
+        }
       });
-      expect(filteredLog.length).toEqual(0);
-      if (filteredLog.length) {
-        console.log('browser console errors: ' + require('util').inspect(filteredLog));
-      }
-    });
 
     browser.ignoreSynchronization = false;
     browser.clearMockModules();
   });
 
-
-  describe('App', function() {
+  describe('App', function () {
     // it('should filter the module list when searching', function () {
     //   browser.get();
     //   browser.waitForAngular();
@@ -43,16 +44,14 @@ describe('docs.angularjs.org', function() {
     //   expect(firstModule.getText()).toEqual('ngBind');
     // });
 
-
-    it('should display the service page when navigating directly', function() {
+    it('should display the service page when navigating directly', function () {
       browser.get('build/docs/index-test.html#!/api/ng/directive/ngClick');
 
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('ngClick');
     });
 
-
-    it('should include the files for the embedded examples from the same domain', function() {
+    it('should include the files for the embedded examples from the same domain', function () {
       browser.get('build/docs/index-test.html#!api/ng/directive/ngClick');
 
       var origin = browser.executeScript('return document.location.origin;');
@@ -71,43 +70,39 @@ describe('docs.angularjs.org', function() {
       expect(scriptEl.getAttribute('src')).toContain(origin);
     });
 
-
-    it('should be resilient to trailing slashes', function() {
+    it('should be resilient to trailing slashes', function () {
       browser.get('build/docs/index-test.html#!/api/ng/function/angular.noop/');
 
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('angular.noop');
     });
 
-
-    it('should be resilient to trailing "index"', function() {
+    it('should be resilient to trailing "index"', function () {
       browser.get('build/docs/index-test.html#!/api/ng/function/angular.noop/index');
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('angular.noop');
     });
 
-
-    it('should be resilient to trailing "index/"', function() {
+    it('should be resilient to trailing "index/"', function () {
       browser.get('build/docs/index-test.html#!/api/ng/function/angular.noop/index/');
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('angular.noop');
     });
 
-
-    it('should display formatted error messages on error doc pages', function() {
+    it('should display formatted error messages on error doc pages', function () {
       browser.get('build/docs/index-test.html#!/error/ng/areq?p0=Missing&p1=not%20a%20function,%20got%20undefined');
       var errMsg = element(by.css('.minerr-errmsg'));
       browser.wait(protractor.ExpectedConditions.presenceOf(errMsg), 5000);
       expect(errMsg.isPresent()).toBe(true);
     });
 
-    it('should display an error if the page does not exist', function() {
+    it('should display an error if the page does not exist', function () {
       browser.get('build/docs/index-test.html#!/api/does/not/exist');
       var mainHeader = element(by.css('.main-body h1 '));
       expect(mainHeader.getText()).toEqual('Oops!');
     });
 
-    it('should set "noindex" if the page does not exist', function() {
+    it('should set "noindex" if the page does not exist', function () {
       browser.get('build/docs/index-test.html#!/api/does/not/exist');
       var robots = element(by.css('meta[name="robots"][content="noindex"]'));
       var googleBot = element(by.css('meta[name="googlebot"][content="noindex"]'));
@@ -115,7 +110,7 @@ describe('docs.angularjs.org', function() {
       expect(googleBot.isPresent()).toBe(true);
     });
 
-    it('should remove "noindex" if the page exists', function() {
+    it('should remove "noindex" if the page exists', function () {
       browser.get('build/docs/index-test.html#!/api');
       var robots = element(by.css('meta[name="robots"][content="noindex"]'));
       var googleBot = element(by.css('meta[name="googlebot"][content="noindex"]'));
@@ -123,17 +118,19 @@ describe('docs.angularjs.org', function() {
       expect(googleBot.isPresent()).toBe(false);
     });
 
-    describe('template request error', function() {
-      beforeEach(function() {
-        browser.addMockModule('httpMocker', function() {
-          angular.module('httpMocker', ['ngMock'])
-            .run(['$httpBackend', function($httpBackend) {
+    describe('template request error', function () {
+      beforeEach(function () {
+        browser.addMockModule('httpMocker', function () {
+          angular.module('httpMocker', ['ngMock']).run([
+            '$httpBackend',
+            function ($httpBackend) {
               $httpBackend.whenGET('localhost:8000/build/docs/partials/api.html').respond(500, '');
-            }]);
-          });
+            }
+          ]);
+        });
       });
 
-      it('should set "noindex" for robots if the request fails', function() {
+      it('should set "noindex" for robots if the request fails', function () {
         // index-test includes ngMock
         browser.get('build/docs/index-test.html#!/api');
         var robots = element(by.css('meta[name="robots"][content="noindex"]'));
@@ -143,17 +140,16 @@ describe('docs.angularjs.org', function() {
       });
     });
 
-
-    describe('page bootstrap error', function() {
-      beforeEach(function() {
-        browser.addMockModule('httpMocker', function() {
+    describe('page bootstrap error', function () {
+      beforeEach(function () {
+        browser.addMockModule('httpMocker', function () {
           // Require a module that does not exist to break the bootstrapping
           angular.module('httpMocker', ['doesNotExist']);
         });
-    });
+      });
 
-      it('should have "noindex" for robots if bootstrapping fails', function() {
-        browser.get('build/docs/index.html#!/api').catch(function() {
+      it('should have "noindex" for robots if bootstrapping fails', function () {
+        browser.get('build/docs/index.html#!/api').catch(function () {
           // get() will fail on AngularJS bootstrap, but if we continue here, protractor
           // will assume the app is ready
           browser.ignoreSynchronization = true;
@@ -163,10 +159,6 @@ describe('docs.angularjs.org', function() {
           expect(googleBot.isPresent()).toBe(true);
         });
       });
-
-
     });
-
   });
-
 });

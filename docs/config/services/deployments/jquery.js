@@ -5,10 +5,7 @@ module.exports = function jqueryDeployment(getVersion) {
     name: 'jquery',
     examples: {
       commonFiles: {
-        scripts: [
-          '../../components/jquery-' + getVersion('jquery') + '/jquery.js',
-          '../../angular.js'
-        ]
+        scripts: ['../../components/jquery-' + getVersion('jquery') + '/jquery.js', '../../angular.js']
       },
       dependencyPath: '../../'
     },

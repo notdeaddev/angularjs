@@ -1,6 +1,6 @@
 'use strict';
 
-(function() {
+(function () {
   /**
    * @ngdoc function
    * @name browserTrigger
@@ -66,23 +66,23 @@
     var x = eventData.x;
     var y = eventData.y;
 
-    var inputType = (element.type) ? element.type.toLowerCase() : null,
-        nodeName = element.nodeName.toLowerCase();
+    var inputType = element.type ? element.type.toLowerCase() : null,
+      nodeName = element.nodeName.toLowerCase();
     if (!eventType) {
       eventType = {
-        'text':            'change',
-        'textarea':        'change',
-        'hidden':          'change',
-        'password':        'change',
-        'button':          'click',
-        'submit':          'click',
-        'reset':           'click',
-        'image':           'click',
-        'checkbox':        'click',
-        'radio':           'click',
-        'select-one':      'change',
+        text: 'change',
+        textarea: 'change',
+        hidden: 'change',
+        password: 'change',
+        button: 'click',
+        submit: 'click',
+        reset: 'click',
+        image: 'click',
+        checkbox: 'click',
+        radio: 'click',
+        'select-one': 'change',
         'select-multiple': 'change',
-        '_default_':       'click'
+        _default_: 'click'
       }[inputType || '_default_'];
     }
 
@@ -143,22 +143,29 @@
       } catch (e) {
         // Support: IE9+
         evnt = window.document.createEvent('CompositionEvent', {});
-        evnt.initCompositionEvent(
-          eventType,
-          eventData.bubbles,
-          eventData.cancelable,
-          window,
-          eventData.data,
-          null
-        );
+        evnt.initCompositionEvent(eventType, eventData.bubbles, eventData.cancelable, window, eventData.data, null);
       }
-
     } else {
       evnt = window.document.createEvent('MouseEvents');
       x = x || 0;
       y = y || 0;
-      evnt.initMouseEvent(eventType, true, true, window, 0, x, y, x, y, pressed('ctrl'),
-          pressed('alt'), pressed('shift'), pressed('meta'), 0, relatedTarget);
+      evnt.initMouseEvent(
+        eventType,
+        true,
+        true,
+        window,
+        0,
+        x,
+        y,
+        x,
+        y,
+        pressed('ctrl'),
+        pressed('alt'),
+        pressed('shift'),
+        pressed('meta'),
+        0,
+        relatedTarget
+      );
     }
 
     /* we're unable to change the timeStamp value directly so this
@@ -214,9 +221,9 @@
     var doc = window.document;
     if (doc) {
       var parent = doc.createElement('div'),
-          child = parent.cloneNode();
+        child = parent.cloneNode();
       parent.appendChild(child);
-      parent.addEventListener('e', function() {
+      parent.addEventListener('e', function () {
         supportsEventBubblingInDetachedTree._cached = true;
       });
       var evnt = window.document.createEvent('Events');
@@ -230,7 +237,7 @@
     var stop = false;
 
     var _stopPropagation = evnt.stopPropagation;
-    evnt.stopPropagation = function() {
+    evnt.stopPropagation = function () {
       stop = true;
       _stopPropagation.apply(evnt, arguments);
     };
@@ -243,14 +250,18 @@
 
   function patchEventTargetForBubbling(event, target) {
     event._target = target;
-    Object.defineProperty(event, 'target', {get: function() { return this._target;}});
+    Object.defineProperty(event, 'target', {
+      get: function () {
+        return this._target;
+      }
+    });
   }
 
   function isAttachedToDocument(element) {
     while ((element = element.parentNode)) {
-        if (element === window) {
-            return true;
-        }
+      if (element === window) {
+        return true;
+      }
     }
     return false;
   }

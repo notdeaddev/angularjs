@@ -2,32 +2,39 @@
 
 var app = angular.module('eventDelegationBenchmark', []);
 
-app.directive('noopDir', function() {
+app.directive('noopDir', function () {
   return {
-    compile: function($element, $attrs) {
-      return function($scope, $element) {
+    compile: function ($element, $attrs) {
+      return function ($scope, $element) {
         return 1;
       };
     }
   };
 });
 
-app.directive('nativeClick', ['$parse', function($parse) {
-  return {
-    compile: function($element, $attrs) {
-      $parse($attrs.tstEvent);
-      return function($scope, $element) {
-        $element[0].addEventListener('click', function() {
-          console.log('clicked');
-        }, false);
-      };
-    }
-  };
-}]);
+app.directive('nativeClick', [
+  '$parse',
+  function ($parse) {
+    return {
+      compile: function ($element, $attrs) {
+        $parse($attrs.tstEvent);
+        return function ($scope, $element) {
+          $element[0].addEventListener(
+            'click',
+            function () {
+              console.log('clicked');
+            },
+            false
+          );
+        };
+      }
+    };
+  }
+]);
 
-app.directive('dlgtClick', function() {
+app.directive('dlgtClick', function () {
   return {
-    compile: function($element, $attrs) {
+    compile: function ($element, $attrs) {
       // We don't setup the global event listeners as the costs are small and one time only...
     }
   };
@@ -40,9 +47,9 @@ app.controller('DataController', function DataController($rootScope) {
 
   benchmarkSteps.push({
     name: '$apply',
-    fn: function() {
+    fn: function () {
       var oldRows = self.rows;
-      $rootScope.$apply(function() {
+      $rootScope.$apply(function () {
         self.rows = [];
       });
       self.rows = oldRows;

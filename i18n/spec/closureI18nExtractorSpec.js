@@ -61,33 +61,33 @@ function newTestLocaleInfo() {
 }
 
 
-describe('findLocaleId', function() {
-  it('should find the id from numbers', function() {
+describe('findLocaleId', function () {
+  it('should find the id from numbers', function () {
     expect(findLocaleId('NumberFormatSymbols_en_GB', 'num')).toEqual('en_GB');
   });
 
 
-  it('should find the id from datetime', function() {
+  it('should find the id from datetime', function () {
     expect(findLocaleId('DateTimeSymbols_en', 'datetime')).toBe('en');
     expect(findLocaleId('DateTimeSymbols_en_ISO', 'datetime')).toEqual('en_ISO');
   });
 
-  it('should not find localeId if data is missing', function() {
+  it('should not find localeId if data is missing', function () {
     expect(findLocaleId('', 'num')).toBeUndefined();
     expect(findLocaleId('aa', 'datetime')).toBeUndefined();
     expect(findLocaleId('NumberFormatSymbols_en', 'datetime')).toBeUndefined();
     expect(findLocaleId('DateTimeSymbols_en', 'num')).toBeUndefined();
   });
 
-  it('should throw an error otherwise', function() {
-    expect(function() {
+  it('should throw an error otherwise', function () {
+    expect(function () {
       findLocaleId('str', 'otherwise');
     }).toThrowError('unknown type in findLocaleId: otherwise');
   });
 });
 
-describe('extractNumberSymbols', function() {
-  it('should extract number data', function() {
+describe('extractNumberSymbols', function () {
+  it('should extract number data', function () {
     var CONTENT = [
       'goog.provide(\'goog.i18n.NumberFormatSymbols_en_GB\');',
       'goog.i18n.NumberFormatSymbols_en_GB = {',
@@ -129,8 +129,8 @@ describe('extractNumberSymbols', function() {
   });
 });
 
-describe('extractCurrencySymbols', function() {
-  it('should extract currency data', function() {
+describe('extractCurrencySymbols', function () {
+  it('should extract currency data', function () {
     var CONTENT = [
       'goog.i18n.currency.CurrencyInfo = {',
       '  \'GBP\':[2, \'£\', \'GB£\'],',
@@ -151,8 +151,8 @@ describe('extractCurrencySymbols', function() {
 });
 
 
-describe('extractDateTimeSymbols', function() {
-  it('should extract date time data', function() {
+describe('extractDateTimeSymbols', function () {
+  it('should extract date time data', function () {
     var CONTENT = [
       'goog.i18n.DateTimeSymbols_fr_CA = {',
       '  ERAS: [\'av. J.-C.\', \'ap. J.-C.\'],',
@@ -221,8 +221,8 @@ describe('extractDateTimeSymbols', function() {
   });
 });
 
-describe('pluralExtractor', function() {
-  it('should output PLURAL_CAT in the output string code', function() {
+describe('pluralExtractor', function () {
+  it('should output PLURAL_CAT in the output string code', function () {
     var content = (
         'goog.provide(\'goog.i18n.pluralRules\');\n' +
         '\n' +
@@ -269,18 +269,18 @@ describe('pluralExtractor', function() {
   });
 });
 
-describe('serializeContent', function() {
-  it('should not make any modifications to the content of the locale', function() {
+describe('serializeContent', function () {
+  it('should not make any modifications to the content of the locale', function () {
     var serializedContent = closureI18nExtractor.serializeContent(newTestLocaleInfo());
     // eslint-disable-next-line no-eval
     expect(eval('(' + serializedContent + ')')).toEqual(newTestLocaleInfo());
   });
-  it('should only have ascii characters', function() {
+  it('should only have ascii characters', function () {
     var serializedContent = closureI18nExtractor.serializeContent(newTestLocaleInfo());
     // eslint-disable-next-line no-control-regex
     expect((/[^\u0001-\u007f]/).test(serializedContent)).toBe(false);
   });
-  it('should not transform arrays into objects', function() {
+  it('should not transform arrays into objects', function () {
     var serializedContent = closureI18nExtractor.serializeContent(newTestLocaleInfo().fr_CA);
     // eslint-disable-next-line no-eval
     var deserializedLocale = eval('(' + serializedContent + ')');
@@ -288,8 +288,8 @@ describe('serializeContent', function() {
   });
 });
 
-describe('outputLocale', function() {
-  it('should render the correct locale ids', function() {
+describe('outputLocale', function () {
+  it('should render the correct locale ids', function () {
     var output = outputLocale(newTestLocaleInfo(), 'fr_CA');
     expect(output).toContain('"id": "fr-ca"');
     expect(output).toContain('"localeID": "fr_CA"');

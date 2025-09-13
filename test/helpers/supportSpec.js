@@ -1,6 +1,4 @@
-'use strict';
-
-describe('support test results', function() {
+describe('support test results', function () {
   var expected, version, testName;
   var userAgent = window.navigator.userAgent;
 
@@ -84,14 +82,14 @@ describe('support test results', function() {
     };
   }
 
-  it('should have expected values specified', function() {
-      expect(expected).not.toBe(null);
-      expect(typeof expected).toBe('object');
+  it('should have expected values specified', function () {
+    expect(expected).not.toBe(null);
+    expect(typeof expected).toBe('object');
   });
 
   for (testName in expected) {
-    it('should report support.' + testName + ' to be ' + expected[testName], function() {
-        expect(support[testName]).toBe(expected[testName]);
+    it('should report support.' + testName + ' to be ' + expected[testName], function () {
+      expect(support[testName]).toBe(expected[testName]);
     });
   }
 });

@@ -41,21 +41,28 @@ function $$CookieWriter($document, $log, $browser) {
     // - 4096 bytes per cookie
     var cookieLength = str.length + 1;
     if (cookieLength > 4096) {
-      $log.warn('Cookie \'' + name +
-        '\' possibly not set or overflowed because it was too large (' +
-        cookieLength + ' > 4096 bytes)!');
+      $log.warn(
+        "Cookie '" +
+          name +
+          "' possibly not set or overflowed because it was too large (" +
+          cookieLength +
+          ' > 4096 bytes)!'
+      );
     }
 
     return str;
   }
 
-  return function(name, value, options) {
+  return function (name, value, options) {
     rawDocument.cookie = buildCookieString(name, value, options);
   };
 }
 
 $$CookieWriter.$inject = ['$document', '$log', '$browser'];
 
-angular.module('ngCookies').provider('$$cookieWriter', /** @this */ function $$CookieWriterProvider() {
-  this.$get = $$CookieWriter;
-});
+angular.module('ngCookies').provider(
+  '$$cookieWriter',
+  /** @this */ function $$CookieWriterProvider() {
+    this.$get = $$CookieWriter;
+  }
+);

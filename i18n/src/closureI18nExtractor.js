@@ -11,8 +11,8 @@ exports.correctedLocaleId = correctedLocaleId;
 exports.findLocaleId = findLocaleId;
 exports.serializeContent = serializeContent;
 
-var goog = { provide: function() {},
-  require: function() {},
+var goog = { provide: function () {},
+  require: function () {},
   i18n: {currency: {}, pluralRules: {}} };
 
 function findLocaleId(str, type) {
@@ -129,7 +129,7 @@ function canonicalizeForJsonStringify(unused_key, object) {
     return object;
   }
   var result = {};
-  Object.keys(object).sort().forEach(function(key) {
+  Object.keys(object).sort().forEach(function (key) {
     result[key] = object[key];
   });
   return result;
@@ -137,7 +137,7 @@ function canonicalizeForJsonStringify(unused_key, object) {
 
 function serializeContent(localeObj) {
   return JSON.stringify(localeObj, canonicalizeForJsonStringify, '  ')
-    .replace(new RegExp('[\\u007f-\\uffff]', 'g'), function(c) { return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4); })
+    .replace(new RegExp('[\\u007f-\\uffff]', 'g'), function (c) { return '\\u' + ('0000' + c.charCodeAt(0).toString(16)).slice(-4); })
     .replace(/"@@|@@"/g, '');
 }
 

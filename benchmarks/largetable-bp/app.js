@@ -2,14 +2,14 @@
 
 var app = angular.module('largetableBenchmark', []);
 
-app.config(function($compileProvider) {
+app.config(function ($compileProvider) {
   if ($compileProvider.debugInfoEnabled) {
     $compileProvider.debugInfoEnabled(false);
   }
 });
 
-app.filter('noop', function() {
-  return function(input) {
+app.filter('noop', function () {
+  return function (input) {
     return input;
   };
 });
@@ -18,21 +18,26 @@ app.controller('DataController', function DataController($scope, $rootScope) {
   var totalRows = 1000;
   var totalColumns = 20;
 
-  var data = $scope.data = [];
+  var data = ($scope.data = []);
   $scope.digestDuration = '?';
   $scope.numberOfBindings = totalRows * totalColumns * 2 + totalRows + 1;
   $scope.numberOfWatches = '?';
 
   /** @this */
-  function iGetter() { return this.i; }
+  function iGetter() {
+    return this.i;
+  }
   /** @this */
-  function jGetter() { return this.j; }
+  function jGetter() {
+    return this.j;
+  }
 
   for (var i = 0; i < totalRows; i++) {
     data[i] = [];
     for (var j = 0; j < totalColumns; j++) {
       data[i][j] = {
-        i: i, j: j,
+        i: i,
+        j: j,
         iFn: iGetter,
         jFn: jGetter
       };
@@ -43,8 +48,8 @@ app.controller('DataController', function DataController($scope, $rootScope) {
 
   benchmarkSteps.push({
     name: 'destroy',
-    fn: function() {
-      $scope.$apply(function() {
+    fn: function () {
+      $scope.$apply(function () {
         previousType = $scope.benchmarkType;
         $scope.benchmarkType = 'none';
       });
@@ -53,8 +58,8 @@ app.controller('DataController', function DataController($scope, $rootScope) {
 
   benchmarkSteps.push({
     name: 'create',
-    fn: function() {
-      $scope.$apply(function() {
+    fn: function () {
+      $scope.$apply(function () {
         $scope.benchmarkType = previousType;
       });
     }
@@ -62,17 +67,16 @@ app.controller('DataController', function DataController($scope, $rootScope) {
 
   benchmarkSteps.push({
     name: '$apply',
-    fn: function() {
+    fn: function () {
       $rootScope.$apply();
     }
   });
 });
 
-
-app.directive('baselineBindingTable', function() {
+app.directive('baselineBindingTable', function () {
   return {
     restrict: 'E',
-    link: function($scope, $element) {
+    link: function ($scope, $element) {
       var i, j, row, cell, comment;
       var document = window.document;
       var template = document.createElement('span');
@@ -103,11 +107,10 @@ app.directive('baselineBindingTable', function() {
   };
 });
 
-
-app.directive('baselineInterpolationTable', function() {
+app.directive('baselineInterpolationTable', function () {
   return {
     restrict: 'E',
-    link: function($scope, $element) {
+    link: function ($scope, $element) {
       var i, j, row, cell, comment;
       var document = window.document;
       var template = document.createElement('span');
@@ -132,8 +135,6 @@ app.directive('baselineInterpolationTable', function() {
     }
   };
 });
-
-
 
 /*
 

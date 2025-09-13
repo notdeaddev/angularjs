@@ -51,10 +51,12 @@
      </file>
    </example>
  */
-var ngStyleDirective = ngDirective(function(scope, element, attr) {
+var ngStyleDirective = ngDirective(function (scope, element, attr) {
   scope.$watchCollection(attr.ngStyle, function ngStyleWatchAction(newStyles, oldStyles) {
-    if (oldStyles && (newStyles !== oldStyles)) {
-      forEach(oldStyles, function(val, style) { element.css(style, ''); });
+    if (oldStyles && newStyles !== oldStyles) {
+      forEach(oldStyles, function (val, style) {
+        element.css(style, '');
+      });
     }
     if (newStyles) element.css(newStyles);
   });

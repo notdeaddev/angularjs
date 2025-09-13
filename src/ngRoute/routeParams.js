@@ -2,7 +2,6 @@
 
 ngRouteModule.provider('$routeParams', $RouteParamsProvider);
 
-
 /**
  * @ngdoc service
  * @name $routeParams
@@ -38,5 +37,7 @@ ngRouteModule.provider('$routeParams', $RouteParamsProvider);
  * ```
  */
 function $RouteParamsProvider() {
-  this.$get = function() { return {}; };
+  this.$get = function () {
+    return {};
+  };
 }

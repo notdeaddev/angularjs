@@ -1,7 +1,7 @@
 'use strict';
 
 const functions = require('firebase-functions');
-const {Storage} = require('@google-cloud/storage');
+const { Storage } = require('@google-cloud/storage');
 
 const storage = new Storage();
 const gcsBucketId = `${process.env.GCLOUD_PROJECT}.appspot.com`;
@@ -15,7 +15,7 @@ function sendStoredFile(request, response) {
   // will be returned instead.
   // Example of path requiring decoding: `.../input%5Btext%5D.html` --> `.../input[text].html`
   const requestPath = decodeURI(request.path || '/');
-  let filePathSegments = requestPath.split('/').filter((segment) => {
+  let filePathSegments = requestPath.split('/').filter(segment => {
     // Remove empty leading or trailing path parts
     return segment !== '';
   });
@@ -42,43 +42,38 @@ function sendStoredFile(request, response) {
 
   downloadSource = filePathSegments.join('/');
 
-  downloadAndSend(downloadSource).catch(error => {
-    if (isDocsPath && error.code === 404) {
-      fileName = 'index.html';
-      filePathSegments = [version, 'docs', fileName];
-      downloadSource = filePathSegments.join('/');
+  downloadAndSend(downloadSource)
+    .catch(error => {
+      if (isDocsPath && error.code === 404) {
+        fileName = 'index.html';
+        filePathSegments = [version, 'docs', fileName];
+        downloadSource = filePathSegments.join('/');
 
-      return downloadAndSend(downloadSource);
-    }
+        return downloadAndSend(downloadSource);
+      }
 
-    return Promise.reject(error);
-  }).catch(error => {
-
-    // If file not found, try the path as a directory
-    return error.code === 404 ? getDirectoryListing(request.path.slice(1)) : Promise.reject(error);
-  }).catch(sendErrorResponse);
+      return Promise.reject(error);
+    })
+    .catch(error => {
+      // If file not found, try the path as a directory
+      return error.code === 404 ? getDirectoryListing(request.path.slice(1)) : Promise.reject(error);
+    })
+    .catch(sendErrorResponse);
 
   function downloadAndSend(downloadSource) {
-
     const file = bucket.file(downloadSource);
 
     return file.getMetadata().then(data => {
       return new Promise((resolve, reject) => {
+        const readStream = file.createReadStream().on('error', reject).on('finish', resolve);
 
-        const readStream = file.createReadStream()
-          .on('error', reject)
-          .on('finish', resolve);
-
-        response
-          .status(200)
-          .set({
-            'Content-Type': data[0].contentType,
-            'Cache-Control': `public, max-age=${BROWSER_CACHE_DURATION}, s-maxage=${CDN_CACHE_DURATION}`
-          });
+        response.status(200).set({
+          'Content-Type': data[0].contentType,
+          'Cache-Control': `public, max-age=${BROWSER_CACHE_DURATION}, s-maxage=${CDN_CACHE_DURATION}`
+        });
 
         readStream.pipe(response);
       });
-
     });
   }
 
@@ -166,9 +161,12 @@ function sendStoredFile(request, response) {
 
         if (
           // we got no files or directories from previous query pages
-          !fileList.length && !directoryList.length &&
+          !fileList.length &&
+          !directoryList.length &&
           // this query page has no file or directories
-          !files.length && (!apiResponse || !apiResponse.prefixes)) {
+          !files.length &&
+          (!apiResponse || !apiResponse.prefixes)
+        ) {
           return Promise.reject({
             code: 404
           });
@@ -187,7 +185,6 @@ function sendStoredFile(request, response) {
 
         return true;
       });
-
     }
   }
 }
@@ -208,28 +205,29 @@ function deleteOldSnapshotZip(object) {
 
   const snapshotFolderMatch = filePath.match(snapshotRegex);
 
-  if (!snapshotFolderMatch ||	contentType !== 'application/zip') {
+  if (!snapshotFolderMatch || contentType !== 'application/zip') {
     return;
   }
 
-  bucket.getFiles({
-    prefix: snapshotFolderMatch[0],
-    delimiter: '/',
-    autoPaginate: false
-  }).then(function(data) {
-    const files = data[0];
+  bucket
+    .getFiles({
+      prefix: snapshotFolderMatch[0],
+      delimiter: '/',
+      autoPaginate: false
+    })
+    .then(function (data) {
+      const files = data[0];
 
-    const oldZipFiles = files.filter(file => {
-      return file.metadata.name !== filePath && file.metadata.contentType === 'application/zip';
+      const oldZipFiles = files.filter(file => {
+        return file.metadata.name !== filePath && file.metadata.contentType === 'application/zip';
+      });
+
+      console.info(`found ${oldZipFiles.length} old zip files to delete`);
+
+      oldZipFiles.forEach(function (file) {
+        file.delete();
+      });
     });
-
-    console.info(`found ${oldZipFiles.length} old zip files to delete`);
-
-    oldZipFiles.forEach(function(file) {
-      file.delete();
-    });
-
-  });
 }
 
 exports.sendStoredFile = functions.https.onRequest(sendStoredFile);

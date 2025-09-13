@@ -29,21 +29,25 @@
 */
 
 function isValidIdentifierStart(ch, cp) {
-  return ch === '$' ||
-         ch === '_' ||
-         IDS_Y(cp);
+  return ch === '$' || ch === '_' || IDS_Y(cp);
 }
 
 function isValidIdentifierContinue(ch, cp) {
-  return ch === '$' ||
-         ch === '_' ||
-         cp === 0x200C || // <ZWNJ>
-         cp === 0x200D || // <ZWJ>
-         IDC_Y(cp);
+  return (
+    ch === '$' ||
+    ch === '_' ||
+    cp === 0x200c || // <ZWNJ>
+    cp === 0x200d || // <ZWJ>
+    IDC_Y(cp)
+  );
 }
 
-angular.module('ngParseExt', [])
-  .config(['$parseProvider', function($parseProvider) {
-    $parseProvider.setIdentifierFns(isValidIdentifierStart, isValidIdentifierContinue);
-  }])
+angular
+  .module('ngParseExt', [])
+  .config([
+    '$parseProvider',
+    function ($parseProvider) {
+      $parseProvider.setIdentifierFns(isValidIdentifierStart, isValidIdentifierContinue);
+    }
+  ])
   .info({ angularVersion: '"NG_VERSION_FULL"' });

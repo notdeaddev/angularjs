@@ -71,7 +71,6 @@ InterpolationParts.prototype.getResult = function getResult(expressionValues) {
   return this.textParts.join('');
 };
 
-
 InterpolationParts.prototype.toParsedFn = function toParsedFn(mustHaveExpression, originalText) {
   var self = this;
   this.flushPartialText();
@@ -85,10 +84,12 @@ InterpolationParts.prototype.toParsedFn = function toParsedFn(mustHaveExpression
     $interpolateMinErr['throwNoconcat'](originalText);
   }
   if (this.expressionFns.length === 0) {
-    if (this.textParts.length !== 1) { this.errorInParseLogic(); }
+    if (this.textParts.length !== 1) {
+      this.errorInParseLogic();
+    }
     return parseTextLiteral(this.textParts[0]);
   }
-  var parsedFn = function(context) {
+  var parsedFn = function (context) {
     return self.getResult(self.getExpressionValues(context));
   };
   parsedFn['$$watchDelegate'] = function $$watchDelegate(scope, listener, objectEquality) {
@@ -106,23 +107,33 @@ InterpolationParts.prototype.toParsedFn = function toParsedFn(mustHaveExpression
 
 InterpolationParts.prototype.watchDelegate = function watchDelegate(scope, listener, objectEquality) {
   var watcher = new InterpolationPartsWatcher(this, scope, listener, objectEquality);
-  return function() { watcher.cancelWatch(); };
+  return function () {
+    watcher.cancelWatch();
+  };
 };
 
 function InterpolationPartsWatcher(interpolationParts, scope, listener, objectEquality) {
   this.interpolationParts = interpolationParts;
   this.scope = scope;
-  this.previousResult = (undefined);
+  this.previousResult = undefined;
   this.listener = listener;
   var self = this;
-  this.expressionFnsWatcher = scope['$watchGroup'](interpolationParts.expressionFns, function(newExpressionValues, oldExpressionValues) {
-    self.watchListener(newExpressionValues, oldExpressionValues);
-  });
+  this.expressionFnsWatcher = scope['$watchGroup'](
+    interpolationParts.expressionFns,
+    function (newExpressionValues, oldExpressionValues) {
+      self.watchListener(newExpressionValues, oldExpressionValues);
+    }
+  );
 }
 
 InterpolationPartsWatcher.prototype.watchListener = function watchListener(newExpressionValues, oldExpressionValues) {
   var result = this.interpolationParts.getResult(newExpressionValues);
-  this.listener.call(null, result, newExpressionValues === oldExpressionValues ? result : this.previousResult, this.scope);
+  this.listener.call(
+    null,
+    result,
+    newExpressionValues === oldExpressionValues ? result : this.previousResult,
+    this.scope
+  );
   this.previousResult = result;
 };
 

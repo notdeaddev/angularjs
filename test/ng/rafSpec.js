@@ -1,11 +1,9 @@
-'use strict';
-
-describe('$$rAF', function() {
-  it('should queue and block animation frames', inject(function($$rAF) {
+describe('$$rAF', function () {
+  it('should queue and block animation frames', inject(function ($$rAF) {
     if (!$$rAF.supported) return;
 
     var message;
-    $$rAF(function() {
+    $$rAF(function () {
       message = 'yes';
     });
 
@@ -14,11 +12,11 @@ describe('$$rAF', function() {
     expect(message).toBe('yes');
   }));
 
-  it('should provide a cancellation method', inject(function($$rAF) {
+  it('should provide a cancellation method', inject(function ($$rAF) {
     if (!$$rAF.supported) return;
 
     var present = true;
-    var cancel = $$rAF(function() {
+    var cancel = $$rAF(function () {
       present = false;
     });
 
@@ -27,27 +25,32 @@ describe('$$rAF', function() {
 
     try {
       $$rAF.flush();
-    } catch (e) { /* empty */ }
+    } catch (e) {
+      /* empty */
+    }
     expect(present).toBe(true);
   }));
 
-  describe('$timeout fallback', function() {
-    it('it should use a $timeout incase native rAF isn\'t supported', function() {
+  describe('$timeout fallback', function () {
+    it("it should use a $timeout incase native rAF isn't supported", function () {
       var timeoutSpy = jasmine.createSpy('callback');
 
       //we need to create our own injector to work around the ngMock overrides
-      var injector = createInjector(['ng', function($provide) {
-        $provide.value('$timeout', timeoutSpy);
-        $provide.value('$window', {
-          location: window.location
-        });
-      }]);
+      var injector = createInjector([
+        'ng',
+        function ($provide) {
+          $provide.value('$timeout', timeoutSpy);
+          $provide.value('$window', {
+            location: window.location
+          });
+        }
+      ]);
 
       var $$rAF = injector.get('$$rAF');
       expect($$rAF.supported).toBe(false);
 
       var message;
-      $$rAF(function() {
+      $$rAF(function () {
         message = 'on';
       });
 
@@ -60,8 +63,8 @@ describe('$$rAF', function() {
     });
   });
 
-  describe('mocks', function() {
-    it('should throw an error if no frames are present', inject(function($$rAF) {
+  describe('mocks', function () {
+    it('should throw an error if no frames are present', inject(function ($$rAF) {
       if ($$rAF.supported) {
         var failed = false;
         try {
@@ -74,27 +77,32 @@ describe('$$rAF', function() {
     }));
   });
 
-  describe('mobile', function() {
-    it('should provide a cancellation method for an older version of Android', function() {
+  describe('mobile', function () {
+    it('should provide a cancellation method for an older version of Android', function () {
       //we need to create our own injector to work around the ngMock overrides
-      var injector = createInjector(['ng', function($provide) {
-        $provide.value('$window', {
-          location: window.location,
-          history: window.history,
-          webkitRequestAnimationFrame: jasmine.createSpy('$window.webkitRequestAnimationFrame'),
-          webkitCancelRequestAnimationFrame: jasmine.createSpy('$window.webkitCancelRequestAnimationFrame')
-        });
-      }]);
+      var injector = createInjector([
+        'ng',
+        function ($provide) {
+          $provide.value('$window', {
+            location: window.location,
+            history: window.history,
+            webkitRequestAnimationFrame: jasmine.createSpy('$window.webkitRequestAnimationFrame'),
+            webkitCancelRequestAnimationFrame: jasmine.createSpy('$window.webkitCancelRequestAnimationFrame')
+          });
+        }
+      ]);
 
       var $$rAF = injector.get('$$rAF');
       var $window = injector.get('$window');
-      var cancel = $$rAF(function() {});
+      var cancel = $$rAF(function () {});
 
       expect($$rAF.supported).toBe(true);
 
       try {
         cancel();
-      } catch (e) { /* empty */ }
+      } catch (e) {
+        /* empty */
+      }
 
       expect($window.webkitCancelRequestAnimationFrame).toHaveBeenCalled();
     });

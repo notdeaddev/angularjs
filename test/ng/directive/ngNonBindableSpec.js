@@ -1,27 +1,23 @@
-'use strict';
-
-
-describe('ngNonBindable', function() {
+describe('ngNonBindable', function () {
   var element;
 
-
-  afterEach(function() {
+  afterEach(function () {
     dealoc(element);
   });
 
-
-  it('should prevent compilation of the owning element and its children',
-      inject(function($rootScope, $compile) {
+  it('should prevent compilation of the owning element and its children', inject(function ($rootScope, $compile) {
     element = $compile('<div ng-non-bindable text="{{name}}"><span ng-bind="name"></span></div>')($rootScope);
-    element = $compile('<div>' +
-                       '  <span id="s1">{{a}}</span>' +
-                       '  <span id="s2" ng-bind="b"></span>' +
-                       '  <div foo="{{a}}" ng-non-bindable>' +
-                       '    <span ng-bind="a"></span>{{b}}' +
-                       '  </div>' +
-                       '  <span id="s3">{{a}}</span>' +
-                       '  <span id="s4" ng-bind="b"></span>' +
-                       '</div>')($rootScope);
+    element = $compile(
+      '<div>' +
+        '  <span id="s1">{{a}}</span>' +
+        '  <span id="s2" ng-bind="b"></span>' +
+        '  <div foo="{{a}}" ng-non-bindable>' +
+        '    <span ng-bind="a"></span>{{b}}' +
+        '  </div>' +
+        '  <span id="s3">{{a}}</span>' +
+        '  <span id="s4" ng-bind="b"></span>' +
+        '</div>'
+    )($rootScope);
     $rootScope.a = 'one';
     $rootScope.b = 'two';
     $rootScope.$digest();

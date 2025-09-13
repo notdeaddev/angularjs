@@ -1,6 +1,5 @@
 'use strict';
 
-angular.module('repeatAnimateBenchmark', [])
-  .run(function($rootScope) {
-    $rootScope.fileType = 'noanimate';
-  });
+angular.module('repeatAnimateBenchmark', []).run(function ($rootScope) {
+  $rootScope.fileType = 'noanimate';
+});

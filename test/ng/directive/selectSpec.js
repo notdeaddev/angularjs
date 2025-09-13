@@ -1,7 +1,12 @@
-'use strict';
-
-describe('select', function() {
-  var scope, formElement, element, $compile, ngModelCtrl, selectCtrl, renderSpy, optionAttributesList = [];
+describe('select', function () {
+  var scope,
+    formElement,
+    element,
+    $compile,
+    ngModelCtrl,
+    selectCtrl,
+    renderSpy,
+    optionAttributesList = [];
 
   function compile(html) {
     formElement = jqLite('<form name="form">' + html + '</form>');
@@ -12,9 +17,11 @@ describe('select', function() {
   }
 
   function compileRepeatedOptions() {
-    compile('<select ng-model="robot">' +
-              '<option value="{{item.value}}" ng-repeat="item in robots">{{item.label}}</option>' +
-            '</select>');
+    compile(
+      '<select ng-model="robot">' +
+        '<option value="{{item.value}}" ng-repeat="item in robots">{{item.label}}</option>' +
+        '</select>'
+    );
   }
 
   function compileGroupedOptions() {
@@ -22,78 +29,75 @@ describe('select', function() {
       '<select ng-model="mySelect">' +
         '<option ng-repeat="item in values">{{item.name}}</option>' +
         '<optgroup ng-repeat="group in groups" label="{{group.name}}">' +
-          '<option ng-repeat="item in group.values">{{item.name}}</option>' +
+        '<option ng-repeat="item in group.values">{{item.name}}</option>' +
         '</optgroup>' +
-      '</select>');
+        '</select>'
+    );
   }
 
   function unknownValue(value) {
     return '? ' + hashKey(value) + ' ?';
   }
 
-  beforeEach(module(function($compileProvider) {
-    $compileProvider.directive('spyOnWriteValue', function() {
-      return {
-        require: 'select',
-        link: {
-          pre: function(scope, element, attrs, ctrl) {
-            selectCtrl = ctrl;
-            renderSpy = jasmine.createSpy('renderSpy');
-            selectCtrl.ngModelCtrl.$render = renderSpy.and.callFake(selectCtrl.ngModelCtrl.$render);
-            spyOn(selectCtrl, 'writeValue').and.callThrough();
+  beforeEach(
+    module(function ($compileProvider) {
+      $compileProvider.directive('spyOnWriteValue', function () {
+        return {
+          require: 'select',
+          link: {
+            pre: function (scope, element, attrs, ctrl) {
+              selectCtrl = ctrl;
+              renderSpy = jasmine.createSpy('renderSpy');
+              selectCtrl.ngModelCtrl.$render = renderSpy.and.callFake(selectCtrl.ngModelCtrl.$render);
+              spyOn(selectCtrl, 'writeValue').and.callThrough();
+            }
           }
-        }
-      };
-    });
+        };
+      });
 
-    $compileProvider.directive('myOptions', function() {
-      return {
-        scope: {myOptions: '='},
-        replace: true,
-        template:
-            '<option value="{{ option.value }}" ng-repeat="option in myOptions">' +
-              '{{ options.label }}' +
-            '</option>'
-      };
-    });
+      $compileProvider.directive('myOptions', function () {
+        return {
+          scope: { myOptions: '=' },
+          replace: true,
+          template: '<option value="{{ option.value }}" ng-repeat="option in myOptions">{{ options.label }}</option>'
+        };
+      });
 
-    $compileProvider.directive('exposeAttributes', function() {
-      return {
-        require: '^^select',
-        link: {
-          pre: function(scope, element, attrs, ctrl) {
-            optionAttributesList.push(attrs);
+      $compileProvider.directive('exposeAttributes', function () {
+        return {
+          require: '^^select',
+          link: {
+            pre: function (scope, element, attrs, ctrl) {
+              optionAttributesList.push(attrs);
+            }
           }
-        }
-      };
-    });
+        };
+      });
+    })
+  );
 
-  }));
-
-  beforeEach(inject(function($rootScope, _$compile_) {
+  beforeEach(inject(function ($rootScope, _$compile_) {
     scope = $rootScope.$new(); //create a child scope because the root scope can't be $destroy-ed
     $compile = _$compile_;
     formElement = element = null;
   }));
 
-
-  afterEach(function() {
+  afterEach(function () {
     scope.$destroy(); //disables unknown option work during destruction
     dealoc(formElement);
     ngModelCtrl = null;
   });
 
-
-  beforeEach(function() {
+  beforeEach(function () {
     jasmine.addMatchers({
-      toEqualSelectWithOptions: function() {
+      toEqualSelectWithOptions: function () {
         return {
-          compare: function(actual, expected) {
+          compare: function (actual, expected) {
             var actualValues = {};
             var optionGroup;
             var optionValue;
 
-            forEach(actual.find('option'), function(option) {
+            forEach(actual.find('option'), function (option) {
               optionGroup = option.parentNode.label || '';
               actualValues[optionGroup] = actualValues[optionGroup] || [];
               // IE9 doesn't populate the label property from the text property like other browsers
@@ -101,7 +105,7 @@ describe('select', function() {
               actualValues[optionGroup].push(option.selected ? [optionValue] : optionValue);
             });
 
-            var message = function() {
+            var message = function () {
               return 'Expected ' + toJson(actualValues) + ' to equal ' + toJson(expected) + '.';
             };
 
@@ -113,23 +117,24 @@ describe('select', function() {
         };
       }
     });
-
   });
 
-  it('should not add options to the select if ngModel is not present', inject(function($rootScope) {
+  it('should not add options to the select if ngModel is not present', inject(function ($rootScope) {
     var scope = $rootScope;
     scope.d = 'd';
     scope.e = 'e';
     scope.f = 'f';
 
-    compile('<select>' +
-      '<option ng-value="\'a\'">alabel</option>' +
-      '<option value="b">blabel</option>' +
-      '<option >c</option>' +
-      '<option ng-value="d">dlabel</option>' +
-      '<option value="{{e}}">elabel</option>' +
-      '<option>{{f}}</option>' +
-    '</select>');
+    compile(
+      '<select>' +
+        '<option ng-value="\'a\'">alabel</option>' +
+        '<option value="b">blabel</option>' +
+        '<option >c</option>' +
+        '<option ng-value="d">dlabel</option>' +
+        '<option value="{{e}}">elabel</option>' +
+        '<option>{{f}}</option>' +
+        '</select>'
+    );
 
     var selectCtrl = element.controller('select');
 
@@ -141,16 +146,16 @@ describe('select', function() {
     expect(selectCtrl.hasOption('f')).toBe(false);
   }));
 
-  describe('select-one', function() {
-
-    it('should compile children of a select without a ngModel, but not create a model for it',
-        function() {
-      compile('<select>' +
-                '<option selected="true">{{a}}</option>' +
-                '<option value="">{{b}}</option>' +
-                '<option>C</option>' +
-              '</select>');
-      scope.$apply(function() {
+  describe('select-one', function () {
+    it('should compile children of a select without a ngModel, but not create a model for it', function () {
+      compile(
+        '<select>' +
+          '<option selected="true">{{a}}</option>' +
+          '<option value="">{{b}}</option>' +
+          '<option>C</option>' +
+          '</select>'
+      );
+      scope.$apply(function () {
         scope.a = 'foo';
         scope.b = 'bar';
       });
@@ -158,29 +163,22 @@ describe('select', function() {
       expect(element.text()).toBe('foobarC');
     });
 
-
-    it('should not interfere with selection via selected attr if ngModel directive is not present',
-        function() {
-      compile('<select>' +
-                '<option>not me</option>' +
-                '<option selected>me!</option>' +
-                '<option>nah</option>' +
-              '</select>');
+    it('should not interfere with selection via selected attr if ngModel directive is not present', function () {
+      compile('<select><option>not me</option><option selected>me!</option><option>nah</option></select>');
       expect(element).toEqualSelect('not me', ['me!'], 'nah');
     });
 
-
-    describe('required state', function() {
-
-      it('should set the error if the empty option is selected', function() {
+    describe('required state', function () {
+      it('should set the error if the empty option is selected', function () {
         compile(
           '<select name="select" ng-model="selection" required>' +
             '<option value=""></option>' +
             '<option value="a">A</option>' +
             '<option value="b">B</option>' +
-          '</select>');
+            '</select>'
+        );
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.selection = 'a';
         });
 
@@ -206,16 +204,16 @@ describe('select', function() {
         expect(ngModelCtrl.$error.required).toBeTruthy();
       });
 
-
-      it('should validate with empty option and bound ngRequired', function() {
+      it('should validate with empty option and bound ngRequired', function () {
         compile(
           '<select name="select" ng-model="selection" ng-required="required">' +
             '<option value=""></option>' +
             '<option value="a">A</option>' +
             '<option value="b">B</option>' +
-          '</select>');
+            '</select>'
+        );
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.required = false;
         });
 
@@ -238,27 +236,27 @@ describe('select', function() {
         expect(element).toBeValid();
       });
 
-
-      it('should not be invalid if no required attribute is present', function() {
+      it('should not be invalid if no required attribute is present', function () {
         compile(
           '<select name="select" ng-model="selection">' +
             '<option value=""></option>' +
             '<option value="c">C</option>' +
-          '</select>');
+            '</select>'
+        );
 
         expect(element).toBeValid();
         expect(element).toBePristine();
       });
 
-
-      it('should NOT set the error if the unknown option is selected', function() {
+      it('should NOT set the error if the unknown option is selected', function () {
         compile(
           '<select name="select" ng-model="selection" required>' +
             '<option value="a">A</option>' +
             '<option value="b">B</option>' +
-          '</select>');
+            '</select>'
+        );
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.selection = 'a';
         });
 
@@ -270,28 +268,25 @@ describe('select', function() {
         expect(element).toBeValid();
         expect(ngModelCtrl.$error.required).toBeFalsy();
       });
-
     });
 
-    it('should work with repeated value options', function() {
+    it('should work with repeated value options', function () {
       scope.robots = ['c3p0', 'r2d2'];
       scope.robot = 'r2d2';
-      compile('<select ng-model="robot">' +
-                '<option ng-repeat="r in robots">{{r}}</option>' +
-              '</select>');
+      compile('<select ng-model="robot"><option ng-repeat="r in robots">{{r}}</option></select>');
       expect(element).toEqualSelect('c3p0', ['r2d2']);
 
       browserTrigger(element.find('option').eq(0));
       expect(element).toEqualSelect(['c3p0'], 'r2d2');
       expect(scope.robot).toBe('c3p0');
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.robots.unshift('wallee');
       });
       expect(element).toEqualSelect('wallee', ['c3p0'], 'r2d2');
       expect(scope.robot).toBe('c3p0');
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.robots = ['c3p0+', 'r2d2+'];
         scope.robot = 'r2d2+';
       });
@@ -299,22 +294,22 @@ describe('select', function() {
       expect(scope.robot).toBe('r2d2+');
     });
 
-
-    it('should interpolate select names', function() {
+    it('should interpolate select names', function () {
       scope.robots = ['c3p0', 'r2d2'];
       scope.name = 'r2d2';
       scope.nameID = 47;
-      compile('<select ng-model="name" name="name{{nameID}}">' +
-                '<option ng-repeat="r in robots">{{r}}</option>' +
-              '</select>');
+      compile(
+        '<select ng-model="name" name="name{{nameID}}">' +
+          '<option ng-repeat="r in robots">{{r}}</option>' +
+          '</select>'
+      );
       expect(scope.form.name47.$pristine).toBeTruthy();
       browserTrigger(element.find('option').eq(0));
       expect(scope.form.name47.$dirty).toBeTruthy();
       expect(scope.name).toBe('c3p0');
     });
 
-
-    it('should rename select controls in form when interpolated name changes', function() {
+    it('should rename select controls in form when interpolated name changes', function () {
       scope.nameID = 'A';
       compile('<select ng-model="name" name="name{{nameID}}"></select>');
       expect(scope.form.nameA.$name).toBe('nameA');
@@ -326,42 +321,42 @@ describe('select', function() {
       expect(scope.form.nameB.$name).toBe('nameB');
     });
 
-
-    it('should select options in a group when there is a linebreak before an option', function() {
+    it('should select options in a group when there is a linebreak before an option', function () {
       scope.mySelect = 'B';
       scope.$apply();
 
       var select = jqLite(
         '<select ng-model="mySelect">' +
           '<optgroup label="first">' +
-            '<option value="A">A</option>' +
-        '</optgroup>' +
-        '<optgroup label="second">\n' +
-            '<option value="B">B</option>' +
-        '</optgroup>      ' +
-      '</select>');
+          '<option value="A">A</option>' +
+          '</optgroup>' +
+          '<optgroup label="second">\n' +
+          '<option value="B">B</option>' +
+          '</optgroup>      ' +
+          '</select>'
+      );
 
       $compile(select)(scope);
       scope.$apply();
 
-      expect(select).toEqualSelectWithOptions({'first':['A'], 'second': [['B']]});
+      expect(select).toEqualSelectWithOptions({ first: ['A'], second: [['B']] });
       dealoc(select);
     });
 
-
-    it('should only call selectCtrl.writeValue after a digest has occurred', function() {
+    it('should only call selectCtrl.writeValue after a digest has occurred', function () {
       scope.mySelect = 'B';
       scope.$apply();
 
       var select = jqLite(
         '<select spy-on-write-value ng-model="mySelect">' +
           '<optgroup label="first">' +
-            '<option value="A">A</option>' +
-        '</optgroup>' +
-        '<optgroup label="second">\n' +
-            '<option value="B">B</option>' +
-        '</optgroup>      ' +
-      '</select>');
+          '<option value="A">A</option>' +
+          '</optgroup>' +
+          '<optgroup label="second">\n' +
+          '<option value="B">B</option>' +
+          '</optgroup>      ' +
+          '</select>'
+      );
 
       $compile(select)(scope);
       expect(selectCtrl.writeValue).not.toHaveBeenCalled();
@@ -371,13 +366,14 @@ describe('select', function() {
       dealoc(select);
     });
 
-
-    it('should remove the "selected" attribute from the previous option when the model changes', function() {
-      compile('<select name="select" ng-model="selected">' +
-        '<option value="">--empty--</option>' +
-        '<option value="a">A</option>' +
-        '<option value="b">B</option>' +
-      '</select>');
+    it('should remove the "selected" attribute from the previous option when the model changes', function () {
+      compile(
+        '<select name="select" ng-model="selected">' +
+          '<option value="">--empty--</option>' +
+          '<option value="a">A</option>' +
+          '<option value="b">B</option>' +
+          '</select>'
+      );
 
       scope.$digest();
 
@@ -431,19 +427,20 @@ describe('select', function() {
       expect(options[2]).toBeMarkedAsSelected();
     });
 
-    describe('empty option', function() {
-
-      it('should allow empty option to be added and removed dynamically', function() {
+    describe('empty option', function () {
+      it('should allow empty option to be added and removed dynamically', function () {
         scope.dynamicOptions = [];
         scope.robot = '';
-        compile('<select ng-model="robot">' +
-                  '<option ng-repeat="opt in dynamicOptions" value="{{opt.val}}">{{opt.display}}</option>' +
-                '</select>');
+        compile(
+          '<select ng-model="robot">' +
+            '<option ng-repeat="opt in dynamicOptions" value="{{opt.val}}">{{opt.display}}</option>' +
+            '</select>'
+        );
 
         expect(element).toEqualSelect(['? string: ?']);
 
         scope.dynamicOptions = [
-          { val: '', display: '--empty--'},
+          { val: '', display: '--empty--' },
           { val: 'x', display: 'robot x' },
           { val: 'y', display: 'robot y' }
         ];
@@ -463,16 +460,17 @@ describe('select', function() {
         expect(element).toEqualSelect([unknownValue(undefined)], 'x', 'y');
       });
 
-
-      it('should cope use a dynamic empty option that is added to a static empty option', function() {
+      it('should cope use a dynamic empty option that is added to a static empty option', function () {
         // We do not make any special provisions for multiple empty options, so this behavior is
         // largely untested
         scope.dynamicOptions = [];
         scope.robot = 'x';
-        compile('<select ng-model="robot">' +
-                 '<option value="">--static-select--</option>' +
-                 '<option ng-repeat="opt in dynamicOptions" value="{{opt.val}}">{{opt.display}}</option>' +
-               '</select>');
+        compile(
+          '<select ng-model="robot">' +
+            '<option value="">--static-select--</option>' +
+            '<option ng-repeat="opt in dynamicOptions" value="{{opt.val}}">{{opt.display}}</option>' +
+            '</select>'
+        );
         scope.$digest();
         expect(element).toEqualSelect([unknownValue('x')], '');
 
@@ -482,9 +480,9 @@ describe('select', function() {
         expect(element.find('option').eq(0).text()).toBe('--static-select--');
 
         scope.dynamicOptions = [
-         { val: '', display: '--dynamic-select--' },
-         { val: 'x', display: 'robot x' },
-         { val: 'y', display: 'robot y' }
+          { val: '', display: '--dynamic-select--' },
+          { val: 'x', display: 'robot x' },
+          { val: 'y', display: 'robot y' }
         ];
         scope.$digest();
         expect(element).toEqualSelect('', [''], 'x', 'y');
@@ -494,36 +492,39 @@ describe('select', function() {
         expect(element).toEqualSelect(['']);
       });
 
-
-      it('should select the empty option when model is undefined', function() {
-        compile('<select ng-model="robot">' +
-                  '<option value="">--select--</option>' +
-                  '<option value="x">robot x</option>' +
-                  '<option value="y">robot y</option>' +
-                '</select>');
+      it('should select the empty option when model is undefined', function () {
+        compile(
+          '<select ng-model="robot">' +
+            '<option value="">--select--</option>' +
+            '<option value="x">robot x</option>' +
+            '<option value="y">robot y</option>' +
+            '</select>'
+        );
 
         expect(element).toEqualSelect([''], 'x', 'y');
       });
 
-
-      it('should support defining an empty option anywhere in the option list', function() {
-        compile('<select ng-model="robot">' +
-                  '<option value="x">robot x</option>' +
-                  '<option value="">--select--</option>' +
-                  '<option value="y">robot y</option>' +
-                '</select>');
+      it('should support defining an empty option anywhere in the option list', function () {
+        compile(
+          '<select ng-model="robot">' +
+            '<option value="x">robot x</option>' +
+            '<option value="">--select--</option>' +
+            '<option value="y">robot y</option>' +
+            '</select>'
+        );
 
         expect(element).toEqualSelect('x', [''], 'y');
       });
 
-
-      it('should set the model to empty string when empty option is selected', function() {
+      it('should set the model to empty string when empty option is selected', function () {
         scope.robot = 'x';
-        compile('<select ng-model="robot">' +
-                  '<option value="">--select--</option>' +
-                  '<option value="x">robot x</option>' +
-                  '<option value="y">robot y</option>' +
-                '</select>');
+        compile(
+          '<select ng-model="robot">' +
+            '<option value="">--select--</option>' +
+            '<option value="x">robot x</option>' +
+            '<option value="y">robot y</option>' +
+            '</select>'
+        );
         expect(element).toEqualSelect('', ['x'], 'y');
 
         browserTrigger(element.find('option').eq(0));
@@ -531,14 +532,15 @@ describe('select', function() {
         expect(scope.robot).toBe('');
       });
 
-
-      it('should remove unknown option when model is undefined', function() {
+      it('should remove unknown option when model is undefined', function () {
         scope.robot = 'other';
-        compile('<select ng-model="robot">' +
-                  '<option value="">--select--</option>' +
-                  '<option value="x">robot x</option>' +
-                  '<option value="y">robot y</option>' +
-                '</select>');
+        compile(
+          '<select ng-model="robot">' +
+            '<option value="">--select--</option>' +
+            '<option value="x">robot x</option>' +
+            '<option value="y">robot y</option>' +
+            '</select>'
+        );
 
         expect(element).toEqualSelect([unknownValue('other')], '', 'x', 'y');
 
@@ -548,45 +550,48 @@ describe('select', function() {
         expect(element).toEqualSelect([''], 'x', 'y');
       });
 
-
-      it('should support option without a value attribute', function() {
-        compile('<select ng-model="robot">' +
-                  '<option>--select--</option>' +
-                  '<option value="x">robot x</option>' +
-                  '<option value="y">robot y</option>' +
-                '</select>');
+      it('should support option without a value attribute', function () {
+        compile(
+          '<select ng-model="robot">' +
+            '<option>--select--</option>' +
+            '<option value="x">robot x</option>' +
+            '<option value="y">robot y</option>' +
+            '</select>'
+        );
         expect(element).toEqualSelect(['? undefined:undefined ?'], '--select--', 'x', 'y');
       });
 
-
-      it('should support option without a value with other HTML attributes', function() {
-        compile('<select ng-model="robot">' +
-                  '<option data-foo="bar">--select--</option>' +
-                  '<option value="x">robot x</option>' +
-                  '<option value="y">robot y</option>' +
-                '</select>');
+      it('should support option without a value with other HTML attributes', function () {
+        compile(
+          '<select ng-model="robot">' +
+            '<option data-foo="bar">--select--</option>' +
+            '<option value="x">robot x</option>' +
+            '<option value="y">robot y</option>' +
+            '</select>'
+        );
         expect(element).toEqualSelect(['? undefined:undefined ?'], '--select--', 'x', 'y');
       });
 
-
-      describe('interactions with repeated options', function() {
-
-        it('should select empty option when model is undefined', function() {
+      describe('interactions with repeated options', function () {
+        it('should select empty option when model is undefined', function () {
           scope.robots = ['c3p0', 'r2d2'];
-          compile('<select ng-model="robot">' +
-                    '<option value="">--select--</option>' +
-                    '<option ng-repeat="r in robots">{{r}}</option>' +
-                  '</select>');
+          compile(
+            '<select ng-model="robot">' +
+              '<option value="">--select--</option>' +
+              '<option ng-repeat="r in robots">{{r}}</option>' +
+              '</select>'
+          );
           expect(element).toEqualSelect([''], 'c3p0', 'r2d2');
         });
 
-
-        it('should set model to empty string when selected', function() {
+        it('should set model to empty string when selected', function () {
           scope.robots = ['c3p0', 'r2d2'];
-          compile('<select ng-model="robot">' +
-                    '<option value="">--select--</option>' +
-                    '<option ng-repeat="r in robots">{{r}}</option>' +
-                  '</select>');
+          compile(
+            '<select ng-model="robot">' +
+              '<option value="">--select--</option>' +
+              '<option ng-repeat="r in robots">{{r}}</option>' +
+              '</select>'
+          );
 
           browserTrigger(element.find('option').eq(1));
           expect(element).toEqualSelect('', ['c3p0'], 'r2d2');
@@ -597,17 +602,18 @@ describe('select', function() {
           expect(scope.robot).toBe('');
         });
 
-
-        it('should not break if both the select and repeater models change at once', function() {
+        it('should not break if both the select and repeater models change at once', function () {
           scope.robots = ['c3p0', 'r2d2'];
           scope.robot = 'c3p0';
-          compile('<select ng-model="robot">' +
-                    '<option value="">--select--</option>' +
-                    '<option ng-repeat="r in robots">{{r}}</option>' +
-                  '</select>');
+          compile(
+            '<select ng-model="robot">' +
+              '<option value="">--select--</option>' +
+              '<option ng-repeat="r in robots">{{r}}</option>' +
+              '</select>'
+          );
           expect(element).toEqualSelect('', ['c3p0'], 'r2d2');
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robots = ['wallee'];
             scope.robot = '';
           });
@@ -616,12 +622,14 @@ describe('select', function() {
         });
       });
 
-      it('should add/remove the "selected" attribute when the empty option is selected/unselected', function() {
-        compile('<select name="select" ng-model="selected">' +
-          '<option value="">--select--</option>' +
-          '<option value="a">A</option>' +
-          '<option value="b">B</option>' +
-        '</select>');
+      it('should add/remove the "selected" attribute when the empty option is selected/unselected', function () {
+        compile(
+          '<select name="select" ng-model="selected">' +
+            '<option value="">--select--</option>' +
+            '<option value="a">A</option>' +
+            '<option value="b">B</option>' +
+            '</select>'
+        );
 
         scope.$digest();
 
@@ -648,153 +656,143 @@ describe('select', function() {
         expect(options[1]).not.toBeMarkedAsSelected();
         expect(options[2]).not.toBeMarkedAsSelected();
       });
-
     });
 
-
-    describe('unknown option', function() {
-
-      it('should insert&select temporary unknown option when no options-model match', function() {
-        compile('<select ng-model="robot">' +
-                  '<option>c3p0</option>' +
-                  '<option>r2d2</option>' +
-                '</select>');
+    describe('unknown option', function () {
+      it('should insert&select temporary unknown option when no options-model match', function () {
+        compile('<select ng-model="robot"><option>c3p0</option><option>r2d2</option></select>');
 
         expect(element).toEqualSelect([unknownValue(undefined)], 'c3p0', 'r2d2');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.robot = 'r2d2';
         });
         expect(element).toEqualSelect('c3p0', ['r2d2']);
 
-
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.robot = 'wallee';
         });
         expect(element).toEqualSelect([unknownValue('wallee')], 'c3p0', 'r2d2');
       });
 
-
-      it('should NOT insert temporary unknown option when model is undefined and empty options ' +
-          'is present', function() {
-        compile('<select ng-model="robot">' +
-                  '<option value="">--select--</option>' +
-                  '<option>c3p0</option>' +
-                  '<option>r2d2</option>' +
-                '</select>');
+      it('should NOT insert temporary unknown option when model is undefined and empty options is present', function () {
+        compile(
+          '<select ng-model="robot">' +
+            '<option value="">--select--</option>' +
+            '<option>c3p0</option>' +
+            '<option>r2d2</option>' +
+            '</select>'
+        );
 
         expect(element).toEqualSelect([''], 'c3p0', 'r2d2');
         expect(scope.robot).toBeUndefined();
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.robot = null;
         });
         expect(element).toEqualSelect([''], 'c3p0', 'r2d2');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.robot = 'r2d2';
         });
         expect(element).toEqualSelect('', 'c3p0', ['r2d2']);
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           delete scope.robot;
         });
         expect(element).toEqualSelect([''], 'c3p0', 'r2d2');
       });
 
+      it(
+        'should insert&select temporary unknown option when no options-model match, empty ' +
+          'option is present and model is defined',
+        function () {
+          scope.robot = 'wallee';
+          compile(
+            '<select ng-model="robot">' +
+              '<option value="">--select--</option>' +
+              '<option>c3p0</option>' +
+              '<option>r2d2</option>' +
+              '</select>'
+          );
 
-      it('should insert&select temporary unknown option when no options-model match, empty ' +
-          'option is present and model is defined', function() {
-        scope.robot = 'wallee';
-        compile('<select ng-model="robot">' +
-                  '<option value="">--select--</option>' +
-                  '<option>c3p0</option>' +
-                  '<option>r2d2</option>' +
-                '</select>');
+          expect(element).toEqualSelect([unknownValue('wallee')], '', 'c3p0', 'r2d2');
 
-        expect(element).toEqualSelect([unknownValue('wallee')], '', 'c3p0', 'r2d2');
+          scope.$apply(function () {
+            scope.robot = 'r2d2';
+          });
+          expect(element).toEqualSelect('', 'c3p0', ['r2d2']);
+        }
+      );
 
-        scope.$apply(function() {
-          scope.robot = 'r2d2';
-        });
-        expect(element).toEqualSelect('', 'c3p0', ['r2d2']);
-      });
-
-
-      describe('interactions with repeated options', function() {
-
-        it('should work with repeated options', function() {
-          compile('<select ng-model="robot">' +
-                    '<option ng-repeat="r in robots">{{r}}</option>' +
-                  '</select>');
+      describe('interactions with repeated options', function () {
+        it('should work with repeated options', function () {
+          compile('<select ng-model="robot"><option ng-repeat="r in robots">{{r}}</option></select>');
           expect(element).toEqualSelect([unknownValue(undefined)]);
           expect(scope.robot).toBeUndefined();
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robot = 'r2d2';
           });
           expect(element).toEqualSelect([unknownValue('r2d2')]);
           expect(scope.robot).toBe('r2d2');
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robots = ['c3p0', 'r2d2'];
           });
           expect(element).toEqualSelect('c3p0', ['r2d2']);
           expect(scope.robot).toBe('r2d2');
         });
 
-
-        it('should work with empty option and repeated options', function() {
-          compile('<select ng-model="robot">' +
-                    '<option value="">--select--</option>' +
-                    '<option ng-repeat="r in robots">{{r}}</option>' +
-                  '</select>');
+        it('should work with empty option and repeated options', function () {
+          compile(
+            '<select ng-model="robot">' +
+              '<option value="">--select--</option>' +
+              '<option ng-repeat="r in robots">{{r}}</option>' +
+              '</select>'
+          );
           expect(element).toEqualSelect(['']);
           expect(scope.robot).toBeUndefined();
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robot = 'r2d2';
           });
           expect(element).toEqualSelect([unknownValue('r2d2')], '');
           expect(scope.robot).toBe('r2d2');
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robots = ['c3p0', 'r2d2'];
           });
           expect(element).toEqualSelect('', 'c3p0', ['r2d2']);
           expect(scope.robot).toBe('r2d2');
         });
 
-
-        it('should insert unknown element when repeater shrinks and selected option is unavailable',
-            function() {
+        it('should insert unknown element when repeater shrinks and selected option is unavailable', function () {
           scope.robots = ['c3p0', 'r2d2'];
           scope.robot = 'r2d2';
-          compile('<select ng-model="robot">' +
-                    '<option ng-repeat="r in robots">{{r}}</option>' +
-                  '</select>');
+          compile('<select ng-model="robot"><option ng-repeat="r in robots">{{r}}</option></select>');
           expect(element).toEqualSelect('c3p0', ['r2d2']);
           expect(scope.robot).toBe('r2d2');
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robots.pop();
           });
           expect(element).toEqualSelect([unknownValue(null)], 'c3p0');
           expect(scope.robot).toBe(null);
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robots.unshift('r2d2');
           });
           expect(element).toEqualSelect([unknownValue(null)], 'r2d2', 'c3p0');
           expect(scope.robot).toBe(null);
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             scope.robot = 'r2d2';
           });
 
           expect(element).toEqualSelect(['r2d2'], 'c3p0');
 
-          scope.$apply(function() {
+          scope.$apply(function () {
             delete scope.robots;
           });
 
@@ -802,17 +800,16 @@ describe('select', function() {
           expect(scope.robot).toBe(null);
         });
       });
-
     });
 
-
-    it('should not break when adding options via a directive with `replace: true` '
-        + 'and a structural directive in its template',
-      function() {
+    it(
+      'should not break when adding options via a directive with `replace: true` ' +
+        'and a structural directive in its template',
+      function () {
         scope.options = [
-          {value: '1', label: 'Option 1'},
-          {value: '2', label: 'Option 2'},
-          {value: '3', label: 'Option 3'}
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+          { value: '3', label: 'Option 3' }
         ];
         compile('<select ng-model="mySelect"><option my-options="options"></option></select>');
 
@@ -820,12 +817,8 @@ describe('select', function() {
       }
     );
 
-
-    it('should not throw when removing the element and all its children', function() {
-      var template =
-        '<select ng-model="mySelect" ng-if="visible">' +
-          '<option value="">--- Select ---</option>' +
-        '</select>';
+    it('should not throw when removing the element and all its children', function () {
+      var template = '<select ng-model="mySelect" ng-if="visible"><option value="">--- Select ---</option></select>';
       scope.visible = true;
 
       compile(template);
@@ -835,28 +828,26 @@ describe('select', function() {
     });
   });
 
-  describe('selectController', function() {
+  describe('selectController', function () {
+    it('should expose .$hasEmptyOption(), .$isEmptyOptionSelected(), and .$isUnknownOptionSelected()', function () {
+      compile('<select ng-model="mySelect"></select>');
 
-    it('should expose .$hasEmptyOption(), .$isEmptyOptionSelected(), ' +
-      'and .$isUnknownOptionSelected()', function() {
-        compile('<select ng-model="mySelect"></select>');
+      var selectCtrl = element.controller('select');
 
-        var selectCtrl = element.controller('select');
+      expect(selectCtrl.$hasEmptyOption).toEqual(jasmine.any(Function));
+      expect(selectCtrl.$isEmptyOptionSelected).toEqual(jasmine.any(Function));
+      expect(selectCtrl.$isUnknownOptionSelected).toEqual(jasmine.any(Function));
+    });
 
-        expect(selectCtrl.$hasEmptyOption).toEqual(jasmine.any(Function));
-        expect(selectCtrl.$isEmptyOptionSelected).toEqual(jasmine.any(Function));
-        expect(selectCtrl.$isUnknownOptionSelected).toEqual(jasmine.any(Function));
-      }
-    );
-
-
-    it('should reflect the status of empty and unknown option', function() {
+    it('should reflect the status of empty and unknown option', function () {
       scope.dynamicOptions = [];
       scope.selected = '';
-      compile('<select ng-model="selected">' +
-                '<option ng-if="empty" value="">--no selection--</option>' +
-                '<option ng-repeat="opt in dynamicOptions" value="{{opt.val}}">{{opt.display}}</option>' +
-              '</select>');
+      compile(
+        '<select ng-model="selected">' +
+          '<option ng-if="empty" value="">--no selection--</option>' +
+          '<option ng-repeat="opt in dynamicOptions" value="{{opt.val}}">{{opt.display}}</option>' +
+          '</select>'
+      );
 
       var selectCtrl = element.controller('select');
 
@@ -936,23 +927,21 @@ describe('select', function() {
       expect(selectCtrl.$isEmptyOptionSelected()).toBe(true);
       expect(selectCtrl.$isUnknownOptionSelected()).toBe(false);
     });
-
   });
 
-  describe('selectController.hasOption', function() {
-
-    describe('flat options', function() {
-      it('should return false for options shifted via ngRepeat', function() {
+  describe('selectController.hasOption', function () {
+    describe('flat options', function () {
+      it('should return false for options shifted via ngRepeat', function () {
         scope.robots = [
-          {value: 1, label: 'c3p0'},
-          {value: 2, label: 'r2d2'}
+          { value: 1, label: 'c3p0' },
+          { value: 2, label: 'r2d2' }
         ];
 
         compileRepeatedOptions();
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.robots.shift();
         });
 
@@ -960,18 +949,17 @@ describe('select', function() {
         expect(selectCtrl.hasOption('2')).toBe(true);
       });
 
-
-      it('should return false for options popped via ngRepeat', function() {
+      it('should return false for options popped via ngRepeat', function () {
         scope.robots = [
-          {value: 1, label: 'c3p0'},
-          {value: 2, label: 'r2d2'}
+          { value: 1, label: 'c3p0' },
+          { value: 2, label: 'r2d2' }
         ];
 
         compileRepeatedOptions();
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.robots.pop();
         });
 
@@ -979,61 +967,48 @@ describe('select', function() {
         expect(selectCtrl.hasOption('2')).toBe(false);
       });
 
-
-      it('should return true for options added via ngRepeat', function() {
-        scope.robots = [
-          {value: 2, label: 'r2d2'}
-        ];
+      it('should return true for options added via ngRepeat', function () {
+        scope.robots = [{ value: 2, label: 'r2d2' }];
 
         compileRepeatedOptions();
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
-          scope.robots.unshift({value: 1, label: 'c3p0'});
+        scope.$apply(function () {
+          scope.robots.unshift({ value: 1, label: 'c3p0' });
         });
 
         expect(selectCtrl.hasOption('1')).toBe(true);
         expect(selectCtrl.hasOption('2')).toBe(true);
       });
 
-
-      it('should keep all the options when changing the model', function() {
-
-        compile('<select ng-model="mySelect"><option ng-repeat="o in [\'A\',\'B\',\'C\']">{{o}}</option></select>');
+      it('should keep all the options when changing the model', function () {
+        compile("<select ng-model=\"mySelect\"><option ng-repeat=\"o in ['A','B','C']\">{{o}}</option></select>");
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.mySelect = 'C';
         });
 
         expect(selectCtrl.hasOption('A')).toBe(true);
         expect(selectCtrl.hasOption('B')).toBe(true);
         expect(selectCtrl.hasOption('C')).toBe(true);
-        expect(element).toEqualSelectWithOptions({'': ['A', 'B', ['C']]});
+        expect(element).toEqualSelectWithOptions({ '': ['A', 'B', ['C']] });
       });
     });
 
-
-    describe('grouped options', function() {
-
-      it('should be able to detect when elements move from a previous group', function() {
-        scope.values = [{name: 'A'}];
+    describe('grouped options', function () {
+      it('should be able to detect when elements move from a previous group', function () {
+        scope.values = [{ name: 'A' }];
         scope.groups = [
           {
             name: 'first',
-            values: [
-              {name: 'B'},
-              {name: 'C'},
-              {name: 'D'}
-            ]
+            values: [{ name: 'B' }, { name: 'C' }, { name: 'D' }]
           },
           {
             name: 'second',
-            values: [
-              {name: 'E'}
-            ]
+            values: [{ name: 'E' }]
           }
         ];
 
@@ -1041,7 +1016,7 @@ describe('select', function() {
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           var itemD = scope.groups[0].values.pop();
           scope.groups[1].values.unshift(itemD);
           scope.values.shift();
@@ -1052,26 +1027,19 @@ describe('select', function() {
         expect(selectCtrl.hasOption('C')).toBe(true);
         expect(selectCtrl.hasOption('D')).toBe(true);
         expect(selectCtrl.hasOption('E')).toBe(true);
-        expect(element).toEqualSelectWithOptions({'': [['']], 'first':['B', 'C'], 'second': ['D', 'E']});
+        expect(element).toEqualSelectWithOptions({ '': [['']], first: ['B', 'C'], second: ['D', 'E'] });
       });
 
-
-      it('should be able to detect when elements move from a following group', function() {
-        scope.values = [{name: 'A'}];
+      it('should be able to detect when elements move from a following group', function () {
+        scope.values = [{ name: 'A' }];
         scope.groups = [
           {
             name: 'first',
-            values: [
-              {name: 'B'},
-              {name: 'C'}
-            ]
+            values: [{ name: 'B' }, { name: 'C' }]
           },
           {
             name: 'second',
-            values: [
-              {name: 'D'},
-              {name: 'E'}
-            ]
+            values: [{ name: 'D' }, { name: 'E' }]
           }
         ];
 
@@ -1079,7 +1047,7 @@ describe('select', function() {
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           var itemD = scope.groups[1].values.shift();
           scope.groups[0].values.push(itemD);
           scope.values.shift();
@@ -1089,27 +1057,19 @@ describe('select', function() {
         expect(selectCtrl.hasOption('C')).toBe(true);
         expect(selectCtrl.hasOption('D')).toBe(true);
         expect(selectCtrl.hasOption('E')).toBe(true);
-        expect(element).toEqualSelectWithOptions({'': [['']], 'first':['B', 'C', 'D'], 'second': ['E']});
+        expect(element).toEqualSelectWithOptions({ '': [['']], first: ['B', 'C', 'D'], second: ['E'] });
       });
 
-
-      it('should be able to detect when an element is replaced with an element from a previous group', function() {
-        scope.values = [{name: 'A'}];
+      it('should be able to detect when an element is replaced with an element from a previous group', function () {
+        scope.values = [{ name: 'A' }];
         scope.groups = [
           {
             name: 'first',
-            values: [
-              {name: 'B'},
-              {name: 'C'},
-              {name: 'D'}
-            ]
+            values: [{ name: 'B' }, { name: 'C' }, { name: 'D' }]
           },
           {
             name: 'second',
-            values: [
-              {name: 'E'},
-              {name: 'F'}
-            ]
+            values: [{ name: 'E' }, { name: 'F' }]
           }
         ];
 
@@ -1117,7 +1077,7 @@ describe('select', function() {
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           var itemD = scope.groups[0].values.pop();
           scope.groups[1].values.unshift(itemD);
           scope.groups[1].values.pop();
@@ -1128,26 +1088,19 @@ describe('select', function() {
         expect(selectCtrl.hasOption('D')).toBe(true);
         expect(selectCtrl.hasOption('E')).toBe(true);
         expect(selectCtrl.hasOption('F')).toBe(false);
-        expect(element).toEqualSelectWithOptions({'': [[''], 'A'], 'first':['B', 'C'], 'second': ['D', 'E']});
+        expect(element).toEqualSelectWithOptions({ '': [[''], 'A'], first: ['B', 'C'], second: ['D', 'E'] });
       });
 
-
-      it('should be able to detect when element is replaced with an element from a following group', function() {
-        scope.values = [{name: 'A'}];
+      it('should be able to detect when element is replaced with an element from a following group', function () {
+        scope.values = [{ name: 'A' }];
         scope.groups = [
           {
             name: 'first',
-            values: [
-              {name: 'B'},
-              {name: 'C'}
-            ]
+            values: [{ name: 'B' }, { name: 'C' }]
           },
           {
             name: 'second',
-            values: [
-              {name: 'D'},
-              {name: 'E'}
-            ]
+            values: [{ name: 'D' }, { name: 'E' }]
           }
         ];
 
@@ -1155,7 +1108,7 @@ describe('select', function() {
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.groups[0].values.pop();
           var itemD = scope.groups[1].values.shift();
           scope.groups[0].values.push(itemD);
@@ -1165,26 +1118,19 @@ describe('select', function() {
         expect(selectCtrl.hasOption('C')).toBe(false);
         expect(selectCtrl.hasOption('D')).toBe(true);
         expect(selectCtrl.hasOption('E')).toBe(true);
-        expect(element).toEqualSelectWithOptions({'': [[''], 'A'], 'first':['B', 'D'], 'second': ['E']});
+        expect(element).toEqualSelectWithOptions({ '': [[''], 'A'], first: ['B', 'D'], second: ['E'] });
       });
 
-
-      it('should be able to detect when an element is removed', function() {
-        scope.values = [{name: 'A'}];
+      it('should be able to detect when an element is removed', function () {
+        scope.values = [{ name: 'A' }];
         scope.groups = [
           {
             name: 'first',
-            values: [
-              {name: 'B'},
-              {name: 'C'}
-            ]
+            values: [{ name: 'B' }, { name: 'C' }]
           },
           {
             name: 'second',
-            values: [
-              {name: 'D'},
-              {name: 'E'}
-            ]
+            values: [{ name: 'D' }, { name: 'E' }]
           }
         ];
 
@@ -1192,7 +1138,7 @@ describe('select', function() {
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.groups[1].values.shift();
         });
         expect(selectCtrl.hasOption('A')).toBe(true);
@@ -1200,26 +1146,19 @@ describe('select', function() {
         expect(selectCtrl.hasOption('C')).toBe(true);
         expect(selectCtrl.hasOption('D')).toBe(false);
         expect(selectCtrl.hasOption('E')).toBe(true);
-        expect(element).toEqualSelectWithOptions({'': [[''], 'A'], 'first':['B', 'C'], 'second': ['E']});
+        expect(element).toEqualSelectWithOptions({ '': [[''], 'A'], first: ['B', 'C'], second: ['E'] });
       });
 
-
-      it('should be able to detect when a group is removed', function() {
-        scope.values = [{name: 'A'}];
+      it('should be able to detect when a group is removed', function () {
+        scope.values = [{ name: 'A' }];
         scope.groups = [
           {
             name: 'first',
-            values: [
-              {name: 'B'},
-              {name: 'C'}
-            ]
+            values: [{ name: 'B' }, { name: 'C' }]
           },
           {
             name: 'second',
-            values: [
-              {name: 'D'},
-              {name: 'E'}
-            ]
+            values: [{ name: 'D' }, { name: 'E' }]
           }
         ];
 
@@ -1227,7 +1166,7 @@ describe('select', function() {
 
         var selectCtrl = element.controller('select');
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.groups.pop();
         });
         expect(selectCtrl.hasOption('A')).toBe(true);
@@ -1235,21 +1174,16 @@ describe('select', function() {
         expect(selectCtrl.hasOption('C')).toBe(true);
         expect(selectCtrl.hasOption('D')).toBe(false);
         expect(selectCtrl.hasOption('E')).toBe(false);
-        expect(element).toEqualSelectWithOptions({'': [[''], 'A'], 'first':['B', 'C']});
+        expect(element).toEqualSelectWithOptions({ '': [[''], 'A'], first: ['B', 'C'] });
       });
     });
   });
 
-  describe('select-multiple', function() {
+  describe('select-multiple', function () {
+    it('should support type="select-multiple"', function () {
+      compile('<select ng-model="selection" multiple><option>A</option><option>B</option></select>');
 
-    it('should support type="select-multiple"', function() {
-      compile(
-        '<select ng-model="selection" multiple>' +
-          '<option>A</option>' +
-          '<option>B</option>' +
-        '</select>');
-
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.selection = ['A'];
       });
 
@@ -1259,7 +1193,7 @@ describe('select', function() {
       expect(optionElements[0]).toBeMarkedAsSelected();
       expect(optionElements[1]).not.toBeMarkedAsSelected();
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.selection.push('B');
       });
 
@@ -1270,36 +1204,39 @@ describe('select', function() {
       expect(optionElements[1]).toBeMarkedAsSelected();
     });
 
-    it('should work with optgroups', function() {
-      compile('<select ng-model="selection" multiple>' +
-                '<optgroup label="group1">' +
-                  '<option>A</option>' +
-                  '<option>B</option>' +
-                '</optgroup>' +
-              '</select>');
+    it('should work with optgroups', function () {
+      compile(
+        '<select ng-model="selection" multiple>' +
+          '<optgroup label="group1">' +
+          '<option>A</option>' +
+          '<option>B</option>' +
+          '</optgroup>' +
+          '</select>'
+      );
 
       expect(element).toEqualSelect('A', 'B');
       expect(scope.selection).toBeUndefined();
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.selection = ['A'];
       });
       expect(element).toEqualSelect(['A'], 'B');
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.selection.push('B');
       });
       expect(element).toEqualSelect(['A'], ['B']);
     });
 
-    it('should require', function() {
+    it('should require', function () {
       compile(
         '<select name="select" ng-model="selection" multiple required>' +
           '<option>A</option>' +
           '<option>B</option>' +
-        '</select>');
+          '</select>'
+      );
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.selection = [];
       });
 
@@ -1307,7 +1244,7 @@ describe('select', function() {
       expect(element).toBeInvalid();
       expect(element).toBePristine();
 
-      scope.$apply(function() {
+      scope.$apply(function () {
         scope.selection = ['A'];
       });
 
@@ -1320,92 +1257,84 @@ describe('select', function() {
       expect(element).toBeDirty();
     });
 
-
-    describe('calls to $render', function() {
-
+    describe('calls to $render', function () {
       var ngModelCtrl;
 
-      beforeEach(function() {
+      beforeEach(function () {
         compile(
           '<select name="select" ng-model="selection" multiple>' +
-          '<option>A</option>' +
-          '<option>B</option>' +
-          '</select>');
+            '<option>A</option>' +
+            '<option>B</option>' +
+            '</select>'
+        );
 
         ngModelCtrl = element.controller('ngModel');
         spyOn(ngModelCtrl, '$render').and.callThrough();
       });
 
-
-      it('should call $render once when the reference to the viewValue changes', function() {
-        scope.$apply(function() {
+      it('should call $render once when the reference to the viewValue changes', function () {
+        scope.$apply(function () {
           scope.selection = ['A'];
         });
         expect(ngModelCtrl.$render).toHaveBeenCalledTimes(1);
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.selection = ['A', 'B'];
         });
         expect(ngModelCtrl.$render).toHaveBeenCalledTimes(2);
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.selection = [];
         });
         expect(ngModelCtrl.$render).toHaveBeenCalledTimes(3);
       });
 
-
-      it('should call $render once when the viewValue deep-changes', function() {
-        scope.$apply(function() {
+      it('should call $render once when the viewValue deep-changes', function () {
+        scope.$apply(function () {
           scope.selection = ['A'];
         });
         expect(ngModelCtrl.$render).toHaveBeenCalledTimes(1);
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.selection.push('B');
         });
         expect(ngModelCtrl.$render).toHaveBeenCalledTimes(2);
 
-        scope.$apply(function() {
+        scope.$apply(function () {
           scope.selection.length = 0;
         });
         expect(ngModelCtrl.$render).toHaveBeenCalledTimes(3);
       });
-
     });
-
   });
 
-
-  describe('option', function() {
-
-    it('should populate a missing value attribute with the option text', function() {
+  describe('option', function () {
+    it('should populate a missing value attribute with the option text', function () {
       compile('<select ng-model="x"><option selected>abc</option></select>');
       expect(element).toEqualSelect([unknownValue(undefined)], 'abc');
     });
 
-
-    it('should ignore the option text if the value attribute exists', function() {
+    it('should ignore the option text if the value attribute exists', function () {
       compile('<select ng-model="x"><option value="abc">xyz</option></select>');
       expect(element).toEqualSelect([unknownValue(undefined)], 'abc');
     });
 
-
-    it('should set value even if self closing HTML', function() {
+    it('should set value even if self closing HTML', function () {
       scope.x = 'hello';
       compile('<select ng-model="x"><option>hello</select>');
       expect(element).toEqualSelect(['hello']);
     });
 
-
-    it('should add options with interpolated value attributes', function() {
+    it('should add options with interpolated value attributes', function () {
       scope.option1 = 'option1';
       scope.option2 = 'option2';
 
-     compile('<select ng-model="selected">' +
-        '<option value="{{option1}}">Option 1</option>' +
-        '<option value="{{option2}}">Option 2</option>' +
-      '</select>');
+      compile(
+        '<select ng-model="selected">' +
+          '<option value="{{option1}}">Option 1</option>' +
+          '<option value="{{option2}}">Option 2</option>' +
+          '</select>'
+      );
 
       scope.$digest();
       expect(scope.selected).toBeUndefined();
@@ -1419,15 +1348,16 @@ describe('select', function() {
       expect(element.find('option').eq(1).text()).toBe('Option 2');
     });
 
-
-    it('should update the option when the interpolated value attribute changes', function() {
+    it('should update the option when the interpolated value attribute changes', function () {
       scope.option1 = 'option1';
       scope.option2 = '';
 
-      compile('<select ng-model="selected">' +
-        '<option value="{{option1}}">Option 1</option>' +
-        '<option value="{{option2}}">Option 2</option>' +
-      '</select>');
+      compile(
+        '<select ng-model="selected">' +
+          '<option value="{{option1}}">Option 1</option>' +
+          '<option value="{{option2}}">Option 2</option>' +
+          '</select>'
+      );
 
       var selectCtrl = element.controller('select');
       spyOn(selectCtrl, 'removeOption').and.callThrough();
@@ -1446,15 +1376,11 @@ describe('select', function() {
       expect(element.find('option').eq(1).text()).toBe('Option 2');
     });
 
-
-    it('should add options with interpolated text', function() {
+    it('should add options with interpolated text', function () {
       scope.option1 = 'Option 1';
       scope.option2 = 'Option 2';
 
-      compile('<select ng-model="selected">' +
-        '<option>{{option1}}</option>' +
-        '<option>{{option2}}</option>' +
-      '</select>');
+      compile('<select ng-model="selected"><option>{{option1}}</option><option>{{option2}}</option></select>');
 
       scope.$digest();
       expect(scope.selected).toBeUndefined();
@@ -1468,15 +1394,11 @@ describe('select', function() {
       expect(element.find('option').eq(1).text()).toBe('Option 2');
     });
 
-
-    it('should update options when their interpolated text changes', function() {
+    it('should update options when their interpolated text changes', function () {
       scope.option1 = 'Option 1';
       scope.option2 = '';
 
-      compile('<select ng-model="selected">' +
-        '<option>{{option1}}</option>' +
-        '<option>{{option2}}</option>' +
-      '</select>');
+      compile('<select ng-model="selected"><option>{{option1}}</option><option>{{option2}}</option></select>');
 
       var selectCtrl = element.controller('select');
       spyOn(selectCtrl, 'removeOption').and.callThrough();
@@ -1495,13 +1417,13 @@ describe('select', function() {
       expect(element.find('option').eq(1).text()).toBe('Option 2 Changed');
     });
 
-
-    it('should not blow up when option directive is found inside of a datalist',
-        inject(function($compile, $rootScope) {
-      var element = $compile('<div>' +
-                               '<datalist><option>some val</option></datalist>' +
-                               '<span>{{foo}}</span>' +
-                             '</div>')($rootScope);
+    it('should not blow up when option directive is found inside of a datalist', inject(function (
+      $compile,
+      $rootScope
+    ) {
+      var element = $compile('<div><datalist><option>some val</option></datalist><span>{{foo}}</span></div>')(
+        $rootScope
+      );
 
       $rootScope.foo = 'success';
       $rootScope.$digest();
@@ -1509,36 +1431,28 @@ describe('select', function() {
       dealoc(element);
     }));
 
-    it('should throw an exception if an option value interpolates to "hasOwnProperty"', function() {
+    it('should throw an exception if an option value interpolates to "hasOwnProperty"', function () {
       scope.hasOwnPropertyOption = 'hasOwnProperty';
-      expect(function() {
-        compile('<select ng-model="x">' +
-                  '<option>{{hasOwnPropertyOption}}</option>' +
-                '</select>');
-      }).toThrowMinErr('ng','badname', 'hasOwnProperty is not a valid "option value" name');
+      expect(function () {
+        compile('<select ng-model="x"><option>{{hasOwnPropertyOption}}</option></select>');
+      }).toThrowMinErr('ng', 'badname', 'hasOwnProperty is not a valid "option value" name');
     });
 
-    describe('with ngValue (and non-primitive values)', function() {
-
-      they('should set the option attribute and select it for value $prop', [
-          'string',
-          undefined,
-          1,
-          true,
-          null,
-          {prop: 'value'},
-          ['a'],
-          NaN
-        ], function(prop) {
-
+    describe('with ngValue (and non-primitive values)', function () {
+      they(
+        'should set the option attribute and select it for value $prop',
+        ['string', undefined, 1, true, null, { prop: 'value' }, ['a'], NaN],
+        function (prop) {
           scope.option1 = prop;
           scope.option2 = 'red';
           scope.selected = 'NOMATCH';
 
-          compile('<select ng-model="selected">' +
-            '<option ng-value="option1">{{option1}}</option>' +
-            '<option ng-value="option2">{{option2}}</option>' +
-          '</select>');
+          compile(
+            '<select ng-model="selected">' +
+              '<option ng-value="option1">{{option1}}</option>' +
+              '<option ng-value="option2">{{option2}}</option>' +
+              '</select>'
+          );
 
           scope.$digest();
           expect(element.find('option').eq(0).val()).toBe('? string:NOMATCH ?');
@@ -1560,27 +1474,23 @@ describe('select', function() {
           } else {
             expect(scope.selected).toBe(prop);
           }
-      });
+        }
+      );
 
-
-      they('should update the option attribute and select it for value $prop', [
-          'string',
-          undefined,
-          1,
-          true,
-          null,
-          {prop: 'value'},
-          ['a'],
-          NaN
-        ], function(prop) {
+      they(
+        'should update the option attribute and select it for value $prop',
+        ['string', undefined, 1, true, null, { prop: 'value' }, ['a'], NaN],
+        function (prop) {
           scope.option = prop;
           scope.option2 = 'red';
           scope.selected = 'NOMATCH';
 
-          compile('<select ng-model="selected">' +
-            '<option ng-value="option">{{option}}</option>' +
-            '<option ng-value="option2">{{option2}}</option>' +
-          '</select>');
+          compile(
+            '<select ng-model="selected">' +
+              '<option ng-value="option">{{option}}</option>' +
+              '<option ng-value="option2">{{option2}}</option>' +
+              '</select>'
+          );
 
           var selectController = element.controller('select');
           spyOn(selectController, 'removeOption').and.callThrough();
@@ -1620,18 +1530,21 @@ describe('select', function() {
 
           expect(element[0].selectedIndex).toBe(0);
           expect(element.find('option').eq(0).val()).toBe('string:UPDATEDVALUE');
-      });
+        }
+      );
 
+      it('should interact with custom attribute $observe and $set calls', function () {
+        var log = [],
+          optionAttr;
 
-      it('should interact with custom attribute $observe and $set calls', function() {
-        var log = [], optionAttr;
-
-        compile('<select ng-model="selected">' +
-          '<option expose-attributes ng-value="option">{{option}}</option>' +
-        '</select>');
+        compile(
+          '<select ng-model="selected">' +
+            '<option expose-attributes ng-value="option">{{option}}</option>' +
+            '</select>'
+        );
 
         optionAttr = optionAttributesList[0];
-        optionAttr.$observe('value', function(newVal) {
+        optionAttr.$observe('value', function (newVal) {
           log.push(newVal);
         });
 
@@ -1646,8 +1559,7 @@ describe('select', function() {
         expect(element.find('option').eq(1).val()).toBe('string:update');
       });
 
-
-      it('should ignore the option text / value attribute if the ngValue attribute exists', function() {
+      it('should ignore the option text / value attribute if the ngValue attribute exists', function () {
         scope.ngvalue = 'abc';
         scope.value = 'def';
         scope.textvalue = 'ghi';
@@ -1656,8 +1568,7 @@ describe('select', function() {
         expect(element).toEqualSelect([unknownValue(undefined)], 'string:abc');
       });
 
-
-      it('should ignore option text with multiple interpolations if the ngValue attribute exists', function() {
+      it('should ignore option text with multiple interpolations if the ngValue attribute exists', function () {
         scope.ngvalue = 'abc';
         scope.textvalue = 'def';
         scope.textvalue2 = 'ghi';
@@ -1666,38 +1577,38 @@ describe('select', function() {
         expect(element).toEqualSelect([unknownValue(undefined)], 'string:abc');
       });
 
-
-      it('should select the first option if it is `undefined`', function() {
+      it('should select the first option if it is `undefined`', function () {
         scope.selected = undefined;
 
         scope.option1 = undefined;
         scope.option2 = 'red';
 
-        compile('<select ng-model="selected">' +
-          '<option ng-value="option1">{{option1}}</option>' +
-          '<option ng-value="option2">{{option2}}</option>' +
-        '</select>');
+        compile(
+          '<select ng-model="selected">' +
+            '<option ng-value="option1">{{option1}}</option>' +
+            '<option ng-value="option2">{{option2}}</option>' +
+            '</select>'
+        );
 
         expect(element).toEqualSelect(['undefined:undefined'], 'string:red');
       });
 
+      describe('and select[multiple]', function () {
+        it('should allow multiple selection', function () {
+          scope.options = {
+            a: 'string',
+            b: undefined,
+            c: 1,
+            d: true,
+            e: null,
+            f: { prop: 'value' },
+            g: ['a'],
+            h: NaN
+          };
+          scope.selected = [];
 
-      describe('and select[multiple]', function() {
-
-        it('should allow multiple selection', function() {
-            scope.options = {
-              a: 'string',
-              b: undefined,
-              c: 1,
-              d: true,
-              e: null,
-              f: {prop: 'value'},
-              g: ['a'],
-              h: NaN
-            };
-            scope.selected = [];
-
-            compile('<select multiple ng-model="selected">' +
+          compile(
+            '<select multiple ng-model="selected">' +
               '<option ng-value="options.a">{{options.a}}</option>' +
               '<option ng-value="options.b">{{options.b}}</option>' +
               '<option ng-value="options.c">{{options.c}}</option>' +
@@ -1706,65 +1617,66 @@ describe('select', function() {
               '<option ng-value="options.f">{{options.f}}</option>' +
               '<option ng-value="options.g">{{options.g}}</option>' +
               '<option ng-value="options.h">{{options.h}}</option>' +
-            '</select>');
+              '</select>'
+          );
 
-            scope.$digest();
-            expect(element).toEqualSelect(
-              'string:string',
-              'undefined:undefined',
-              'number:1',
-              'boolean:true',
-              'object:null',
-              'object:3',
-              'object:4',
-              'number:NaN'
-            );
+          scope.$digest();
+          expect(element).toEqualSelect(
+            'string:string',
+            'undefined:undefined',
+            'number:1',
+            'boolean:true',
+            'object:null',
+            'object:3',
+            'object:4',
+            'number:NaN'
+          );
 
-            scope.selected = ['string', 1];
-            scope.$digest();
+          scope.selected = ['string', 1];
+          scope.$digest();
 
-            expect(element.find('option').eq(0).prop('selected')).toBe(true);
-            expect(element.find('option').eq(2).prop('selected')).toBe(true);
+          expect(element.find('option').eq(0).prop('selected')).toBe(true);
+          expect(element.find('option').eq(2).prop('selected')).toBe(true);
 
-            browserTrigger(element.find('option').eq(1));
-            expect(scope.selected).toEqual([undefined]);
+          browserTrigger(element.find('option').eq(1));
+          expect(scope.selected).toEqual([undefined]);
 
-            //reset
-            scope.selected = [];
-            scope.$digest();
+          //reset
+          scope.selected = [];
+          scope.$digest();
 
-            forEach(element.find('option'), function(option) {
-              // browserTrigger can't produce click + ctrl, so set selection manually
-              jqLite(option).prop('selected', true);
-            });
+          forEach(element.find('option'), function (option) {
+            // browserTrigger can't produce click + ctrl, so set selection manually
+            jqLite(option).prop('selected', true);
+          });
 
-            browserTrigger(element, 'change');
+          browserTrigger(element, 'change');
 
-            var arrayVal = ['a'];
-            arrayVal.$$hashKey = 'object:4';
+          var arrayVal = ['a'];
+          arrayVal.$$hashKey = 'object:4';
 
-            expect(scope.selected).toEqual([
-              'string',
-              undefined,
-              1,
-              true,
-              null,
-              {prop: 'value', $$hashKey: 'object:3'},
-              arrayVal,
-              NaN
-            ]);
+          expect(scope.selected).toEqual([
+            'string',
+            undefined,
+            1,
+            true,
+            null,
+            { prop: 'value', $$hashKey: 'object:3' },
+            arrayVal,
+            NaN
+          ]);
         });
-
       });
-
     });
 
-    describe('updating the model and selection when option elements are manipulated', function() {
-
-      they('should set the model to null when the currently selected option with $prop is removed',
-        ['ngValue', 'interpolatedValue', 'interpolatedText'], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+    describe('updating the model and selection when option elements are manipulated', function () {
+      they(
+        'should set the model to null when the currently selected option with $prop is removed',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B, C];
           scope.obj = {};
@@ -1783,11 +1695,7 @@ describe('select', function() {
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(4);
@@ -1804,17 +1712,16 @@ describe('select', function() {
           expect(optionElements.length).toEqual(3);
           expect(scope.obj.value).toBe(null);
           expect(element.val()).toBe('? object:null ?');
-      });
+        }
+      );
 
-
-      they('should set the model to null when the currently selected option with $prop changes its value',
-        [
-          'ngValue',
-          'interpolatedValue',
-          'interpolatedText'
-        ], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      they(
+        'should set the model to null when the currently selected option with $prop changes its value',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B, C];
           scope.obj = {};
@@ -1833,11 +1740,7 @@ describe('select', function() {
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(4);
@@ -1854,17 +1757,16 @@ describe('select', function() {
           expect(optionElements.length).toEqual(4);
           expect(scope.obj.value).toBe(null);
           expect(element.val()).toBe('? string:A ?');
-      });
+        }
+      );
 
-
-      they('should set the model to null when the currently selected option with $prop is disabled',
-        [
-          'ngValue',
-          'interpolatedValue',
-          'interpolatedText'
-        ], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      they(
+        'should set the model to null when the currently selected option with $prop is disabled',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B, C];
           scope.obj = {};
@@ -1873,21 +1775,20 @@ describe('select', function() {
 
           switch (prop) {
             case 'ngValue':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
               break;
             case 'interpolatedValue':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
               break;
             case 'interpolatedText':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(4);
@@ -1904,17 +1805,16 @@ describe('select', function() {
           expect(optionElements.length).toEqual(4);
           expect(scope.obj.value).toBe(null);
           expect(element.val()).toBe('? object:null ?');
-      });
+        }
+      );
 
-
-      they('should select a disabled option with $prop when the model is set to the matching value',
-        [
-          'ngValue',
-          'interpolatedValue',
-          'interpolatedText'
-        ], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      they(
+        'should select a disabled option with $prop when the model is set to the matching value',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B, C];
           scope.obj = {};
@@ -1923,21 +1823,20 @@ describe('select', function() {
 
           switch (prop) {
             case 'ngValue':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
               break;
             case 'interpolatedValue':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
               break;
             case 'interpolatedText':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(4);
@@ -1960,17 +1859,16 @@ describe('select', function() {
           // https://bugs.jquery.com/ticket/13097
           expect(element[0].value).toBe(prop === 'ngValue' ? 'string:B' : 'B');
           expect(optionElements.eq(1).prop('selected')).toBe(true);
-      });
+        }
+      );
 
-
-      they('should ignore an option with $prop that becomes enabled and does not match the model',
-        [
-          'ngValue',
-          'interpolatedValue',
-          'interpolatedText'
-        ], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      they(
+        'should ignore an option with $prop that becomes enabled and does not match the model',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B, C];
           scope.obj = {};
@@ -1979,21 +1877,20 @@ describe('select', function() {
 
           switch (prop) {
             case 'ngValue':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
               break;
             case 'interpolatedValue':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
               break;
             case 'interpolatedText':
-              optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
+              optionString =
+                '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(4);
@@ -2018,17 +1915,16 @@ describe('select', function() {
           expect(optionElements.length).toEqual(4);
           expect(scope.obj.value).toBe(null);
           expect(element.val()).toBe('? object:null ?');
-      });
+        }
+      );
 
-
-      they('should select a newly added option with $prop when it matches the current model',
-        [
-          'ngValue',
-          'interpolatedValue',
-          'interpolatedText'
-        ], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      they(
+        'should select a newly added option with $prop when it matches the current model',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B];
           scope.obj = {
@@ -2049,11 +1945,7 @@ describe('select', function() {
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(3);
@@ -2065,18 +1957,17 @@ describe('select', function() {
           expect(element.val()).toBe(prop === 'ngValue' ? 'object:3' : 'C');
           expect(optionElements.length).toEqual(3);
           expect(optionElements[2].selected).toBe(true);
-          expect(scope.obj.value).toEqual(prop === 'ngValue' ? {name: 'C', $$hashKey: 'object:3'} : 'C');
-      });
+          expect(scope.obj.value).toEqual(prop === 'ngValue' ? { name: 'C', $$hashKey: 'object:3' } : 'C');
+        }
+      );
 
-
-      they('should keep selection and model when repeated options with track by are replaced with equal options',
-        [
-          'ngValue',
-          'interpolatedValue',
-          'interpolatedText'
-        ], function(prop) {
-
-          var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      they(
+        'should keep selection and model when repeated options with track by are replaced with equal options',
+        ['ngValue', 'interpolatedValue', 'interpolatedText'],
+        function (prop) {
+          var A = { name: 'A' },
+            B = { name: 'B' },
+            C = { name: 'C' };
 
           scope.options = [A, B, C];
           scope.obj = {
@@ -2087,21 +1978,19 @@ describe('select', function() {
 
           switch (prop) {
             case 'ngValue':
-              optionString = '<option ng-repeat="option in options track by option.name" ng-value="option.name">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options track by option.name" ng-value="option.name">{{$index}}</option>';
               break;
             case 'interpolatedValue':
-              optionString = '<option ng-repeat="option in options track by option.name" value="{{option.name}}">{{$index}}</option>';
+              optionString =
+                '<option ng-repeat="option in options track by option.name" value="{{option.name}}">{{$index}}</option>';
               break;
             case 'interpolatedText':
               optionString = '<option ng-repeat="option in options track by option.name">{{option.name}}</option>';
               break;
           }
 
-          compile(
-            '<select ng-model="obj.value">' +
-              optionString +
-            '</select>'
-          );
+          compile('<select ng-model="obj.value">' + optionString + '</select>');
 
           var optionElements = element.find('option');
           expect(optionElements.length).toEqual(3);
@@ -2115,11 +2004,7 @@ describe('select', function() {
           expect(optionElements[2].selected).toBe(true);
           expect(scope.obj.value).toBe('C');
 
-          scope.options = [
-            {name: 'A'},
-            {name: 'B'},
-            {name: 'C'}
-          ];
+          scope.options = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
           scope.$digest();
 
           optionElements = element.find('option');
@@ -2127,18 +2012,17 @@ describe('select', function() {
           expect(optionElements.length).toEqual(3);
           expect(optionElements[2].selected).toBe(true);
           expect(scope.obj.value).toBe('C');
-      });
+        }
+      );
 
-      describe('when multiple', function() {
-
-        they('should set the model to null when the currently selected option with $prop is removed',
-          [
-            'ngValue',
-            'interpolatedValue',
-            'interpolatedText'
-          ], function(prop) {
-
-            var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+      describe('when multiple', function () {
+        they(
+          'should set the model to null when the currently selected option with $prop is removed',
+          ['ngValue', 'interpolatedValue', 'interpolatedText'],
+          function (prop) {
+            var A = { name: 'A' },
+              B = { name: 'B' },
+              C = { name: 'C' };
 
             scope.options = [A, B, C];
             scope.obj = {};
@@ -2157,11 +2041,7 @@ describe('select', function() {
                 break;
             }
 
-            compile(
-              '<select ng-model="obj.value" multiple>' +
-                optionString +
-              '</select>'
-            );
+            compile('<select ng-model="obj.value" multiple>' + optionString + '</select>');
 
             var ngModelCtrl = element.controller('ngModel');
             var ngModelCtrlSpy = spyOn(ngModelCtrl, '$setViewValue').and.callThrough();
@@ -2176,7 +2056,6 @@ describe('select', function() {
             optionElements = element.find('option');
             expect(optionElements.length).toEqual(3);
             expect(scope.obj.value).toEqual(prop === 'ngValue' ? [A, C] : ['A', 'C']);
-
 
             ngModelCtrlSpy.calls.reset();
             scope.options.shift();
@@ -2195,16 +2074,16 @@ describe('select', function() {
             expect(val).toEqual([]);
 
             expect(ngModelCtrlSpy).toHaveBeenCalledTimes(1);
-        });
+          }
+        );
 
-        they('should set the model to null when the currently selected option with $prop changes its value',
-          [
-            'ngValue',
-            'interpolatedValue',
-            'interpolatedText'
-          ], function(prop) {
-
-            var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+        they(
+          'should set the model to null when the currently selected option with $prop changes its value',
+          ['ngValue', 'interpolatedValue', 'interpolatedText'],
+          function (prop) {
+            var A = { name: 'A' },
+              B = { name: 'B' },
+              C = { name: 'C' };
 
             scope.options = [A, B, C];
             scope.obj = {};
@@ -2223,11 +2102,7 @@ describe('select', function() {
                 break;
             }
 
-            compile(
-              '<select ng-model="obj.value" multiple>' +
-                optionString +
-              '</select>'
-            );
+            compile('<select ng-model="obj.value" multiple>' + optionString + '</select>');
 
             var ngModelCtrl = element.controller('ngModel');
             var ngModelCtrlSpy = spyOn(ngModelCtrl, '$setViewValue').and.callThrough();
@@ -2260,17 +2135,17 @@ describe('select', function() {
             expect(val).toEqual([]);
 
             expect(ngModelCtrlSpy).toHaveBeenCalledTimes(1);
+          }
+        );
 
-        });
-
-        they('should set the model to null when the currently selected option with $prop becomes disabled',
-          [
-            'ngValue',
-            'interpolatedValue',
-            'interpolatedText'
-          ], function(prop) {
-
-            var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'}, D = { name: 'D'};
+        they(
+          'should set the model to null when the currently selected option with $prop becomes disabled',
+          ['ngValue', 'interpolatedValue', 'interpolatedText'],
+          function (prop) {
+            var A = { name: 'A' },
+              B = { name: 'B' },
+              C = { name: 'C' },
+              D = { name: 'D' };
 
             scope.options = [A, B, C, D];
             scope.obj = {};
@@ -2279,21 +2154,20 @@ describe('select', function() {
 
             switch (prop) {
               case 'ngValue':
-                optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option.name">{{$index}}</option>';
                 break;
               case 'interpolatedValue':
-                optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
                 break;
               case 'interpolatedText':
-                optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
                 break;
             }
 
-            compile(
-              '<select ng-model="obj.value" multiple>' +
-                optionString +
-              '</select>'
-            );
+            compile('<select ng-model="obj.value" multiple>' + optionString + '</select>');
 
             var ngModelCtrl = element.controller('ngModel');
             var ngModelCtrlSpy = spyOn(ngModelCtrl, '$setViewValue').and.callThrough();
@@ -2320,17 +2194,17 @@ describe('select', function() {
             expect(scope.obj.value).toEqual(['D']);
             expect(element.val()).toEqual(prop === 'ngValue' ? ['string:D'] : ['D']);
             expect(ngModelCtrlSpy).toHaveBeenCalledTimes(1);
-        });
+          }
+        );
 
-
-        they('should select disabled options with $prop when the model is set to matching values',
-          [
-            'ngValue',
-            'interpolatedValue',
-            'interpolatedText'
-          ], function(prop) {
-
-            var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'}, D = {name: 'D'};
+        they(
+          'should select disabled options with $prop when the model is set to matching values',
+          ['ngValue', 'interpolatedValue', 'interpolatedText'],
+          function (prop) {
+            var A = { name: 'A' },
+              B = { name: 'B' },
+              C = { name: 'C' },
+              D = { name: 'D' };
 
             scope.options = [A, B, C, D];
             scope.obj = {};
@@ -2339,21 +2213,20 @@ describe('select', function() {
 
             switch (prop) {
               case 'ngValue':
-                optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option">{{$index}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options" ng-disabled="option.disabled" ng-value="option">{{$index}}</option>';
                 break;
               case 'interpolatedValue':
-                optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options" ng-disabled="option.disabled" value="{{option.name}}">{{$index}}</option>';
                 break;
               case 'interpolatedText':
-                optionString = '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options" ng-disabled="option.disabled">{{option.name}}</option>';
                 break;
             }
 
-            compile(
-              '<select ng-model="obj.value" multiple>' +
-                optionString +
-              '</select>'
-            );
+            compile('<select ng-model="obj.value" multiple>' + optionString + '</select>');
 
             var optionElements = element.find('option');
             expect(optionElements.length).toEqual(4);
@@ -2372,28 +2245,29 @@ describe('select', function() {
 
             optionElements = element.find('option');
             expect(optionElements.length).toEqual(4);
-            expect(scope.obj.value).toEqual(prop === 'ngValue' ?
-              [
-                {name: 'A', $$hashKey: 'object:3', disabled: true},
-                {name: 'C', $$hashKey: 'object:5'},
-                {name: 'D', $$hashKey: 'object:6', disabled: true}
-              ] :
-              ['A', 'C', 'D']
+            expect(scope.obj.value).toEqual(
+              prop === 'ngValue'
+                ? [
+                    { name: 'A', $$hashKey: 'object:3', disabled: true },
+                    { name: 'C', $$hashKey: 'object:5' },
+                    { name: 'D', $$hashKey: 'object:6', disabled: true }
+                  ]
+                : ['A', 'C', 'D']
             );
 
             expect(optionElements.eq(0).prop('selected')).toBe(true);
             expect(optionElements.eq(2).prop('selected')).toBe(true);
             expect(optionElements.eq(3).prop('selected')).toBe(true);
-        });
+          }
+        );
 
-        they('should select a newly added option with $prop when it matches the current model',
-          [
-            'ngValue',
-            'interpolatedValue',
-            'interpolatedText'
-          ], function(prop) {
-
-            var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+        they(
+          'should select a newly added option with $prop when it matches the current model',
+          ['ngValue', 'interpolatedValue', 'interpolatedText'],
+          function (prop) {
+            var A = { name: 'A' },
+              B = { name: 'B' },
+              C = { name: 'C' };
 
             scope.options = [A, B];
             scope.obj = {
@@ -2414,11 +2288,7 @@ describe('select', function() {
                 break;
             }
 
-            compile(
-              '<select ng-model="obj.value" multiple>' +
-                optionString +
-              '</select>'
-            );
+            compile('<select ng-model="obj.value" multiple>' + optionString + '</select>');
 
             var optionElements = element.find('option');
             expect(optionElements.length).toEqual(2);
@@ -2432,20 +2302,24 @@ describe('select', function() {
             expect(optionElements.length).toEqual(3);
             expect(optionElements[1].selected).toBe(true);
             expect(optionElements[2].selected).toBe(true);
-            expect(scope.obj.value).toEqual(prop === 'ngValue' ?
-              [{ name: 'B', $$hashKey: 'object:4'},
-                {name: 'C', $$hashKey: 'object:7'}] :
-              ['B', 'C']);
-        });
+            expect(scope.obj.value).toEqual(
+              prop === 'ngValue'
+                ? [
+                    { name: 'B', $$hashKey: 'object:4' },
+                    { name: 'C', $$hashKey: 'object:7' }
+                  ]
+                : ['B', 'C']
+            );
+          }
+        );
 
-        they('should keep selection and model when a repeated options with track by are replaced with equal options',
-          [
-            'ngValue',
-            'interpolatedValue',
-            'interpolatedText'
-          ], function(prop) {
-
-            var A = { name: 'A'}, B = { name: 'B'}, C = { name: 'C'};
+        they(
+          'should keep selection and model when a repeated options with track by are replaced with equal options',
+          ['ngValue', 'interpolatedValue', 'interpolatedText'],
+          function (prop) {
+            var A = { name: 'A' },
+              B = { name: 'B' },
+              C = { name: 'C' };
 
             scope.options = [A, B, C];
             scope.obj = {
@@ -2456,21 +2330,19 @@ describe('select', function() {
 
             switch (prop) {
               case 'ngValue':
-                optionString = '<option ng-repeat="option in options track by option.name" ng-value="option.name">{{$index}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options track by option.name" ng-value="option.name">{{$index}}</option>';
                 break;
               case 'interpolatedValue':
-                optionString = '<option ng-repeat="option in options track by option.name" value="{{option.name}}">{{$index}}</option>';
+                optionString =
+                  '<option ng-repeat="option in options track by option.name" value="{{option.name}}">{{$index}}</option>';
                 break;
               case 'interpolatedText':
                 optionString = '<option ng-repeat="option in options track by option.name">{{option.name}}</option>';
                 break;
             }
 
-            compile(
-              '<select ng-model="obj.value" multiple>' +
-                optionString +
-              '</select>'
-            );
+            compile('<select ng-model="obj.value" multiple>' + optionString + '</select>');
 
             var optionElements = element.find('option');
             expect(optionElements.length).toEqual(3);
@@ -2485,11 +2357,7 @@ describe('select', function() {
             expect(optionElements[2].selected).toBe(true);
             expect(scope.obj.value).toEqual(['B', 'C']);
 
-            scope.options = [
-              {name: 'A'},
-              {name: 'B'},
-              {name: 'C'}
-            ];
+            scope.options = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
             scope.$digest();
 
             optionElements = element.find('option');
@@ -2498,75 +2366,70 @@ describe('select', function() {
             expect(optionElements[1].selected).toBe(true);
             expect(optionElements[2].selected).toBe(true);
             expect(scope.obj.value).toEqual(['B', 'C']);
+          }
+        );
+      });
+
+      it('should keep the ngModel value when the selected option is recreated by ngRepeat', function () {
+        scope.options = [{ name: 'A' }, { name: 'B' }, { name: 'C' }];
+        scope.obj = {
+          value: 'B'
+        };
+
+        compile(
+          '<select ng-model="obj.value">' +
+            '<option ng-repeat="option in options" value="{{option.name}}">{{option.name}}</option>' +
+            '</select>'
+        );
+
+        var optionElements = element.find('option');
+        expect(optionElements.length).toEqual(3);
+        expect(optionElements[0].value).toBe('A');
+        expect(optionElements[1]).toBeMarkedAsSelected();
+        expect(scope.obj.value).toBe('B');
+
+        scope.$apply(function () {
+          // Only when new objects are used, ngRepeat re-creates the element from scratch
+          scope.options = [{ name: 'B' }, { name: 'C' }, { name: 'D' }];
         });
 
+        var previouslySelectedOptionElement = optionElements[1];
+        optionElements = element.find('option');
+
+        expect(optionElements.length).toEqual(3);
+        expect(optionElements[0].value).toBe('B');
+        expect(optionElements[0]).toBeMarkedAsSelected();
+        expect(scope.obj.value).toBe('B');
+        // Ensure the assumption that the element is re-created is true
+        expect(previouslySelectedOptionElement).not.toBe(optionElements[0]);
       });
 
-      it('should keep the ngModel value when the selected option is recreated by ngRepeat', function() {
-          scope.options = [{ name: 'A'}, { name: 'B'}, { name: 'C'}];
-          scope.obj = {
-            value: 'B'
-          };
+      it('should validate when the options change', function () {
+        scope.values = ['A', 'B'];
+        scope.selection = 'A';
 
-          compile(
-            '<select ng-model="obj.value">' +
-              '<option ng-repeat="option in options" value="{{option.name}}">{{option.name}}</option>' +
+        compile(
+          '<select ng-model="selection" required>' +
+            '<option value="">--select--</option>' +
+            '<option ng-repeat="option in values" value="{{option}}">{{option}}</option>' +
             '</select>'
-          );
+        );
 
-          var optionElements = element.find('option');
-          expect(optionElements.length).toEqual(3);
-          expect(optionElements[0].value).toBe('A');
-          expect(optionElements[1]).toBeMarkedAsSelected();
-          expect(scope.obj.value).toBe('B');
+        expect(element).toEqualSelect('', ['A'], 'B');
+        expect(element).toBeValid();
+        expect(ngModelCtrl.$error.required).toBeFalsy();
 
-          scope.$apply(function() {
-            // Only when new objects are used, ngRepeat re-creates the element from scratch
-            scope.options = [{ name: 'B'}, { name: 'C'}, { name: 'D'}];
-          });
+        scope.$apply(function () {
+          // Only when new objects are used, ngRepeat re-creates the element from scratch
+          scope.values = ['B', 'C'];
+        });
 
-          var previouslySelectedOptionElement = optionElements[1];
-          optionElements = element.find('option');
-
-          expect(optionElements.length).toEqual(3);
-          expect(optionElements[0].value).toBe('B');
-          expect(optionElements[0]).toBeMarkedAsSelected();
-          expect(scope.obj.value).toBe('B');
-          // Ensure the assumption that the element is re-created is true
-          expect(previouslySelectedOptionElement).not.toBe(optionElements[0]);
+        expect(element).toEqualSelect([''], 'B', 'C');
+        expect(element).toBeInvalid();
+        expect(ngModelCtrl.$error.required).toBeTruthy();
+        // ngModel sets undefined for invalid values
+        expect(scope.selection).toBeUndefined();
       });
-
-
-      it('should validate when the options change', function() {
-          scope.values = ['A', 'B'];
-          scope.selection = 'A';
-
-          compile(
-            '<select ng-model="selection" required>' +
-              '<option value="">--select--</option>' +
-              '<option ng-repeat="option in values" value="{{option}}">{{option}}</option>' +
-            '</select>'
-          );
-
-          expect(element).toEqualSelect('', ['A'], 'B');
-          expect(element).toBeValid();
-          expect(ngModelCtrl.$error.required).toBeFalsy();
-
-          scope.$apply(function() {
-            // Only when new objects are used, ngRepeat re-creates the element from scratch
-            scope.values = ['B', 'C'];
-          });
-
-          expect(element).toEqualSelect([''], 'B', 'C');
-          expect(element).toBeInvalid();
-          expect(ngModelCtrl.$error.required).toBeTruthy();
-          // ngModel sets undefined for invalid values
-          expect(scope.selection).toBeUndefined();
-      });
-
-
     });
-
-
   });
 });

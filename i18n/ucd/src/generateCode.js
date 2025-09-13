@@ -20,7 +20,7 @@ function generateCode(validRanges) {
 function generateFunction(positiveElements, functionName) {
   var result = [];
   result.push('function ', functionName, '(cp) {\n');
-  positiveElements.forEach(function(range) {
+  positiveElements.forEach(function (range) {
     if (range[0] === range[1]) {
       result.push('  if (cp === 0x', range[0], ')');
     } else {

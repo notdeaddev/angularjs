@@ -125,7 +125,6 @@ var REGEX_STRING_REGEXP = /^\/(.+)\/([a-z]*)$/;
 // This is used so that it's possible for internal tests to create mock ValidityStates.
 var VALIDITY_STATE_PROPERTY = 'validity';
 
-
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 
 /**
@@ -135,7 +134,9 @@ var hasOwnProperty = Object.prototype.hasOwnProperty;
  * @param {string} string String to be converted to lowercase.
  * @returns {string} Lowercased string.
  */
-var lowercase = function(string) {return isString(string) ? string.toLowerCase() : string;};
+var lowercase = function (string) {
+  return isString(string) ? string.toLowerCase() : string;
+};
 
 /**
  * @private
@@ -144,24 +145,23 @@ var lowercase = function(string) {return isString(string) ? string.toLowerCase()
  * @param {string} string String to be converted to uppercase.
  * @returns {string} Uppercased string.
  */
-var uppercase = function(string) {return isString(string) ? string.toUpperCase() : string;};
+var uppercase = function (string) {
+  return isString(string) ? string.toUpperCase() : string;
+};
 
-
-var
-    msie,             // holds major version number for IE, or NaN if UA is not IE.
-    jqLite,           // delay binding since jQuery could be loaded after us.
-    jQuery,           // delay binding
-    slice             = [].slice,
-    splice            = [].splice,
-    push              = [].push,
-    toString          = Object.prototype.toString,
-    getPrototypeOf    = Object.getPrototypeOf,
-    ngMinErr          = minErr('ng'),
-
-    /** @name angular */
-    angular           = window.angular || (window.angular = {}),
-    angularModule,
-    uid               = 0;
+var msie, // holds major version number for IE, or NaN if UA is not IE.
+  jqLite, // delay binding since jQuery could be loaded after us.
+  jQuery, // delay binding
+  slice = [].slice,
+  splice = [].splice,
+  push = [].push,
+  toString = Object.prototype.toString,
+  getPrototypeOf = Object.getPrototypeOf,
+  ngMinErr = minErr('ng'),
+  /** @name angular */
+  angular = window.angular || (window.angular = {}),
+  angularModule,
+  uid = 0;
 
 // Support: IE 9-11 only
 /**
@@ -170,7 +170,6 @@ var
  */
 msie = window.document.documentMode;
 
-
 /**
  * @private
  * @param {*} obj
@@ -178,7 +177,6 @@ msie = window.document.documentMode;
  *                   String ...)
  */
 function isArrayLike(obj) {
-
   // `null`, `undefined` and `window` are not array-like
   if (obj == null || isWindow(obj)) return false;
 
@@ -194,8 +192,7 @@ function isArrayLike(obj) {
 
   // NodeList objects (with `item` method) and
   // other objects with suitable length characteristics are array-like
-  return isNumber(length) && (length >= 0 && (length - 1) in obj || typeof obj.item === 'function');
-
+  return isNumber(length) && ((length >= 0 && length - 1 in obj) || typeof obj.item === 'function');
 }
 
 /**
@@ -250,7 +247,7 @@ function forEach(obj, iterator, context) {
         }
       }
     } else if (obj.forEach && obj.forEach !== forEach) {
-        obj.forEach(iterator, context, obj);
+      obj.forEach(iterator, context, obj);
     } else if (isBlankObject(obj)) {
       // createMap() fast path --- Safe to avoid hasOwnProperty check because prototype chain is empty
       for (key in obj) {
@@ -283,14 +280,15 @@ function forEachSorted(obj, iterator, context) {
   return keys;
 }
 
-
 /**
  * when using forEach the params are value, key, but it is often useful to have key, value.
  * @param {function(string, *)} iteratorFn
  * @returns {function(*, string)}
  */
 function reverseParams(iteratorFn) {
-  return function(value, key) {iteratorFn(key, value);};
+  return function (value, key) {
+    iteratorFn(key, value);
+  };
 }
 
 /**
@@ -307,7 +305,6 @@ function nextUid() {
   return ++uid;
 }
 
-
 /**
  * Set or clear the hashkey for an object.
  * @param obj object
@@ -320,7 +317,6 @@ function setHashKey(obj, h) {
     delete obj.$$hashKey;
   }
 }
-
 
 function baseExtend(dst, objs, deep) {
   var h = dst.$$hashKey;
@@ -380,56 +376,54 @@ function extend(dst) {
   return baseExtend(dst, slice.call(arguments, 1), false);
 }
 
-
 /**
-* @ngdoc function
-* @name angular.merge
-* @module ng
-* @kind function
-*
-* @description
-* Deeply extends the destination object `dst` by copying own enumerable properties from the `src` object(s)
-* to `dst`. You can specify multiple `src` objects. If you want to preserve original objects, you can do so
-* by passing an empty object as the target: `var object = angular.merge({}, object1, object2)`.
-*
-* Unlike {@link angular.extend extend()}, `merge()` recursively descends into object properties of source
-* objects, performing a deep copy.
-*
-* @deprecated
-* sinceVersion="1.6.5"
-* This function is deprecated, but will not be removed in the 1.x lifecycle.
-* There are edge cases (see {@link angular.merge#known-issues known issues}) that are not
-* supported by this function. We suggest using another, similar library for all-purpose merging,
-* such as [lodash's merge()](https://lodash.com/docs/4.17.4#merge).
-*
-* @knownIssue
-* This is a list of (known) object types that are not handled correctly by this function:
-* - [`Blob`](https://developer.mozilla.org/docs/Web/API/Blob)
-* - [`MediaStream`](https://developer.mozilla.org/docs/Web/API/MediaStream)
-* - [`CanvasGradient`](https://developer.mozilla.org/docs/Web/API/CanvasGradient)
-* - AngularJS {@link $rootScope.Scope scopes};
-*
-* `angular.merge` also does not support merging objects with circular references.
-*
-* @param {Object} dst Destination object.
-* @param {...Object} src Source object(s).
-* @returns {Object} Reference to `dst`.
-*/
+ * @ngdoc function
+ * @name angular.merge
+ * @module ng
+ * @kind function
+ *
+ * @description
+ * Deeply extends the destination object `dst` by copying own enumerable properties from the `src` object(s)
+ * to `dst`. You can specify multiple `src` objects. If you want to preserve original objects, you can do so
+ * by passing an empty object as the target: `var object = angular.merge({}, object1, object2)`.
+ *
+ * Unlike {@link angular.extend extend()}, `merge()` recursively descends into object properties of source
+ * objects, performing a deep copy.
+ *
+ * @deprecated
+ * sinceVersion="1.6.5"
+ * This function is deprecated, but will not be removed in the 1.x lifecycle.
+ * There are edge cases (see {@link angular.merge#known-issues known issues}) that are not
+ * supported by this function. We suggest using another, similar library for all-purpose merging,
+ * such as [lodash's merge()](https://lodash.com/docs/4.17.4#merge).
+ *
+ * @knownIssue
+ * This is a list of (known) object types that are not handled correctly by this function:
+ * - [`Blob`](https://developer.mozilla.org/docs/Web/API/Blob)
+ * - [`MediaStream`](https://developer.mozilla.org/docs/Web/API/MediaStream)
+ * - [`CanvasGradient`](https://developer.mozilla.org/docs/Web/API/CanvasGradient)
+ * - AngularJS {@link $rootScope.Scope scopes};
+ *
+ * `angular.merge` also does not support merging objects with circular references.
+ *
+ * @param {Object} dst Destination object.
+ * @param {...Object} src Source object(s).
+ * @returns {Object} Reference to `dst`.
+ */
 function merge(dst) {
   return baseExtend(dst, slice.call(arguments, 1), true);
 }
-
-
 
 function toInt(str) {
   return parseInt(str, 10);
 }
 
-var isNumberNaN = Number.isNaN || function isNumberNaN(num) {
-  // eslint-disable-next-line no-self-compare
-  return num !== num;
-};
-
+var isNumberNaN =
+  Number.isNaN ||
+  function isNumberNaN(num) {
+    // eslint-disable-next-line no-self-compare
+    return num !== num;
+  };
 
 function inherit(parent, extra) {
   return extend(Object.create(parent), extra);
@@ -453,7 +447,6 @@ function inherit(parent, extra) {
  */
 function noop() {}
 noop.$inject = [];
-
 
 /**
  * @ngdoc function
@@ -483,16 +476,20 @@ noop.$inject = [];
  * @param {*} value to be returned.
  * @returns {*} the value passed in.
  */
-function identity($) {return $;}
+function identity($) {
+  return $;
+}
 identity.$inject = [];
 
-
-function valueFn(value) {return function valueRef() {return value;};}
+function valueFn(value) {
+  return function valueRef() {
+    return value;
+  };
+}
 
 function hasCustomToString(obj) {
   return isFunction(obj.toString) && obj.toString !== toString;
 }
-
 
 /**
  * @ngdoc function
@@ -506,8 +503,9 @@ function hasCustomToString(obj) {
  * @param {*} value Reference to check.
  * @returns {boolean} True if `value` is undefined.
  */
-function isUndefined(value) {return typeof value === 'undefined';}
-
+function isUndefined(value) {
+  return typeof value === 'undefined';
+}
 
 /**
  * @ngdoc function
@@ -521,8 +519,9 @@ function isUndefined(value) {return typeof value === 'undefined';}
  * @param {*} value Reference to check.
  * @returns {boolean} True if `value` is defined.
  */
-function isDefined(value) {return typeof value !== 'undefined';}
-
+function isDefined(value) {
+  return typeof value !== 'undefined';
+}
 
 /**
  * @ngdoc function
@@ -542,7 +541,6 @@ function isObject(value) {
   return value !== null && typeof value === 'object';
 }
 
-
 /**
  * Determine if a value is an object with a null prototype
  *
@@ -551,7 +549,6 @@ function isObject(value) {
 function isBlankObject(value) {
   return value !== null && typeof value === 'object' && !getPrototypeOf(value);
 }
-
 
 /**
  * @ngdoc function
@@ -565,8 +562,9 @@ function isBlankObject(value) {
  * @param {*} value Reference to check.
  * @returns {boolean} True if `value` is a `String`.
  */
-function isString(value) {return typeof value === 'string';}
-
+function isString(value) {
+  return typeof value === 'string';
+}
 
 /**
  * @ngdoc function
@@ -586,8 +584,9 @@ function isString(value) {return typeof value === 'string';}
  * @param {*} value Reference to check.
  * @returns {boolean} True if `value` is a `Number`.
  */
-function isNumber(value) {return typeof value === 'number';}
-
+function isNumber(value) {
+  return typeof value === 'number';
+}
 
 /**
  * @ngdoc function
@@ -604,7 +603,6 @@ function isNumber(value) {return typeof value === 'number';}
 function isDate(value) {
   return toString.call(value) === '[object Date]';
 }
-
 
 /**
  * @ngdoc function
@@ -633,10 +631,14 @@ function isArray(arr) {
 function isError(value) {
   var tag = toString.call(value);
   switch (tag) {
-    case '[object Error]': return true;
-    case '[object Exception]': return true;
-    case '[object DOMException]': return true;
-    default: return value instanceof Error;
+    case '[object Error]':
+      return true;
+    case '[object Exception]':
+      return true;
+    case '[object DOMException]':
+      return true;
+    default:
+      return value instanceof Error;
   }
 }
 
@@ -652,8 +654,9 @@ function isError(value) {
  * @param {*} value Reference to check.
  * @returns {boolean} True if `value` is a `Function`.
  */
-function isFunction(value) {return typeof value === 'function';}
-
+function isFunction(value) {
+  return typeof value === 'function';
+}
 
 /**
  * Determines if a value is a regular expression object.
@@ -666,7 +669,6 @@ function isRegExp(value) {
   return toString.call(value) === '[object RegExp]';
 }
 
-
 /**
  * Checks if `obj` is a window object.
  *
@@ -678,36 +680,29 @@ function isWindow(obj) {
   return obj && obj.window === obj;
 }
 
-
 function isScope(obj) {
   return obj && obj.$evalAsync && obj.$watch;
 }
-
 
 function isFile(obj) {
   return toString.call(obj) === '[object File]';
 }
 
-
 function isFormData(obj) {
   return toString.call(obj) === '[object FormData]';
 }
-
 
 function isBlob(obj) {
   return toString.call(obj) === '[object Blob]';
 }
 
-
 function isBoolean(value) {
   return typeof value === 'boolean';
 }
 
-
 function isPromiseLike(obj) {
   return obj && isFunction(obj.then);
 }
-
 
 var TYPED_ARRAY_REGEXP = /^\[object (?:Uint8|Uint8Clamped|Uint16|Uint32|Int8|Int16|Int32|Float32|Float64)Array]$/;
 function isTypedArray(value) {
@@ -718,21 +713,21 @@ function isArrayBuffer(obj) {
   return toString.call(obj) === '[object ArrayBuffer]';
 }
 
-
-var trim = function(value) {
+var trim = function (value) {
   return isString(value) ? value.trim() : value;
 };
 
 // Copied from:
 // http://docs.closure-library.googlecode.com/git/local_closure_goog_string_string.js.source.html#line1021
 // Prereq: s is a string.
-var escapeForRegexp = function(s) {
-  return s
-    .replace(/([-()[\]{}+?*.$^|,:#<!\\])/g, '\\$1')
-    // eslint-disable-next-line no-control-regex
-    .replace(/\x08/g, '\\x08');
+var escapeForRegexp = function (s) {
+  return (
+    s
+      .replace(/([-()[\]{}+?*.$^|,:#<!\\])/g, '\\$1')
+      // eslint-disable-next-line no-control-regex
+      .replace(/\x08/g, '\\x08')
+  );
 };
-
 
 /**
  * @ngdoc function
@@ -747,9 +742,11 @@ var escapeForRegexp = function(s) {
  * @returns {boolean} True if `value` is a DOM element (or wrapped jQuery element).
  */
 function isElement(node) {
-  return !!(node &&
-    (node.nodeName  // We are a direct element.
-    || (node.prop && node.attr && node.find)));  // We have an on and find method part of jQuery API.
+  return !!(
+    node &&
+    (node.nodeName || // We are a direct element.
+      (node.prop && node.attr && node.find))
+  ); // We have an on and find method part of jQuery API.
 }
 
 /**
@@ -757,13 +754,14 @@ function isElement(node) {
  * @returns {object} in the form of {key1:true, key2:true, ...}
  */
 function makeMap(str) {
-  var obj = {}, items = str.split(','), i;
+  var obj = {},
+    items = str.split(','),
+    i;
   for (i = 0; i < items.length; i++) {
     obj[items[i]] = true;
   }
   return obj;
 }
-
 
 function nodeName_(element) {
   return lowercase(element.nodeName || (element[0] && element[0].nodeName));
@@ -875,17 +873,17 @@ function copy(source, destination, maxDepth) {
 
   if (destination) {
     if (isTypedArray(destination) || isArrayBuffer(destination)) {
-      throw ngMinErr('cpta', 'Can\'t copy! TypedArray destination cannot be mutated.');
+      throw ngMinErr('cpta', "Can't copy! TypedArray destination cannot be mutated.");
     }
     if (source === destination) {
-      throw ngMinErr('cpi', 'Can\'t copy! Source and destination are identical.');
+      throw ngMinErr('cpi', "Can't copy! Source and destination are identical.");
     }
 
     // Empty the destination object
     if (isArray(destination)) {
       destination.length = 0;
     } else {
-      forEach(destination, function(value, key) {
+      forEach(destination, function (value, key) {
         if (key !== '$$hashKey') {
           delete destination[key];
         }
@@ -947,8 +945,7 @@ function copy(source, destination, maxDepth) {
     }
 
     if (isWindow(source) || isScope(source)) {
-      throw ngMinErr('cpws',
-        'Can\'t copy! Making copies of Window or Scope instances is not supported.');
+      throw ngMinErr('cpws', "Can't copy! Making copies of Window or Scope instances is not supported.");
     }
 
     var needsRecurse = false;
@@ -962,9 +959,7 @@ function copy(source, destination, maxDepth) {
     stackSource.push(source);
     stackDest.push(destination);
 
-    return needsRecurse
-      ? copyRecurse(source, destination, maxDepth)
-      : destination;
+    return needsRecurse ? copyRecurse(source, destination, maxDepth) : destination;
   }
 
   function copyType(source) {
@@ -984,10 +979,10 @@ function copy(source, destination, maxDepth) {
         // Support: IE10
         if (!source.slice) {
           // If we're in this case we know the environment supports ArrayBuffer
-          /* eslint-disable no-undef */
+
           var copied = new ArrayBuffer(source.byteLength);
           new Uint8Array(copied).set(new Uint8Array(source));
-          /* eslint-enable */
+
           return copied;
         }
         return source.slice(0);
@@ -1004,7 +999,7 @@ function copy(source, destination, maxDepth) {
         return re;
 
       case '[object Blob]':
-        return new source.constructor([source], {type: source.type});
+        return new source.constructor([source], { type: source.type });
     }
 
     if (isFunction(source.cloneNode)) {
@@ -1013,10 +1008,15 @@ function copy(source, destination, maxDepth) {
   }
 }
 
-
-// eslint-disable-next-line no-self-compare
-function simpleCompare(a, b) { return a === b || (a !== a && b !== b); }
-
+function simpleCompare(x, y) {
+  if (x === y) {
+    // Handle +0 vs -0
+    return x !== 0 || 1 / x === 1 / y;
+  } else {
+    // Handle NaN
+    return x !== x && y !== y; // eslint-disable-line no-self-compare
+  }
+}
 
 /**
  * @ngdoc function
@@ -1086,7 +1086,11 @@ function equals(o1, o2) {
   if (o1 === null || o2 === null) return false;
   // eslint-disable-next-line no-self-compare
   if (o1 !== o1 && o2 !== o2) return true; // NaN === NaN
-  var t1 = typeof o1, t2 = typeof o2, length, key, keySet;
+  var t1 = typeof o1,
+    t2 = typeof o2,
+    length,
+    key,
+    keySet;
   if (t1 === t2 && t1 === 'object') {
     if (isArray(o1)) {
       if (!isArray(o2)) return false;
@@ -1103,8 +1107,8 @@ function equals(o1, o2) {
       if (!isRegExp(o2)) return false;
       return o1.toString() === o2.toString();
     } else {
-      if (isScope(o1) || isScope(o2) || isWindow(o1) || isWindow(o2) ||
-        isArray(o2) || isDate(o2) || isRegExp(o2)) return false;
+      if (isScope(o1) || isScope(o2) || isWindow(o1) || isWindow(o2) || isArray(o2) || isDate(o2) || isRegExp(o2))
+        return false;
       keySet = createMap();
       for (key in o1) {
         if (key.charAt(0) === '$' || isFunction(o1[key])) continue;
@@ -1112,10 +1116,7 @@ function equals(o1, o2) {
         keySet[key] = true;
       }
       for (key in o2) {
-        if (!(key in keySet) &&
-            key.charAt(0) !== '$' &&
-            isDefined(o2[key]) &&
-            !isFunction(o2[key])) return false;
+        if (!(key in keySet) && key.charAt(0) !== '$' && isDefined(o2[key]) && !isFunction(o2[key])) return false;
       }
       return true;
     }
@@ -1123,19 +1124,15 @@ function equals(o1, o2) {
   return false;
 }
 
-var csp = function() {
+var csp = function () {
   if (!isDefined(csp.rules)) {
-
-
-    var ngCspElement = (window.document.querySelector('[ng-csp]') ||
-                    window.document.querySelector('[data-ng-csp]'));
+    var ngCspElement = window.document.querySelector('[ng-csp]') || window.document.querySelector('[data-ng-csp]');
 
     if (ngCspElement) {
-      var ngCspAttribute = ngCspElement.getAttribute('ng-csp') ||
-                    ngCspElement.getAttribute('data-ng-csp');
+      var ngCspAttribute = ngCspElement.getAttribute('ng-csp') || ngCspElement.getAttribute('data-ng-csp');
       csp.rules = {
-        noUnsafeEval: !ngCspAttribute || (ngCspAttribute.indexOf('no-unsafe-eval') !== -1),
-        noInlineStyle: !ngCspAttribute || (ngCspAttribute.indexOf('no-inline-style') !== -1)
+        noUnsafeEval: !ngCspAttribute || ngCspAttribute.indexOf('no-unsafe-eval') !== -1,
+        noInlineStyle: !ngCspAttribute || ngCspAttribute.indexOf('no-inline-style') !== -1
       };
     } else {
       csp.rules = {
@@ -1196,10 +1193,13 @@ var csp = function() {
  </html>
  ```
  */
-var jq = function() {
+var jq = function () {
   if (isDefined(jq.name_)) return jq.name_;
   var el;
-  var i, ii = ngAttrPrefixes.length, prefix, name;
+  var i,
+    ii = ngAttrPrefixes.length,
+    prefix,
+    name;
   for (i = 0; i < ii; ++i) {
     prefix = ngAttrPrefixes[i];
     el = window.document.querySelector('[' + prefix.replace(':', '\\:') + 'jq]');
@@ -1219,7 +1219,6 @@ function concat(array1, array2, index) {
 function sliceArgs(args, startIndex) {
   return slice.call(args, startIndex || 0);
 }
-
 
 /**
  * @ngdoc function
@@ -1242,22 +1241,17 @@ function bind(self, fn) {
   var curryArgs = arguments.length > 2 ? sliceArgs(arguments, 2) : [];
   if (isFunction(fn) && !(fn instanceof RegExp)) {
     return curryArgs.length
-      ? function() {
-          return arguments.length
-            ? fn.apply(self, concat(curryArgs, arguments, 0))
-            : fn.apply(self, curryArgs);
+      ? function () {
+          return arguments.length ? fn.apply(self, concat(curryArgs, arguments, 0)) : fn.apply(self, curryArgs);
         }
-      : function() {
-          return arguments.length
-            ? fn.apply(self, arguments)
-            : fn.call(self);
+      : function () {
+          return arguments.length ? fn.apply(self, arguments) : fn.call(self);
         };
   } else {
     // In IE, native methods are not functions so they cannot be bound (note: they don't need to be).
     return fn;
   }
 }
-
 
 function toJsonReplacer(key, value) {
   var val = value;
@@ -1266,7 +1260,7 @@ function toJsonReplacer(key, value) {
     val = undefined;
   } else if (isWindow(value)) {
     val = '$WINDOW';
-  } else if (value &&  window.document === value) {
+  } else if (value && window.document === value) {
     val = '$DOCUMENT';
   } else if (isScope(value)) {
     val = '$SCOPE';
@@ -1274,7 +1268,6 @@ function toJsonReplacer(key, value) {
 
   return val;
 }
-
 
 /**
  * @ngdoc function
@@ -1320,7 +1313,6 @@ function toJson(obj, pretty) {
   return JSON.stringify(obj, toJsonReplacer, pretty);
 }
 
-
 /**
  * @ngdoc function
  * @name angular.fromJson
@@ -1334,11 +1326,8 @@ function toJson(obj, pretty) {
  * @returns {Object|Array|string|number} Deserialized JSON string.
  */
 function fromJson(json) {
-  return isString(json)
-      ? JSON.parse(json)
-      : json;
+  return isString(json) ? JSON.parse(json) : json;
 }
-
 
 var ALL_COLONS = /:/g;
 function timezoneToOffset(timezone, fallback) {
@@ -1349,13 +1338,11 @@ function timezoneToOffset(timezone, fallback) {
   return isNumberNaN(requestedTimezoneOffset) ? fallback : requestedTimezoneOffset;
 }
 
-
 function addDateMinutes(date, minutes) {
   date = new Date(date.getTime());
   date.setMinutes(date.getMinutes() + minutes);
   return date;
 }
-
 
 function convertTimezoneToLocal(date, timezone, reverse) {
   reverse = reverse ? -1 : 1;
@@ -1364,7 +1351,6 @@ function convertTimezoneToLocal(date, timezone, reverse) {
   return addDateMinutes(date, reverse * (timezoneOffset - dateTimezoneOffset));
 }
 
-
 /**
  * @returns {string} Returns the string representation of the element.
  */
@@ -1372,16 +1358,15 @@ function startingTag(element) {
   element = jqLite(element).clone().empty();
   var elemHtml = jqLite('<div></div>').append(element).html();
   try {
-    return element[0].nodeType === NODE_TYPE_TEXT ? lowercase(elemHtml) :
-        elemHtml.
-          match(/^(<[^>]+>)/)[1].
-          replace(/^<([\w-]+)/, function(match, nodeName) {return '<' + lowercase(nodeName);});
+    return element[0].nodeType === NODE_TYPE_TEXT
+      ? lowercase(elemHtml)
+      : elemHtml.match(/^(<[^>]+>)/)[1].replace(/^<([\w-]+)/, function (match, nodeName) {
+          return '<' + lowercase(nodeName);
+        });
   } catch (e) {
     return lowercase(elemHtml);
   }
-
 }
-
 
 /////////////////////////////////////////////////
 
@@ -1401,17 +1386,16 @@ function tryDecodeURIComponent(value) {
   }
 }
 
-
 /**
  * Parses an escaped url query string into key-value pairs.
  * @returns {Object.<string,boolean|Array>}
  */
-function parseKeyValue(/**string*/keyValue) {
+function parseKeyValue(/**string*/ keyValue) {
   var obj = {};
-  forEach((keyValue || '').split('&'), function(keyValue) {
+  forEach((keyValue || '').split('&'), function (keyValue) {
     var splitPoint, key, val;
     if (keyValue) {
-      key = keyValue = keyValue.replace(/\+/g,'%20');
+      key = keyValue = keyValue.replace(/\+/g, '%20');
       splitPoint = keyValue.indexOf('=');
       if (splitPoint !== -1) {
         key = keyValue.substring(0, splitPoint);
@@ -1425,7 +1409,7 @@ function parseKeyValue(/**string*/keyValue) {
         } else if (isArray(obj[key])) {
           obj[key].push(val);
         } else {
-          obj[key] = [obj[key],val];
+          obj[key] = [obj[key], val];
         }
       }
     }
@@ -1435,20 +1419,17 @@ function parseKeyValue(/**string*/keyValue) {
 
 function toKeyValue(obj) {
   var parts = [];
-  forEach(obj, function(value, key) {
+  forEach(obj, function (value, key) {
     if (isArray(value)) {
-      forEach(value, function(arrayValue) {
-        parts.push(encodeUriQuery(key, true) +
-                   (arrayValue === true ? '' : '=' + encodeUriQuery(arrayValue, true)));
+      forEach(value, function (arrayValue) {
+        parts.push(encodeUriQuery(key, true) + (arrayValue === true ? '' : '=' + encodeUriQuery(arrayValue, true)));
       });
     } else {
-    parts.push(encodeUriQuery(key, true) +
-               (value === true ? '' : '=' + encodeUriQuery(value, true)));
+      parts.push(encodeUriQuery(key, true) + (value === true ? '' : '=' + encodeUriQuery(value, true)));
     }
   });
   return parts.length ? parts.join('&') : '';
 }
-
 
 /**
  * We need our custom method because encodeURIComponent is too aggressive and doesn't follow
@@ -1462,12 +1443,8 @@ function toKeyValue(obj) {
  *                     / "*" / "+" / "," / ";" / "="
  */
 function encodeUriSegment(val) {
-  return encodeUriQuery(val, true).
-             replace(/%26/gi, '&').
-             replace(/%3D/gi, '=').
-             replace(/%2B/gi, '+');
+  return encodeUriQuery(val, true).replace(/%26/gi, '&').replace(/%3D/gi, '=').replace(/%2B/gi, '+');
 }
-
 
 /**
  * This method is intended for encoding *key* or *value* parts of query component. We need a custom
@@ -1481,22 +1458,24 @@ function encodeUriSegment(val) {
  *                     / "*" / "+" / "," / ";" / "="
  */
 function encodeUriQuery(val, pctEncodeSpaces) {
-  return encodeURIComponent(val).
-             replace(/%40/gi, '@').
-             replace(/%3A/gi, ':').
-             replace(/%24/g, '$').
-             replace(/%2C/gi, ',').
-             replace(/%3B/gi, ';').
-             replace(/%20/g, (pctEncodeSpaces ? '%20' : '+'));
+  return encodeURIComponent(val)
+    .replace(/%40/gi, '@')
+    .replace(/%3A/gi, ':')
+    .replace(/%24/g, '$')
+    .replace(/%2C/gi, ',')
+    .replace(/%3B/gi, ';')
+    .replace(/%20/g, pctEncodeSpaces ? '%20' : '+');
 }
 
 var ngAttrPrefixes = ['ng-', 'data-ng-', 'ng:', 'x-ng-'];
 
 function getNgAttribute(element, ngAttr) {
-  var attr, i, ii = ngAttrPrefixes.length;
+  var attr,
+    i,
+    ii = ngAttrPrefixes.length;
   for (i = 0; i < ii; ++i) {
     attr = ngAttrPrefixes[i] + ngAttr;
-    if (isString(attr = element.getAttribute(attr))) {
+    if (isString((attr = element.getAttribute(attr)))) {
       return attr;
     }
   }
@@ -1520,7 +1499,7 @@ function allowAutoBootstrap(document) {
   var attributes = script.attributes;
   var srcs = [attributes.getNamedItem('src'), attributes.getNamedItem('href'), attributes.getNamedItem('xlink:href')];
 
-  return srcs.every(function(src) {
+  return srcs.every(function (src) {
     if (!src) {
       return true;
     }
@@ -1699,11 +1678,11 @@ var isAutoBootstrapAllowed = allowAutoBootstrap(window.document);
  */
 function angularInit(element, bootstrap) {
   var appElement,
-      module,
-      config = {};
+    module,
+    config = {};
 
   // The element `element` has priority over any other element.
-  forEach(ngAttrPrefixes, function(prefix) {
+  forEach(ngAttrPrefixes, function (prefix) {
     var name = prefix + 'app';
 
     if (!appElement && element.hasAttribute && element.hasAttribute(name)) {
@@ -1711,7 +1690,7 @@ function angularInit(element, bootstrap) {
       module = element.getAttribute(name);
     }
   });
-  forEach(ngAttrPrefixes, function(prefix) {
+  forEach(ngAttrPrefixes, function (prefix) {
     var name = prefix + 'app';
     var candidate;
 
@@ -1722,8 +1701,10 @@ function angularInit(element, bootstrap) {
   });
   if (appElement) {
     if (!isAutoBootstrapAllowed) {
-      window.console.error('AngularJS: disabling automatic bootstrap. <script> protocol indicates ' +
-          'an extension, document.location.href does not match.');
+      window.console.error(
+        'AngularJS: disabling automatic bootstrap. <script> protocol indicates ' +
+          'an extension, document.location.href does not match.'
+      );
       return;
     }
     config.strictDi = getNgAttribute(appElement, 'strict-di') !== null;
@@ -1796,40 +1777,51 @@ function bootstrap(element, modules, config) {
     strictDi: false
   };
   config = extend(defaultConfig, config);
-  var doBootstrap = function() {
+  var doBootstrap = function () {
     element = jqLite(element);
 
     if (element.injector()) {
-      var tag = (element[0] === window.document) ? 'document' : startingTag(element);
+      var tag = element[0] === window.document ? 'document' : startingTag(element);
       // Encode angle brackets to prevent input from being sanitized to empty string #8683.
       throw ngMinErr(
-          'btstrpd',
-          'App already bootstrapped with this element \'{0}\'',
-          tag.replace(/</,'&lt;').replace(/>/,'&gt;'));
+        'btstrpd',
+        "App already bootstrapped with this element '{0}'",
+        tag.replace(/</, '&lt;').replace(/>/, '&gt;')
+      );
     }
 
     modules = modules || [];
-    modules.unshift(['$provide', function($provide) {
-      $provide.value('$rootElement', element);
-    }]);
+    modules.unshift([
+      '$provide',
+      function ($provide) {
+        $provide.value('$rootElement', element);
+      }
+    ]);
 
     if (config.debugInfoEnabled) {
       // Pushing so that this overrides `debugInfoEnabled` setting defined in user's `modules`.
-      modules.push(['$compileProvider', function($compileProvider) {
-        $compileProvider.debugInfoEnabled(true);
-      }]);
+      modules.push([
+        '$compileProvider',
+        function ($compileProvider) {
+          $compileProvider.debugInfoEnabled(true);
+        }
+      ]);
     }
 
     modules.unshift('ng');
     var injector = createInjector(modules, config.strictDi);
-    injector.invoke(['$rootScope', '$rootElement', '$compile', '$injector',
-       function bootstrapApply(scope, element, compile, injector) {
-        scope.$apply(function() {
+    injector.invoke([
+      '$rootScope',
+      '$rootElement',
+      '$compile',
+      '$injector',
+      function bootstrapApply(scope, element, compile, injector) {
+        scope.$apply(function () {
           element.data('$injector', injector);
           compile(element)(scope);
         });
-      }]
-    );
+      }
+    ]);
     return injector;
   };
 
@@ -1846,8 +1838,8 @@ function bootstrap(element, modules, config) {
   }
 
   window.name = window.name.replace(NG_DEFER_BOOTSTRAP, '');
-  angular.resumeBootstrap = function(extraModules) {
-    forEach(extraModules, function(module) {
+  angular.resumeBootstrap = function (extraModules) {
+    forEach(extraModules, function (module) {
       modules.push(module);
     });
     return doBootstrap();
@@ -1884,8 +1876,7 @@ function reloadWithDebugInfo() {
 function getTestability(rootElement) {
   var injector = angular.element(rootElement).injector();
   if (!injector) {
-    throw ngMinErr('test',
-      'no injector found for element argument to getTestability');
+    throw ngMinErr('test', 'no injector found for element argument to getTestability');
   }
   return injector.get('$$testability');
 }
@@ -1893,7 +1884,7 @@ function getTestability(rootElement) {
 var SNAKE_CASE_REGEXP = /[A-Z]/g;
 function snake_case(name, separator) {
   separator = separator || '_';
-  return name.replace(SNAKE_CASE_REGEXP, function(letter, pos) {
+  return name.replace(SNAKE_CASE_REGEXP, function (letter, pos) {
     return (pos ? separator : '') + letter.toLowerCase();
   });
 }
@@ -1908,9 +1899,11 @@ function bindJQuery() {
 
   // bind to jQuery if present;
   var jqName = jq();
-  jQuery = isUndefined(jqName) ? window.jQuery :   // use jQuery (if present)
-           !jqName             ? undefined     :   // use jqLite
-                                 window[jqName];   // use jQuery specified by `ngJq`
+  jQuery = isUndefined(jqName)
+    ? window.jQuery // use jQuery (if present)
+    : !jqName
+      ? undefined // use jqLite
+      : window[jqName]; // use jQuery specified by `ngJq`
 
   // Use jQuery if it exists with proper functionality, otherwise default to us.
   // AngularJS 1.2+ requires jQuery 1.7+ for on()/off() support.
@@ -1933,7 +1926,7 @@ function bindJQuery() {
   // are passed through jqLite/jQuery.cleanData. Monkey-patch this method to fire
   // the $destroy event on all removed nodes.
   originalCleanData = jqLite.cleanData;
-  jqLite.cleanData = function(elems) {
+  jqLite.cleanData = function (elems) {
     var events;
     for (var i = 0, elem; (elem = elems[i]) != null; i++) {
       events = (jqLite._data(elem) || {}).events;
@@ -1975,18 +1968,21 @@ function UNSAFE_restoreLegacyJqLiteXHTMLReplacement() {
  */
 function assertArg(arg, name, reason) {
   if (!arg) {
-    throw ngMinErr('areq', 'Argument \'{0}\' is {1}', (name || '?'), (reason || 'required'));
+    throw ngMinErr('areq', "Argument '{0}' is {1}", name || '?', reason || 'required');
   }
   return arg;
 }
 
 function assertArgFn(arg, name, acceptArrayAnnotation) {
   if (acceptArrayAnnotation && isArray(arg)) {
-      arg = arg[arg.length - 1];
+    arg = arg[arg.length - 1];
   }
 
-  assertArg(isFunction(arg), name, 'not a function, got ' +
-      (arg && typeof arg === 'object' ? arg.constructor.name || 'Object' : typeof arg));
+  assertArg(
+    isFunction(arg),
+    name,
+    'not a function, got ' + (arg && typeof arg === 'object' ? arg.constructor.name || 'Object' : typeof arg)
+  );
   return arg;
 }
 
@@ -2051,7 +2047,6 @@ function getBlockNodes(nodes) {
   return blockNodes || nodes;
 }
 
-
 /**
  * Creates a new object without a prototype. This object is useful for lookup without having to
  * guard against prototypically inherited properties via hasOwnProperty.
@@ -2068,7 +2063,8 @@ function createMap() {
 }
 
 function stringify(value) {
-  if (value == null) { // null || undefined
+  if (value == null) {
+    // null || undefined
     return '';
   }
   switch (typeof value) {

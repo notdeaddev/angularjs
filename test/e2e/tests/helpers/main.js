@@ -1,7 +1,5 @@
-'use strict';
-
 var helper = {
-  loadFixture: function(fixture) {
+  loadFixture: function (fixture) {
     var i = 0;
     while (fixture[i] === '/') ++i;
     fixture = fixture.slice(i);

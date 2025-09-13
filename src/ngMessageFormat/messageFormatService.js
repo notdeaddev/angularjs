@@ -168,42 +168,61 @@
     </example>
  */
 
-var $$MessageFormatFactory = ['$parse', '$locale', '$sce', '$exceptionHandler', function $$messageFormat(
-                               $parse,   $locale,   $sce,   $exceptionHandler) {
+var $$MessageFormatFactory = [
+  '$parse',
+  '$locale',
+  '$sce',
+  '$exceptionHandler',
+  function $$messageFormat($parse, $locale, $sce, $exceptionHandler) {
+    function getStringifier(trustedContext, allOrNothing, text) {
+      return function stringifier(value) {
+        try {
+          value = trustedContext ? $sce['getTrusted'](trustedContext, value) : $sce['valueOf'](value);
+          return allOrNothing && value === undefined ? value : $$stringify(value);
+        } catch (err) {
+          $exceptionHandler($interpolateMinErr['interr'](text, err));
+        }
+      };
+    }
 
-  function getStringifier(trustedContext, allOrNothing, text) {
-    return function stringifier(value) {
-      try {
-        value = trustedContext ? $sce['getTrusted'](trustedContext, value) : $sce['valueOf'](value);
-        return allOrNothing && (value === undefined) ? value : $$stringify(value);
-      } catch (err) {
-        $exceptionHandler($interpolateMinErr['interr'](text, err));
-      }
+    function interpolate(text, mustHaveExpression, trustedContext, allOrNothing) {
+      var stringifier = getStringifier(trustedContext, allOrNothing, text);
+      var parser = new MessageFormatParser(
+        text,
+        0,
+        $parse,
+        $locale['pluralCat'],
+        stringifier,
+        mustHaveExpression,
+        trustedContext,
+        allOrNothing
+      );
+      parser.run(parser.ruleInterpolate);
+      return parser.parsedFn;
+    }
+
+    return {
+      interpolate: interpolate
     };
   }
+];
 
-  function interpolate(text, mustHaveExpression, trustedContext, allOrNothing) {
-    var stringifier = getStringifier(trustedContext, allOrNothing, text);
-    var parser = new MessageFormatParser(text, 0, $parse, $locale['pluralCat'], stringifier,
-                                         mustHaveExpression, trustedContext, allOrNothing);
-    parser.run(parser.ruleInterpolate);
-    return parser.parsedFn;
+var $$interpolateDecorator = [
+  '$$messageFormat',
+  '$delegate',
+  function $$interpolateDecorator($$messageFormat, $interpolate) {
+    if ($interpolate['startSymbol']() !== '{{' || $interpolate['endSymbol']() !== '}}') {
+      throw $interpolateMinErr(
+        'nochgmustache',
+        'angular-message-format.js currently does not allow you to use custom start and end symbols for interpolation.'
+      );
+    }
+    var interpolate = $$messageFormat['interpolate'];
+    interpolate['startSymbol'] = $interpolate['startSymbol'];
+    interpolate['endSymbol'] = $interpolate['endSymbol'];
+    return interpolate;
   }
-
-  return {
-    'interpolate': interpolate
-  };
-}];
-
-var $$interpolateDecorator = ['$$messageFormat', '$delegate', function $$interpolateDecorator($$messageFormat, $interpolate) {
-  if ($interpolate['startSymbol']() !== '{{' || $interpolate['endSymbol']() !== '}}') {
-    throw $interpolateMinErr('nochgmustache', 'angular-message-format.js currently does not allow you to use custom start and end symbols for interpolation.');
-  }
-  var interpolate = $$messageFormat['interpolate'];
-  interpolate['startSymbol'] = $interpolate['startSymbol'];
-  interpolate['endSymbol'] = $interpolate['endSymbol'];
-  return interpolate;
-}];
+];
 
 var $interpolateMinErr;
 var isFunction;
@@ -212,14 +231,17 @@ var toJson;
 var $$stringify;
 
 var ngModule = window['angular']['module']('ngMessageFormat', ['ng']);
-ngModule['info']({ 'angularVersion': '"NG_VERSION_FULL"' });
+ngModule['info']({ angularVersion: '"NG_VERSION_FULL"' });
 ngModule['factory']('$$messageFormat', $$MessageFormatFactory);
-ngModule['config'](['$provide', function($provide) {
-  $interpolateMinErr = window['angular']['$interpolateMinErr'];
-  isFunction = window['angular']['isFunction'];
-  noop = window['angular']['noop'];
-  toJson = window['angular']['toJson'];
-  $$stringify = window['angular']['$$stringify'];
+ngModule['config']([
+  '$provide',
+  function ($provide) {
+    $interpolateMinErr = window['angular']['$interpolateMinErr'];
+    isFunction = window['angular']['isFunction'];
+    noop = window['angular']['noop'];
+    toJson = window['angular']['toJson'];
+    $$stringify = window['angular']['$$stringify'];
 
-  $provide['decorator']('$interpolate', $$interpolateDecorator);
-}]);
+    $provide['decorator']('$interpolate', $$interpolateDecorator);
+  }
+]);

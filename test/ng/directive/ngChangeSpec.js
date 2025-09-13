@@ -1,21 +1,19 @@
-'use strict';
-
 /* globals generateInputCompilerHelper: false */
 
-describe('ngChange', function() {
-
-  var helper = {}, $rootScope;
+describe('ngChange', function () {
+  var helper = {},
+    $rootScope;
 
   generateInputCompilerHelper(helper);
 
-  beforeEach(inject(function(_$rootScope_) {
+  beforeEach(inject(function (_$rootScope_) {
     $rootScope = _$rootScope_;
   }));
 
-  it('should $eval expression after new value is set in the model', function() {
+  it('should $eval expression after new value is set in the model', function () {
     helper.compileInput('<input type="text" ng-model="value" ng-change="change()" />');
 
-    $rootScope.change = jasmine.createSpy('change').and.callFake(function() {
+    $rootScope.change = jasmine.createSpy('change').and.callFake(function () {
       expect($rootScope.value).toBe('new value');
     });
 
@@ -23,8 +21,7 @@ describe('ngChange', function() {
     expect($rootScope.change).toHaveBeenCalledOnce();
   });
 
-
-  it('should not $eval the expression if changed from model', function() {
+  it('should not $eval the expression if changed from model', function () {
     helper.compileInput('<input type="text" ng-model="value" ng-change="change()" />');
 
     $rootScope.change = jasmine.createSpy('change');
@@ -33,8 +30,7 @@ describe('ngChange', function() {
     expect($rootScope.change).not.toHaveBeenCalled();
   });
 
-
-  it('should $eval ngChange expression on checkbox', function() {
+  it('should $eval ngChange expression on checkbox', function () {
     var inputElm = helper.compileInput('<input type="checkbox" ng-model="foo" ng-change="changeFn()">');
 
     $rootScope.changeFn = jasmine.createSpy('changeFn');
@@ -44,8 +40,7 @@ describe('ngChange', function() {
     expect($rootScope.changeFn).toHaveBeenCalledOnce();
   });
 
-
-  it('should be able to change the model and via that also update the view', function() {
+  it('should be able to change the model and via that also update the view', function () {
     var inputElm = helper.compileInput('<input type="text" ng-model="value" ng-change="value=\'b\'" />');
 
     helper.changeInputValueTo('a');

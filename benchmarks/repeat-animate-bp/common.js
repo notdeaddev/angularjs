@@ -1,26 +1,25 @@
 'use strict';
 
-(function() {
+(function () {
   var app = angular.module('repeatAnimateBenchmark');
 
-  app.config(function($compileProvider, $animateProvider) {
+  app.config(function ($compileProvider, $animateProvider) {
     if ($compileProvider.debugInfoEnabled) {
       $compileProvider.debugInfoEnabled(false);
     }
-
   });
 
-  app.run(function($animate) {
+  app.run(function ($animate) {
     if ($animate.enabled) {
       $animate.enabled(true);
     }
   });
 
-  app.controller('DataController', function($scope, $rootScope, $animate) {
+  app.controller('DataController', function ($scope, $rootScope, $animate) {
     var totalRows = 500;
     var totalColumns = 20;
 
-    var data = $scope.data = [];
+    var data = ($scope.data = []);
 
     function fillData() {
       if ($animate.enabled) {
@@ -39,8 +38,8 @@
 
     benchmarkSteps.push({
       name: 'enter',
-      fn: function() {
-        $scope.$apply(function() {
+      fn: function () {
+        $scope.$apply(function () {
           fillData();
         });
       }
@@ -48,25 +47,25 @@
 
     benchmarkSteps.push({
       name: 'leave',
-      fn: function() {
-        $scope.$apply(function() {
+      fn: function () {
+        $scope.$apply(function () {
           data = $scope.data = [];
         });
       }
     });
   });
 
-  app.directive('disableAnimations', function($animate) {
+  app.directive('disableAnimations', function ($animate) {
     return {
       link: {
-        pre: function(s, e) {
+        pre: function (s, e) {
           $animate.enabled(e, false);
         }
       }
     };
   });
 
-  app.directive('noop', function($animate) {
+  app.directive('noop', function ($animate) {
     return {
       link: {
         pre: angular.noop
@@ -74,10 +73,10 @@
     };
   });
 
-  app.directive('baseline', function($document) {
+  app.directive('baseline', function ($document) {
     return {
       restrict: 'E',
-      link: function($scope, $element) {
+      link: function ($scope, $element) {
         var document = $document[0];
 
         var i, j, row, cell, comment;
@@ -105,10 +104,10 @@
           }
         }
 
-        $scope.$watch('data.length', function(newVal) {
+        $scope.$watch('data.length', function (newVal) {
           if (newVal === 0) {
             while ($element[0].firstChild) {
-                $element[0].removeChild($element[0].firstChild);
+              $element[0].removeChild($element[0].firstChild);
             }
           } else {
             createList();

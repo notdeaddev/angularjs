@@ -15,7 +15,7 @@ function extractValues(stream, propertiesToExtract, callback) {
   var firstValid = {};
   var lastValid = {};
   var keys = Object.keys(propertiesToExtract);
-  var keyValues = keys.map(function(k) { return propertiesToExtract[k]; });
+  var keyValues = keys.map(function (k) { return propertiesToExtract[k]; });
   var validRanges = {};
 
   for (var i in keys) {

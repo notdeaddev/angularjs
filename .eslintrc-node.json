@@ -8,7 +8,5 @@
   "parserOptions": {
     "ecmaVersion": 2017
   },
-  "plugins": [
-    "promise"
-  ]
+  "plugins": ["promise"]
 }

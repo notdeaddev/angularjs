@@ -1,7 +1,5 @@
-'use strict';
-
-angular.
-  module('test', [
+angular
+  .module('test', [
     'ngTouch',
     'ngSanitize',
     'ngRoute',
@@ -11,7 +9,7 @@ angular.
     'ngCookies',
     'ngAria',
     'ngAnimate'
-  ]).
-  controller('TestController', function($scope) {
+  ])
+  .controller('TestController', function ($scope) {
     $scope.text = 'Hello, world!';
   });

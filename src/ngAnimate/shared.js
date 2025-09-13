@@ -13,7 +13,11 @@ var NG_ANIMATE_CLASSNAME = 'ng-animate';
 var NG_ANIMATE_CHILDREN_DATA = '$$ngAnimateChildren';
 
 // Detect proper transitionend/animationend event names.
-var CSS_PREFIX = '', TRANSITION_PROP, TRANSITIONEND_EVENT, ANIMATION_PROP, ANIMATIONEND_EVENT;
+var CSS_PREFIX = '',
+  TRANSITION_PROP,
+  TRANSITIONEND_EVENT,
+  ANIMATION_PROP,
+  ANIMATIONEND_EVENT;
 
 // If unprefixed events are not supported but webkit-prefixed are, use the latter.
 // Otherwise, just use W3C names, browsers not supporting them at all will just ignore them.
@@ -24,7 +28,7 @@ var CSS_PREFIX = '', TRANSITION_PROP, TRANSITIONEND_EVENT, ANIMATION_PROP, ANIMA
 // Also, the only modern browser that uses vendor prefixes for transitions/keyframes is webkit
 // therefore there is no reason to test anymore for other vendor prefixes:
 // http://caniuse.com/#search=transition
-if ((window.ontransitionend === undefined) && (window.onwebkittransitionend !== undefined)) {
+if (window.ontransitionend === undefined && window.onwebkittransitionend !== undefined) {
   CSS_PREFIX = '-webkit-';
   TRANSITION_PROP = 'WebkitTransition';
   TRANSITIONEND_EVENT = 'webkitTransitionEnd transitionend';
@@ -33,7 +37,7 @@ if ((window.ontransitionend === undefined) && (window.onwebkittransitionend !== 
   TRANSITIONEND_EVENT = 'transitionend';
 }
 
-if ((window.onanimationend === undefined) && (window.onwebkitanimationend !== undefined)) {
+if (window.onanimationend === undefined && window.onwebkitanimationend !== undefined) {
   CSS_PREFIX = '-webkit-';
   ANIMATION_PROP = 'WebkitAnimation';
   ANIMATIONEND_EVENT = 'webkitAnimationEnd animationend';
@@ -58,12 +62,12 @@ var TRANSITION_DURATION_PROP = TRANSITION_PROP + DURATION_KEY;
 var ngMinErr = angular.$$minErr('ng');
 function assertArg(arg, name, reason) {
   if (!arg) {
-    throw ngMinErr('areq', 'Argument \'{0}\' is {1}', (name || '?'), (reason || 'required'));
+    throw ngMinErr('areq', "Argument '{0}' is {1}", name || '?', reason || 'required');
   }
   return arg;
 }
 
-function mergeClasses(a,b) {
+function mergeClasses(a, b) {
   if (!a && !b) return '';
   if (!a) return b;
   if (!b) return a;
@@ -83,16 +87,11 @@ function packageStyles(options) {
 
 function pendClasses(classes, fix, isPrefix) {
   var className = '';
-  classes = isArray(classes)
-      ? classes
-      : classes && isString(classes) && classes.length
-          ? classes.split(/\s+/)
-          : [];
-  forEach(classes, function(klass, i) {
+  classes = isArray(classes) ? classes : classes && isString(classes) && classes.length ? classes.split(/\s+/) : [];
+  forEach(classes, function (klass, i) {
     if (klass && klass.length > 0) {
-      className += (i > 0) ? ' ' : '';
-      className += isPrefix ? fix + klass
-                            : klass + fix;
+      className += i > 0 ? ' ' : '';
+      className += isPrefix ? fix + klass : klass + fix;
     }
   });
   return className;
@@ -141,19 +140,19 @@ function extractElementNode(element) {
 }
 
 function $$addClass($$jqLite, element, className) {
-  forEach(element, function(elm) {
+  forEach(element, function (elm) {
     $$jqLite.addClass(elm, className);
   });
 }
 
 function $$removeClass($$jqLite, element, className) {
-  forEach(element, function(elm) {
+  forEach(element, function (elm) {
     $$jqLite.removeClass(elm, className);
   });
 }
 
 function applyAnimationClassesFactory($$jqLite) {
-  return function(element, options) {
+  return function (element, options) {
     if (options.addClass) {
       $$addClass($$jqLite, element, options.addClass);
       options.addClass = null;
@@ -169,7 +168,7 @@ function prepareAnimationOptions(options) {
   options = options || {};
   if (!options.$$prepared) {
     var domOperation = options.domOperation || noop;
-    options.domOperation = function() {
+    options.domOperation = function () {
       options.$$domOperationFired = true;
       domOperation();
       domOperation = noop;
@@ -247,12 +246,12 @@ function resolveElementClasses(existing, toAdd, toRemove) {
   existing = splitClassesToLookup(existing);
 
   toAdd = splitClassesToLookup(toAdd);
-  forEach(toAdd, function(value, key) {
+  forEach(toAdd, function (value, key) {
     flags[key] = ADD_CLASS;
   });
 
   toRemove = splitClassesToLookup(toRemove);
-  forEach(toRemove, function(value, key) {
+  forEach(toRemove, function (value, key) {
     flags[key] = flags[key] === ADD_CLASS ? null : REMOVE_CLASS;
   });
 
@@ -261,7 +260,7 @@ function resolveElementClasses(existing, toAdd, toRemove) {
     removeClass: ''
   };
 
-  forEach(flags, function(val, klass) {
+  forEach(flags, function (val, klass) {
     var prop, allow;
     if (val === ADD_CLASS) {
       prop = 'addClass';
@@ -284,7 +283,7 @@ function resolveElementClasses(existing, toAdd, toRemove) {
     }
 
     var obj = {};
-    forEach(classes, function(klass) {
+    forEach(classes, function (klass) {
       // sometimes the split leaves empty string values
       // incase extra spaces were applied to the options
       if (klass.length) {
@@ -298,7 +297,7 @@ function resolveElementClasses(existing, toAdd, toRemove) {
 }
 
 function getDomNode(element) {
-  return (element instanceof jqLite) ? element[0] : element;
+  return element instanceof jqLite ? element[0] : element;
 }
 
 function applyGeneratedPreparationClasses($$jqLite, element, event, options) {
@@ -342,14 +341,14 @@ function applyInlineStyle(node, styleTuple) {
   node.style[prop] = value;
 }
 
-function concatWithSpace(a,b) {
+function concatWithSpace(a, b) {
   if (!a) return b;
   if (!b) return a;
   return a + ' ' + b;
 }
 
 var helpers = {
-  blockTransitions: function(node, duration) {
+  blockTransitions: function (node, duration) {
     // we use a negative delay value since it performs blocking
     // yet it doesn't kill any existing transitions running on the
     // same element which makes this safe for class-based animations

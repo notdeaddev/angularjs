@@ -1,5 +1,3 @@
-'use strict';
-
 var supportTests = {
   classes: '/^class\\b/.test((class C {}).toString())',
   fatArrows: 'a => a',

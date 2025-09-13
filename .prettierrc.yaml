@@ -1,0 +1,6 @@
+printWidth: 120
+singleQuote: true # repo uses single quotes (ESLint enforced)
+trailingComma: none # no dangling commas in arrays/objects
+arrowParens: avoid # single-arg arrow functions omit parens
+proseWrap: preserve # keep manual line breaks in Markdown
+htmlWhitespaceSensitivity: ignore # avoid altering significant template whitespace
