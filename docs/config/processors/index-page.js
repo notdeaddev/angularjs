@@ -34,7 +34,7 @@ module.exports = function generateIndexPagesProcessor() {
           deployment
         );
 
-        indexDoc.id = 'index' + (deployment.name === 'default' ? '' : '-' + deployment.name);
+        indexDoc.id = 'index' + (deployment.name === 'production' ? '' : '-' + deployment.name);
 
         docs.push(indexDoc);
       });
