@@ -7,6 +7,13 @@ const esbuild = require('esbuild');
 const { mergeFilesFor } = require(path.join(__dirname, '..', 'angularFiles.js'));
 const pkg = require(path.join(__dirname, '..', 'package.json'));
 
+const CSP_CSS_HEADER = '/* Include this file in your html if you are using the CSP mode. */\n\n';
+const ANGULAR_STYLES = {
+  css: ['css/angular.css'],
+  generateCspCssFile: true,
+  minify: true
+};
+
 function replaceVersionPlaceholders(src) {
   const branch = pkg.branchVersion || '0.0.0';
   const match = branch.match(/(\d+)\.(\d+)\.(\d+)/) || ['', '0', '0', '0'];
@@ -33,7 +40,13 @@ async function buildAngular(outputFolder) {
   fs.mkdirSync(outDir, { recursive: true });
 
   const modules = [
-    { name: 'angular', group: 'angularSrc', prefix: 'src/angular.prefix', suffix: 'src/angular.suffix' },
+    {
+      name: 'angular',
+      group: 'angularSrc',
+      prefix: 'src/angular.prefix',
+      suffix: 'src/angular.suffix',
+      styles: ANGULAR_STYLES
+    },
     { name: 'angular-loader', group: 'angularLoader', prefix: 'src/loader.prefix', suffix: 'src/loader.suffix' },
     {
       name: 'angular-resource',
@@ -99,8 +112,11 @@ async function buildAngular(outputFolder) {
       ...files.map(f => fs.readFileSync(path.join(rootDir, f), 'utf8')),
       fs.readFileSync(path.join(rootDir, mod.suffix), 'utf8')
     ];
-    const code = replaceVersionPlaceholders(parts.join('\n'));
+    let code = replaceVersionPlaceholders(parts.join('\n'));
     const base = path.join(outDir, mod.name);
+    if (mod.styles) {
+      code = inlineStyles(code, mod.styles, rootDir, base);
+    }
     fs.writeFileSync(`${base}.js`, code);
     const result = await esbuild.transform(code, {
       minify: true,
@@ -126,6 +142,54 @@ async function buildAngular(outputFolder) {
   for (const bundle of testBundles) {
     fs.copyFileSync(path.join(outDir, `${bundle}.js`), path.join(testBundlesDir, `${bundle}.js`));
   }
+}
+
+function inlineStyles(code, stylesConfig, rootDir, basePath) {
+  const cssFiles = stylesConfig.css.map(file => path.join(rootDir, file));
+  const processed = addStyle(code, cssFiles, stylesConfig.minify);
+
+  if (stylesConfig.generateCspCssFile) {
+    fs.writeFileSync(`${basePath}-csp.css`, CSP_CSS_HEADER + processed.css);
+  }
+
+  return processed.js;
+}
+
+function addStyle(src, cssFiles, minify) {
+  const styles = cssFiles.reduce(
+    (state, file) => {
+      let css = fs.readFileSync(file, 'utf8');
+
+      state.css.push(css);
+
+      if (minify) {
+        css = css
+          .replace(/\r?\n/g, '')
+          .replace(/\/\*.*?\*\//g, '')
+          .replace(/:\s+/g, ':')
+          .replace(/\s*\{\s*/g, '{')
+          .replace(/\s*\}\s*/g, '}')
+          .replace(/\s*,\s*/g, ',')
+          .replace(/\s*;\s*/g, ';');
+      }
+
+      css = css.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r?\n/g, '\\n');
+
+      state.js.push(
+        "!window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend(window.angular.element('<style>').text('" +
+          css +
+          "'));"
+      );
+
+      return state;
+    },
+    { js: [src], css: [] }
+  );
+
+  return {
+    js: styles.js.join('\n'),
+    css: styles.css.join('\n')
+  };
 }
 
 if (require.main === module) {
