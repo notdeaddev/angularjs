@@ -171,10 +171,9 @@ module.exports = new Package('angularjs', [
     ) {
       generateIndexPagesProcessor.deployments = [
         debugDeployment,
-        defaultDeployment,
+        productionDeployment,
         jqueryDeployment,
-        testDeployment,
-        productionDeployment
+        testDeployment
       ];
 
       generateProtractorTestsProcessor.deployments = [defaultDeployment, jqueryDeployment];
