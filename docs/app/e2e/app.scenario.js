@@ -32,17 +32,17 @@ describe('docs.angularjs.org', function () {
   });
 
   describe('App', function () {
-    // it('should filter the module list when searching', function () {
-    //   browser.get();
-    //   browser.waitForAngular();
+    it('should filter the module list when searching', function () {
+      browser.get('build/docs/index-test.html#!/api');
 
-    //   var search = element(by.model('q'));
-    //   search.clear();
-    //   search.sendKeys('ngBind');
+      var search = element(by.model('q'));
+      search.clear();
+      search.sendKeys('ngBind');
+      browser.waitForAngular();
 
-    //   var firstModule = element(by.css('.search-results a'));
-    //   expect(firstModule.getText()).toEqual('ngBind');
-    // });
+      var firstModule = element(by.css('.search-results-container a'));
+      expect(firstModule.getText()).toEqual('ngBind');
+    });
 
     it('should display the service page when navigating directly', function () {
       browser.get('build/docs/index-test.html#!/api/ng/directive/ngClick');
